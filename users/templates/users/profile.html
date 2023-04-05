@@ -1,0 +1,65 @@
+{% extends 'hostels/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}Profile{% endblock %}
+
+
+
+
+{% block content %}
+<section class="mt-1 mb-5 pb-5">
+    <div class="container5">
+        <div class="row d-flex justify-content-center bg-light">
+            <div class="col-sm-12 col-md-12 col-lg-6">
+                <p class="lead text-center p-3 bg-success text-warning">Update Profile Info</p>
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 d-flex justify-content-center">
+                        <img src="{{user.profile.image.url}}" class="rounded-circle" style="width: 15%;">
+                    </div>
+                    <div class="col-sm-6 col-md-6 col-lg-6">
+                        <label>First Name:</label><br>
+                        <p class="lead text-capitalize">{{user.first_name}}</p>
+                    </div>
+                    <div class="col-sm-6 col-md-6 col-lg-6">
+                        <label>Last Name:</label><br>
+                        <p class="lead text-capitalize">{{user.last_name}}</p>
+                    </div>
+                    <div class="col-sm-6 col-md-6 col-lg-6">
+                        <label>Email Address:</label><br>
+                        <p class="lead text-capitalize">{{user.email}}</p>
+                    </div>
+                    <div class="col-sm-6 col-md-6 col-lg-6">
+                        <label>Phone:</label><br>
+                        <p class="lead text-capitalize">{{user.telephone}}</p>
+                    </div>
+                    <div class="col-sm-6 col-md-6 col-lg-6">
+                        <label>UIN:</label><br>
+                        <p class="lead text-capitalize">{{user.profile.ghana_card_number}}</p>
+                    </div>
+                    <div class="col-sm-6 col-md-6 col-lg-6">
+                        <label>Course:</label><br>
+                        <p class="lead text-capitalize">{{user.profile.gender}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row bg-light d-flex justify-content-center">
+            <div class="col-sm-12 col-md-12 col-lg-6">
+                <p class="lead text-center p-3 bg-success text-warning">Update Profile Info</p>
+                <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                    <div class="form-group">
+                        <div class="text-success">
+                            {{u_form|crispy}}
+                            {{p_form|crispy}}
+                        </div>   
+                        <div class="form-group text-center mt-3">
+                            <button class="btn btn-outline-warning" type="submit">Update</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

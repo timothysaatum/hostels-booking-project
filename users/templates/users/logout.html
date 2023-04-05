@@ -1,0 +1,24 @@
+{% extends 'hostels/base.html' %}
+
+
+{% block title %}Ulas|logout{% endblock %}
+{% block content %}
+<section class="mt-1 mb-5 pb-5">
+    <div class="container">
+        <div class="row bg-light d-flex justify-content-center">
+            <p class="lead text-center p-3 text-danger">
+                You have been logged out
+            </p>
+            <div class="col-sm-12 col-md-12 col-lg-6">
+                    <div class="form-group">
+                        <div class="border-top pt-3 m-3  d-flex justify-content-center">
+                            <small class="text-muted  text-white">
+                                <a href="{% url 'login' %}" class="text-info">Sign in again</a>
+                            </small>
+                        </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
