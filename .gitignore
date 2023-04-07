@@ -1,2 +1,3 @@
 ./grem
 db.sqlite
+.env

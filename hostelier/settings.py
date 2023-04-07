@@ -96,6 +96,8 @@ DATABASES = {
 #celery -A tasks worker --loglevel=INFO  -P threads
 CELERY_BROKER_URL = "redis://localhost:6379"
 CELERY_RESULT_BACKEND = "redis://localhost:6379"
+SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'
+
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
