@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'ckeditor_uploader',
     'crispy_forms',
     'hostels',
+    'atlass',
     'crispy_bootstrap5',
     'users',
     'library',
@@ -150,7 +151,7 @@ CRISPY_TEMPLATE_PACK = 'bootstrap5'
 
 
 LOGIN_URL = 'login'
-LOGIN_REDIRECT_URL = 'home'
+LOGIN_REDIRECT_URL = 'rooms'
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
