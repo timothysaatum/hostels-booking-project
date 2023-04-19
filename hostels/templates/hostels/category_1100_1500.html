@@ -1,0 +1,52 @@
+{% extends 'hostels/base.html' %}
+{% load static %}
+
+
+{% block title %}Category GHS1000 to GHS1500{% endblock %}
+{% block content %}
+<!-- Room Start -->
+<div class="container-xxl py-5">
+    <div class="container">
+        <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
+            <h6 class="mb-5">Explore Our <span class="text-danger text-uppercase">Category GHS1100 to GHS1500
+                    Rooms</span></h6>
+        </div>
+        <div class="row g-4 pb-5 mb-5">
+            {% for item in category_1100_1500 %}
+            <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+                <div class="room-item shadow rounded overflow-hidden">
+                    <div class="position-relative">
+                        <img class="img-fluid" src="{{item.image.url}}" alt="{{hostel.image.url}}">
+                        <small
+                            class="position-absolute start-0 top-100 translate-middle-y bg-danger text-white rounded py-1 px-3 ms-4">{{item.cost_per_room}}/per
+                            year</small>
+                    </div>
+                    <div class="p-4 mt-2">
+                        <div class="d-flex justify-content-between mb-3">
+                            <h5 class="mb-0 text-uppercase">{{item.hostel_name}}</h5>
+                        </div>
+                        <div class="d-flex mb-3">
+                            <small class="border-end me-3 pe-3"><i
+                                    class="fa fa-bed text-danger me-2"></i>{{item.number_of_rooms}}
+                                Rooms</small>
+                            <small class="border-end me-3 pe-3"><i
+                                    class="fa fa-bath text-danger me-2"></i>{{item.number_of_bath}}
+                                Bath</small>
+                            <small><i class="fa fa-wifi text-danger me-2"></i>Wifi:{{item.wifi}}</small>
+                        </div>
+                        <p class="text-body mb-3">{{item.description|safe}}</p>
+                        <div class="d-flex justify-content-between">
+                            <a class="btn btn-sm btn-danger rounded py-2 px-4"
+                                href="{% url 'hostel-detail' item.pk %}">View Detail</a>
+                            <a class="btn btn-sm btn-dark rounded py-2 px-4"
+                                href="{% url 'pay' %}">Book Now</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+<!-- Room End -->

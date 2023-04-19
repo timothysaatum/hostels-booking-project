@@ -1,0 +1,21 @@
+{% extends 'hostels/base.html' %}
+{% load static %}
+
+
+{% block title %}Booking Details{% endblock %}
+{% block content %}
+<section class="mt-4 pb-5 mb-5 mb-3 pb-3">
+    <div class="container">
+        <div class="row bg-light  d-flex justify-content-center pb-5 mb-5">
+            <div class="col-sm-12 col-md-12 col-lg-8">
+            	 <p class="lead text-center p-3 bg-success text-warning">
+                Booking Details.
+            	</p>
+                <div class="text-success d-flex justify-content-center">
+                    {{details}}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

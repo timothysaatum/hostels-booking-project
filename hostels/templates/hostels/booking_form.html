@@ -1,0 +1,26 @@
+{% extends 'hostels/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}Pay{% endblock %}
+{% block content %}
+<section class="mt-1 pb-4">
+    <div class="container py-1 mb-5 pb-5">
+        <div class="row bg-light d-flex justify-content-center">
+            <div class="col-sm-12 col-md-12 col-lg-6">
+                <p class="lead text-center p-3 bg-success text-warning">Enter your details to book the room</p>
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <div class="text-warning">
+                            {{form|crispy}}
+                            <div class="form-group text-center mt-3">
+                                <button class="btn btn-outline-warning px-5" type="submit">Book</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
