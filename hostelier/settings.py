@@ -40,7 +40,6 @@ INSTALLED_APPS = [
     'atlass',
     'crispy_bootstrap5',
     'users',
-    'library',
     "phonenumber_field",
     #default apps
     'django.contrib.admin',
