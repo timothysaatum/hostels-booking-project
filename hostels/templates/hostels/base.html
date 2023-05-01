@@ -28,86 +28,41 @@
 </head>
 
 <body>
-<section class="bg-light bg-onscroll fixed-top">
+{% block navbar %}
+    <section class="bg-light bg-onscroll fixed-top">
         <nav>
             <div class="container-fluid d-flex justify-content-between p-3 mx-1">
                 <div class="col-md-1 d-flex align-items-center">
-                    <img src="{% static 'hostels/images/logo.png' %}" alt="" class="img-fluid">
+                    <a href="{% url 'home' %}" class="nav-brand d-none d-sm-block"><img src="{% static 'hostels/images/logo.png' %}" alt="" class="img-fluid"></a>
                 </div>
-                <div class="col-md-5 col-lg-3 py-1 col-sm-12 d-flex justify-content-between bg-light shadow-lg nav-border">
-                    <button class="btn btn-sm btn-light border-end fw-bolder btn-border"><i class="fa-solid fa-plus"></i> guests</button>
-                    <button class="btn btn-sm btn-light border-end fw-bolder btn-border"><i class="fa-solid fa-plus"></i> guests</button>
+                <div class="d-flex align-items-center nav-border"><a href="{% url 'rooms' %}" class="nav-link text-light bg-danger fw-bold p-1 btn-border" role="button"><i class="fa-solid fa-arrow-right"></i> See All</a></div>
+                <div
+                    class="col-md-5 col-lg-3 py-1 col-sm-12 d-flex justify-content-between bg-light shadow-lg nav-border">
+                    <button class="btn btn-sm btn-light border-end fw-bolder btn-border"><i
+                            class="fa-solid fa-plus"></i> Room</button>
+                    <button class="btn btn-sm btn-light border-end fw-bolder btn-border"><i
+                            class="fa-solid fa-plus"></i> Store</button>
                     <button class="btn btn-sm btn-pink btn-border"><i
                             class="fa-solid fa-magnifying-glass text-light"></i></button>
                 </div>
                 <div class="col-3 d-none d-lg-block d-sm-block d-flex justify-content-between">
                     <a href="#" class="text-dark mx-2">My Rent <span><i class="fa-solid fa-house"></i></span></a>
-                    <a href="#" class="nav-border text-dark border p-1" role="button"><span><i class="fa-solid fa-bars m-2"></i>
-                            <i class="fa-regular fa-user m-2"></i></span></a>
+                    <button class="nav-border text-dark border btn-sm" id="account">
+                        <span><i class="fa-solid fa-bars m-2"></i>
+                            <i class="fa-regular fa-user m-2"></i></span>
+                    </button>
+                    <form method="post" class="d-none" id="show">
+                        <ul>
+                            <li><a href="#">Login</a></li>
+                            <li><a href="#">Logout</a></li>
+                            <li><a href="#">Sing Up</a></li>
+                        </ul>
+                    </form>
                 </div>
             </div>
         </nav>
-        <div class="container-fluid mx-1 border-bottom">
-            <div class="d-flex align-items-center">
-                <div class="flex-shrink-0">
-                    <a href="#" class="btn-left btn-link p-2 toggle text-dark"><i
-                            class="fa-solid fa-circle-chevron-left"></i></a>
-                </div>
-                <div class="flex-grow-1 w-100 o-hidden">
-                    <ul class="nav nav-fill text-uppercase small position-relative flex-nowrap text-dark font-color fw-bolder">
-                        <li class="nav-item">
-                            <a href="#" class="nav-link"> Apartment</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                Recreational</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">Find Food</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">Uds</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">Knust</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">uhas</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">uenr</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">legon</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">Ucc</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">Stu</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">Ubids</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">Cktedam</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">Tatco</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">Batco</a>
-                        </li>
-                    </ul>
-                </div>
-                <div class="flex-shrink-0">
-                    <a href="#" class="btn-right btn-link toggle p-2 text-dark"><i
-                            class="fa-solid fa-circle-chevron-right"></i></a>
-                </div>
-            </div>
-        </div>
-
-</section>
+    </section>
+{% endblock navbar %}
     <!--messages-->
     {% if messages %}
     {% for message in messages %}
@@ -125,6 +80,7 @@
     {% block content %}
 
     {% endblock %}
+    {% block footer %}
     <!-- Footer Start -->
     <footer class="pt-5">
         <div class="container-fluid bg-dark mt-5 mb-3 text-light p-5">
@@ -132,11 +88,14 @@
                 <div class="col-md-4 pt-3 pb-3">
                     <h6 class="text-uppercase text-decoration-underline fw-bolder footer text-danger">ULAS</h6>
                     <u class="text-decoration-none px-4">
-                        <li><a href="#" title="a" class="text-light"><i class="fa-solid fa-chevron-right"></i> About Us</a>
+                        <li><a href="#" title="a" class="text-light"><i class="fa-solid fa-chevron-right"></i> About
+                                Us</a>
                         </li>
-                        <li><a href="#" title="a" class="text-light"><i class="fa-solid fa-chevron-right"></i> Contact</a>
+                        <li><a href="#" title="a" class="text-light"><i class="fa-solid fa-chevron-right"></i>
+                                Contact</a>
                         </li>
-                        <li><a href="#" title="a" class="text-light"><i class="fa-solid fa-chevron-right"></i> Services</a>
+                        <li><a href="#" title="a" class="text-light"><i class="fa-solid fa-chevron-right"></i>
+                                Services</a>
                         </li>
                         <li><a href="#" title="a" class="text-light"><i class="fa-solid fa-chevron-right"></i> Our
                                 Mission</a></li>
@@ -145,7 +104,8 @@
                     </u>
                 </div>
                 <div class="col-md-4 pt-3 pb-3">
-                    <h6 class="text-uppercase text-decoration-underline fw-bolder text-light footer">Products &amp; Services
+                    <h6 class="text-uppercase text-decoration-underline fw-bolder text-light footer">Products &amp;
+                        Services
                     </h6>
                     <u class="text-decoration-none px-4">
                         <li><a href="#" title="a" class="text-light"><i class="fa-solid fa-chevron-right"></i>
@@ -159,39 +119,42 @@
                     </u>
                 </div>
                 <div class="col-md-4 pt-3 pb-3">
-                    <h6 class="text-uppercase text-decoration-underline fw-bolder text-light footer">Customer Support</h6>
+                    <h6 class="text-uppercase text-decoration-underline fw-bolder text-light footer">Customer Support
+                    </h6>
                     <u class="text-decoration-none px-4">
-                        <li><a href="#" title="a" class="text-light"><i class="fa-solid fa-chevron-right"></i> Vitamins</a>
+                        <li><a href="#" title="a" class="text-light"><i class="fa-solid fa-chevron-right"></i>
+                                Vitamins</a>
                         </li>
-                        <li><a href="#" title="a" class="text-light"><i class="fa-solid fa-chevron-right"></i> Vitamins</a>
+                        <li><a href="#" title="a" class="text-light"><i class="fa-solid fa-chevron-right"></i>
+                                Vitamins</a>
                         </li>
-                        <li><a href="#" title="a" class="text-light"><i class="fa-solid fa-chevron-right"></i> Vitamins</a>
+                        <li><a href="#" title="a" class="text-light"><i class="fa-solid fa-chevron-right"></i>
+                                Vitamins</a>
                         </li>
-                        <li><a href="#" title="a" class="text-light"><i class="fa-solid fa-chevron-right"></i> Vitamins</a>
+                        <li><a href="#" title="a" class="text-light"><i class="fa-solid fa-chevron-right"></i>
+                                Vitamins</a>
                         </li>
                     </u>
                 </div>
             </div>
         </div>
     </footer>
+    {% endblock footer %}
     <!-- Footer End -->
 
 
     <!-- Back to Top -->
 
     <!-- JavaScript Libraries -->
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"
-        integrity="sha384-zYPOMqeu1DAVkHiLqWBUTcbYfZ8osu1Nd6Z89ify25QV9guujx43ITvfi12/QExE"
-        crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.min.js"
-        integrity="sha384-Y4oOpwW3duJdCWv5ly8SCFYWqFDsfob/3GkgExXKV4idmbt98QcxXYs9UoXAB7BZ"
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
         crossorigin="anonymous"></script>
     <script src="{% static 'hostels/js/wow/wow.js' %}"></script>
     <script src="{% static 'hostels/js/aos/aos.js' %}"></script>
     <script src="{% static 'hostels/js/jquery/jquery.js' %}"></script>
-    <script src="{% static 'hostels/js/jquery/script.js' %}"></script>
     <!-- Template Javascript -->
     <script src="{% static 'hostels/js/main.js' %}"></script>
+    <script src="{% static 'hostels/js/jquery/script.js' %}"></script>
 </body>
 
 </html>

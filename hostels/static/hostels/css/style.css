@@ -19,9 +19,16 @@ h6,.h7 {
     color: #191970;
     font-family: 'Ubuntu', sans-serif;
 }
-
+.title-font{
+    font-family: 'Ubuntu', sans-serif;
+    color: #2F4F4F;
+}
 .nav-border button {
     font-size: smaller;
+}
+
+.room-mt{
+    margin-top: 10em;
 }
 
 @media (max-width: 768px) {}
@@ -74,7 +81,7 @@ nav img {
 }
 
 .margin-bottom{
-    margin-top: 7em;
+    margin-top: 5em;
 }
 
 .nav-border,
@@ -82,6 +89,7 @@ nav img {
     border: solid transparent;
     border-radius: 12rem;
 }
+
 
 .btn-pink {
     background-color: #c83445;

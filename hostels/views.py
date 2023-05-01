@@ -4,7 +4,9 @@ from .models import Hostel, Booking
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from .forms import PayForm
-#from atlas.transaction import initiate_payment
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
+# from atlas.transaction import initiate_payment
 
 
 user = get_user_model()
@@ -14,12 +16,22 @@ def home(request):
     return render(request, 'hostels/index.html')
 
 
-class HostelListView(ListView):
+@method_decorator(csrf_exempt, name='dispatch')
+class RoomsListView(ListView):
     model = Hostel
     context_object_name = 'hostels'
     template_name = 'hostels/rooms.html'
     slug_url_kwarg = 'pk'
     ordering = ['-date_added']
+
+    def get_queryset(self):
+        if self.request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
+            school = self.request.GET.get('query')
+            print(school)
+            hostels = Hostel.objects.filter(school__name__icontains=school)
+            print(hostels)
+        hostels = Hostel.objects.all()
+        return hostels
 
 
 class HostelDetailView(DetailView):
@@ -46,18 +58,18 @@ def category_1600_2000(request):
 
 def about(request):
     count = Hostel.objects.all().count()
-    all_users= get_user_model().objects.all().count()
-    return render(request, 'hostels/about.html', {'count':count, 'all_users':all_users})
+    all_users = get_user_model().objects.all().count()
+    return render(request, 'hostels/about.html', {'count': count, 'all_users': all_users})
 
 
 def contact(request):
     return render(request, 'hostels/contact.html')
 
+
 @login_required
 def food(request):
-    #rests = Restaurant.objects.all()
+    # rests = Restaurant.objects.all()
     return render(request, 'hostels/food.html')
-
 
 
 def make_booking(request, pk):
@@ -68,14 +80,14 @@ def make_booking(request, pk):
             momo_no = form.cleaned_data['momo_no']
             account_no = form.cleaned_data['account_no']
             message = form.cleaned_data['message']
-            Booking.objects.create(hostel=hostel, tenant=request.user, momo_no=momo_no
-                , cost=hostel.get_cost(), room_no=pk, account_no=account_no, message=message)
-            #initiate_payment(amount=hostel.cost_per_room, account_number=momo_no)
+            Booking.objects.create(hostel=hostel, tenant=request.user, momo_no=momo_no, cost=hostel.get_cost(
+            ), room_no=pk, account_no=account_no, message=message)
+            # initiate_payment(amount=hostel.cost_per_room, account_number=momo_no)
         return redirect('rooms')
 
     form = PayForm()
 
-    return render(request, 'hostels/booking_form.html', {'form':form})
+    return render(request, 'hostels/booking_form.html', {'form': form})
 
 
 class BookingDetailView(DetailView):

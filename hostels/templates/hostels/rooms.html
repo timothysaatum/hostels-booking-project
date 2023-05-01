@@ -2,58 +2,147 @@
 {% load static %}
 
 
-{% block title %}Rooms{% endblock %}
-{% block content %}
-<!-- Room Start -->
-<div class="container-xxl py-5 mt-5">
-    <div class="container mt-3">
-        <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
-            <h6 class="section-title text-center text-danger text-uppercase">All Rooms</h6>
-            <h1 class="mb-5">Explore Our <span class="text-danger text-uppercase">Rooms</span></h1>
-        </div>
-        <div class="row g-4 pb-5 mb-5">
-            {% for hostel in hostels %}
-            {% if not hostel.no_of_rooms == 0 %}
-            <div class="col-lg-4 col-md-6 wow fadeInUp rounded" data-wow-delay="0.1s">
-                <div class="room-item shadow rounded overflow-hidden">
-                    <div class="position-relative">
-                        <img class="img-fluid rounded border-top" src="{{hostel.image.url}}" alt="{{hostel.image.url}}">
-                        <small
-                            class="position-absolute start-0 top-100 translate-middle-y bg-danger text-white rounded py-1 px-3 ms-4">GHS{{hostel.cost_per_room}} / per
-                            year</small>
-                    </div>
-                    <div class="p-4 mt-2">
-                        <div class="d-flex justify-content-between mb-3">
-                            <h5 class="mb-0 text-uppercase">{{hostel.hostel_name}}</h5>
-                        </div>
-                        <div class="d-flex mb-3">
-                            <small class="border-end me-3 pe-3">
-                                {% if hostel.no_of_rooms > 1 %}<i class="fa fa-bed text-danger me-2"></i>{{hostel.no_of_rooms}} Rooms left
-                                    {% else %}
-                                    <i class="fa fa-bed text-danger me-2"></i>{{hostel.no_of_rooms}} Room left
-                                {% endif %}
-                            </small>
-                            <small class="border-end me-3 pe-3">
-                                <i class="fas fa-walking text-danger me-2"></i>
-                                {{hostel.get_dist}} walk to campus</small>
-                            <small><i class="fa fa-wifi text-danger me-2" title="wifi"></i>{{hostel.wifi}}</small>
-                        </div>
-                        <p class="text-body mb-3">{{hostel.details|safe|truncatechars:167}}</p>
-                        <div class="d-flex justify-content-between">
-                            <a class="btn btn-sm btn-danger rounded py-2 px-4"
-                                href="{% url 'hostel-detail' hostel.pk %}">View Detail</a>
-                            <a class="btn btn-sm btn-dark rounded py-2 px-4"
-                                href="{% url 'pay' hostel.pk %}">Book Now</a>
-                        </div>
-                    </div>
-                </div>
+{% block title %}UDS-Hostels{% endblock %}
+{% block navbar %}
+<section class="bg-light bg-onscroll fixed-top">
+    <nav>
+        <div class="container-fluid d-flex justify-content-between p-3 mx-1">
+            <div class="col-md-1 d-flex align-items-center">
+                <a href="{% url 'home' %}" class="nav-brand"><img src="{% static 'hostels/images/logo.png' %}" alt=""
+                        class="img-fluid"></a>
             </div>
-            {% endif %}
+            <div class="col-md-5 col-lg-3 py-1 col-sm-12 d-flex justify-content-between bg-light shadow-lg nav-border">
+                <button class="btn btn-sm btn-light border-end fw-bolder btn-border"><i class="fa-solid fa-plus"></i>
+                    Room</button>
+                <button class="btn btn-sm btn-light border-end fw-bolder btn-border"><i class="fa-solid fa-plus"></i>
+                    Store</button>
+                <button class="btn btn-sm btn-pink btn-border"><i
+                        class="fa-solid fa-magnifying-glass text-light"></i></button>
+            </div>
+            <div class="col-3 d-none d-lg-block d-sm-block d-flex justify-content-between">
+                <a href="#" class="text-dark mx-2">My Rent <span><i class="fa-solid fa-house"></i></span></a>
+                <button class="nav-border text-dark border btn-sm" id="account">
+                    <span><i class="fa-solid fa-bars m-2"></i>
+                        <i class="fa-regular fa-user m-2"></i></span>
+                </button>
+                <form method="post" class="d-none" id="show">
+                    <ul>
+                        <li><a href="#">Login</a></li>
+                        <li><a href="#">Logout</a></li>
+                        <li><a href="#">Sing Up</a></li>
+                    </ul>
+                </form>
+            </div>
+        </div>
+    </nav>
+    <div class="container-fluid mx-1 border-bottom">
+        <div class="d-flex align-items-center">
+            <div class="flex-shrink-0">
+                <a href="#" class="btn-left btn-link p-2 toggle text-dark"><i
+                        class="fa-solid fa-circle-chevron-left"></i></a>
+            </div>
+            <div class="flex-grow-1 w-100 o-hidden">
+                <ul
+                    class="nav nav-fill text-uppercase small position-relative flex-nowrap text-dark font-color fw-bolder">
+                    <li class="nav-item">
+                        <input class="nav-link fw-bold text-uppercase text-dark" type="button" name="apartment" value="apartment"
+                            id="apartment">
+                    </li>
+                    <li class="nav-item">
+                        <input class="nav-link fw-bold text-uppercase text-dark" type="button" name="food" value="food"
+                            id="food">
+                    </li>
+                    <li class="nav-item">
+                        <input class="nav-link fw-bold text-uppercase text-dark" type="button" name="uds" value="uds"
+                            id="uds">
+                    </li>
+                    <li class="nav-item">
+                        <input class="nav-link fw-bold text-uppercase text-dark" type="button" name="knust"
+                            value="knust" id="knust">
+                    </li>
+                    <li class="nav-item">
+                        <input class="nav-link fw-bold text-uppercase text-dark" type="button" name="uhas" value="uhas"
+                            id="uhas">
+                    </li>
+                    <li class="nav-item">
+                        <input class="nav-link fw-bold text-uppercase text-dark" type="button" name="uenr" value="uenr"
+                            id="uenr">
+                    </li>
+                    <li class="nav-item">
+                        <input class="nav-link fw-bold text-uppercase text-dark" type="button" name="legon"
+                            value="legon" id="legon">
+                    </li>
+                    <li class="nav-item">
+                        <input class="nav-link fw-bold text-uppercase text-dark" type="button" name="ucc" value="ucc"
+                            id="ucc">
+                    </li>
+                    <li class="nav-item">
+                        <input class="nav-link fw-bold text-uppercase text-dark" type="button" name="stu" value="stu"
+                            id="stu">
+                    </li>
+                    <li class="nav-item">
+                        <input class="nav-link fw-bold text-uppercase text-dark" type="button" name="ubids"
+                            value="ubids" id="ubids">
+                    </li>
+                    <li class="nav-item">
+                        <input class="nav-link fw-bold text-uppercase text-dark" type="button" name="cktedam"
+                            value="cktedam" id="cktedam">
+                    </li>
+                    <li class="nav-item">
+                        <input class="nav-link fw-bold text-uppercase text-dark" type="button" name="tatco"
+                            value="tatco" id="tatco">
+                    </li>
+                    <li class="nav-item">
+                        <input class="nav-link fw-bold text-uppercase text-dark" type="button" name="batco"
+                            value="batco" id="batco">
+                    </li>
+                </ul>
+            </div>
+            <div class="flex-shrink-0">
+                <a href="#" class="btn-right btn-link toggle p-2 text-dark"><i
+                        class="fa-solid fa-circle-chevron-right"></i></a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock navbar %}
+{% block content %}
+<section class="room-mt bg-light shadow content">
+    <div class="container d-flex justify-content-between align-items-center">
+        <h2 class="text-capitalize mb-5">{% for hostel in hostels %}{% if forloop.counter == 1 %}{{hostel.school.name}}
+            student hostels{% endif %}{% endfor %}</h2>
+        <button class="btn btn-sm btn-outline h7 py-1" role="button" type="button"><i
+                class="fa-solid fa-list fa-2x"></i></button>
+    </div>
+    <hr>
+    <div class="container">
+        <div class="row d-flex justify-content-between sm-margin">
+            {% for hostel in hostels %}
+            <div class="col-md-6 col-lg-3 mb-3" data-aos="fade-up">
+                <a href="{% url 'hostel-detail' hostel.pk %}"><img src="{{hostel.image.url}}" alt="bed one"
+                        class="img-fluid round">
+                    <div class="d-flex justify-content-between">
+                        <p class="text-capitalize text-dark fw-bold title-font">{{hostel.hostel_name}}</p>
+                        <span class="p-1 text-dark fw-bolder">Gh₵{{hostel.get_cost}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between border-top">
+                        <span class="border-end text-dark"><i class="fa-solid fa-bed text-danger"></i>
+                            {{hostel.no_of_rooms}}</span>
+                        <span class="border-end text-dark"><i class="fa-solid fa-wifi text-danger"></i>
+                            {{hostel.wifi}}</span>
+                        <span class="border-end text-dark"><i class="fa-solid fa-person-walking text-danger"></i>
+                            {{hostel.get_dist}}</span>
+                    </div>
+                    <small class="text-muted">{{hostel.details|safe|truncatechars:45}}</small>
+                    <p class="text-dark pt-2 text-capitalize mb-1"><b>{{hostel.school.name}}| {{hostel.campus}}</b></p>
+
+                </a>
+            </div>
             {% empty %}
-            <h1>No rooms available yet</h1>
+            no rooms posted yet
             {% endfor %}
         </div>
     </div>
-</div>
-<!-- Room End -->
+</section>
 {% endblock %}
+{% block footer %}{% endblock footer %}

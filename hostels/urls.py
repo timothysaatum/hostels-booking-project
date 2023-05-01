@@ -1,16 +1,16 @@
 from django.urls import path
 from .views import (HostelDetailView, about, home, contact,
-     food, HostelListView,
-     category_500_1000,
-     BookingDetailView, 
-     category_1100_1500, category_1600_2000, make_booking)
-
+                    food,
+                    category_500_1000,
+                    BookingDetailView,
+                    category_1100_1500, category_1600_2000, RoomsListView,
+                    make_booking)
 
 
 urlpatterns = [
-    #hostels views
+    # hostels views
     path('', home, name='home'),
-    path('rooms/', HostelListView.as_view(), name='rooms'),
+    path('rooms/', RoomsListView.as_view(), name='rooms'),
     path('hostel/<int:pk>/', HostelDetailView.as_view(), name='hostel-detail'),
     path('category_500_1000/', category_500_1000, name='category_500_1000'),
     path('category_1100_1500/', category_1100_1500, name='category_1100_1500'),

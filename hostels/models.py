@@ -8,6 +8,7 @@ from django.contrib.auth import get_user_model
 from PIL import Image
 from .distance import calc_distance
 from .tasks import add_after_expiry_task
+from django.utils.text import slugify
 
 room_user = get_user_model()
 
@@ -27,6 +28,22 @@ class School(models.Model):
         return self.name
 
 
+
+
+class Apartment(models.Model):
+    name = models.CharField(max_length=100)
+    description = models.TextField()
+    address = models.CharField(max_length=255)
+    num_bedrooms = models.IntegerField()
+    num_bathrooms = models.IntegerField()
+    max_guests = models.IntegerField()
+    price_per_month = models.DecimalField(max_digits=8, decimal_places=2)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name
+
+
 class Hostel(models.Model):
     '''
     these are the categories the hostels will be grouped into
@@ -39,7 +56,7 @@ class Hostel(models.Model):
     '''
     school = models.ForeignKey(School, on_delete=models.CASCADE)
     campus = models.CharField(max_length=100, default='Main Campus')
-    hostel_name = models.CharField(max_length=50, default='un-named hostel')
+    hostel_name = models.CharField(max_length=50, default='unnamed hostel')
     contact = PhoneNumberField()
     image = models.ImageField(blank=True,
                               upload_to='static/images',
@@ -80,6 +97,7 @@ class Hostel(models.Model):
     '''
     calculating the distance of the hostel to the campus
     '''
+
     def get_dist(self):
         try:
             time_to_walk = calc_distance(hostel_coordinates=self.hostel_coordinates, school_coordinates=self.school.school_coordinates)

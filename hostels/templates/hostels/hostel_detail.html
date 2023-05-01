@@ -4,21 +4,12 @@
 
 {% block title %}Hostel Detail{% endblock %}
 {% block content %}
-<section class="mt-5 mb-5 pt-5">
-<div class="container mt-5">
-    <div class="row">
-        <div class="col-md-4 col-sm-12 wow fadeInUp" data-wow-delay="0.1s">
-            <h6 class="article-title">{{ object.hostel_name }}({{hostel.school.name}}-{{hostel.campus}})</h6>
-        </div>
-        <div class="col-md-7 col-sm-12 text-end">
-            <a href="#">share</a>
-        </div>
-    </div>
-</div>
+<section class="room-mt mb-5">
+<h1 class="mx-3"><a href="{% url 'rooms' %}">{{ object.hostel_name }}({{hostel.school.name}}-{{hostel.campus}})</a></h1>
 <hr>
 <div class="container-fluid mb-5">
     <div class="row">
-        <div class="col-md-8">
+        <div class="col-md-8 col-md-offset-2">
             <div class="pb-5 mb-5 mt-3">
                 <div class="container pb-3 mb-5">
                     <div class="row g-0 border wow fadeInUp" data-wow-delay="0.1s">
@@ -65,21 +56,6 @@
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="col-3 position-sticky start-50 top-0">
-            <a href="#" title="reserve">Reserve</a>
-        </div>
-    </div>
-    <div class="row mb-5 pb-5">
-        <div class="col-6 mb-5 d-flex justify-content-center">
-            <span class="p-3">
-                <a href="{% url 'rooms' %}" class="btn-detail">Go back</a>
-            </span>
-        </div>
-        <div class="col-6 mb-5 d-flex justify-content-center">
-            <span class="p-3">
-                <a href="{% url 'pay' hostel.pk %}" class="btn-detail">Book room</a>
-            </span>
         </div>
     </div>
 </div>
