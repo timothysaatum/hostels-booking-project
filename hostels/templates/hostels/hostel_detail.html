@@ -5,59 +5,43 @@
 {% block title %}Hostel Detail{% endblock %}
 {% block content %}
 <section class="room-mt mb-5">
-<h1 class="mx-3"><a href="{% url 'rooms' %}">{{ object.hostel_name }}({{hostel.school.name}}-{{hostel.campus}})</a></h1>
+<p class="mx-3 lead text-capitalize"><a href="{% url 'rooms' %}">{{ object.hostel_name }}({{hostel.school.name}}-{{hostel.campus}})</a></p>
 <hr>
-<div class="container-fluid mb-5">
-    <div class="row">
-        <div class="col-md-8 col-md-offset-2">
-            <div class="pb-5 mb-5 mt-3">
-                <div class="container pb-3 mb-5">
-                    <div class="row g-0 border wow fadeInUp" data-wow-delay="0.1s">
-                        <div class="col-sm-12 col-md-8 m-1">
-                            <div>
-                                <img class="image-fluid w-100" src="{{ object.image.url }}" alt="{{ object.title}} ">
-                            </div>
-                        </div>
-                        <div class="col-md-3 col-sm-12 mt-3">
-                            <div class="row g-0">
-                                <div class="col-12">
-                                    <img class="image-fluid w-100" src="{{ object.image.url }}" alt="{{ object.title}}">
-                                </div>
-                                <div class="col-12 mt-3">
-                                    <img class="image-fluid w-100" src="{{ object.image.url }}" alt="{{ object.title}}">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="wow fadeInUp" data-wow-delay="0.1s">{{ object.details | safe }}</div>
-                    <h6 class="hero text-decoration-underline wow fadeInUp" data-wow-delay="0.1s">Utilities at This Place</h6>
-                    <ul class="utilities-list wow fadeInUp" data-wow-delay="0.1s">
-                        <li> Wifi availability 24 / 7</li>
-                        <li> Swimming pool 24 / 7</li>
-                        <li> Valley Ball 24 / 7</li>
-                        <li> Security available 24 / 7</li>
-                    </ul>
-                    <h6 class="hero text-decoration-underline wow fadeInUp" data-wow-delay="0.1s">Important</h6>
-                    <p class="wow fadeInUp" data-wow-delay="0.1s">Every booking you make through our site prevents from being duped by unscrupulous individuals, you have the school support in case of any eventualities and it saves you a lot of time.</p>
-                    <h6>Where you will stay and sleep</h6>
-                    <div class="row wow fadeInUp" data-wow-delay="0.1s">
-                        <div class="col-md-4 mt-3">
-                            <img class="image-fluid w-100" src="{{ object.image.url }}" alt="{{ object.title}} ">
-                        </div>
-                        <div class="col-md-4 mt-3">
-                            <img class="image-fluid w-100" src="{{ object.image.url }}" alt="{{ object.title}} ">
-                        </div>
-                        <div class="col-md-4 mt-3">
-                            <img class="image-fluid w-100" src="{{ object.image.url }}" alt="{{ object.title}} ">
-                        </div>
-                        <div class="col-md-4 mt-3">
-                            <img class="image-fluid w-100" src="{{ object.image.url }}" alt="{{ object.title}} ">
-                        </div>
-                    </div>
-                </div>
+</section>
+<section>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-3 col-md-3 mt-1">
+                <img src="{{object.image.url}}" class="img-fluid">
+            </div>
+            <div class="col-sm-3 col-md-3 mt-1">
+                <img src="{{object.image.url}}" class="img-fluid">
+            </div>
+            <div class="col-sm-3 col-md-3 mt-1">
+                <img src="{{object.image.url}}" class="img-fluid">
+            </div>
+            <div class="col-sm-3 col-md-3 mt-1">
+                <img src="{{object.image.url}}" class="img-fluid">
+            </div>
+            <div class="col-sm-3 col-md-3 mt-1">
+                <img src="{{object.image.url}}" class="img-fluid">
+            </div>
+            <div class="col-sm-3 col-md-3 mt-1">
+                <img src="{{object.image.url}}" class="img-fluid">
+            </div>
+            <div class="col-sm-3 col-md-3 mt-1">
+                <img src="{{object.image.url}}" class="img-fluid">
+            </div>
+            <div class="col-sm-3 col-md-3 mt-1">
+                <img src="{{object.image.url}}" class="img-fluid">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-2 col-sm-12 m-2 d-flex justify-content-center border py-3">
+               <span class="text-muted text-capitalize"><i class="fa-solid fa-wifi text-danger fa-2x"> </i> {{object.wifi}}</span>
             </div>
         </div>
     </div>
-</div>
+
 </section>
 {% endblock content %}

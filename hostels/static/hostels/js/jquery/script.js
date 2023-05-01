@@ -2,7 +2,7 @@ $(document).ready(function () {
   new WOW().init();
   AOS.init();
 
-  //just dey play
+  //navbar toogle chevron icons
   $(".toggle").click(function () {
     $(".nav").toggleClass("justify-content-end");
     $(".toggle").toggleClass("text-light");
@@ -13,20 +13,22 @@ $(document).ready(function () {
     $("#show").toggle(500);
   });
 
-  $("#apartment, #food, #uds, #knust, #ucc, #legon, #stu, #uenr, #uhas, #tatco, #batco, #cktedam").click(function () {
+  $(
+    "#apartment, #food, #uds, #knust, #ucc, #legon, #stu, #uenr, #uhas, #tatco, #batco, #cktedam"
+  ).click(function () {
     const queryValue = $(this).val();
-    console.log(queryValue)
+    console.log(queryValue);
     $.ajax({
       url: "/rooms/",
       type: "GET",
       data: { query: queryValue },
-      success: function (response) {
+      success: function (hostels) {
         //window.location.href = "/rooms/?response=" + encodeURIComponent(response);
-        $(".content").html(response);
+        $(".content").html(hostels);
       },
       error: function (xhr, status, error) {
         console.log(error);
-      }
+      },
     });
   });
 });

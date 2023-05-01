@@ -13,7 +13,9 @@ user = get_user_model()
 
 
 def home(request):
-    return render(request, 'hostels/index.html')
+    students_hostels = Hostel.objects.all()[0:12]
+    #apartments = Apartment.objects.all()[0:8]
+    return render(request, 'hostels/index.html', {'hostels':students_hostels})
 
 
 @method_decorator(csrf_exempt, name='dispatch')

@@ -8,7 +8,7 @@ from django.contrib.auth import get_user_model
 from PIL import Image
 from .distance import calc_distance
 from .tasks import add_after_expiry_task
-from django.utils.text import slugify
+#from django.utils.text import slugify
 
 room_user = get_user_model()
 
@@ -30,27 +30,42 @@ class School(models.Model):
 
 
 
-class Apartment(models.Model):
-    name = models.CharField(max_length=100)
-    description = models.TextField()
-    address = models.CharField(max_length=255)
-    num_bedrooms = models.IntegerField()
-    num_bathrooms = models.IntegerField()
-    max_guests = models.IntegerField()
-    price_per_month = models.DecimalField(max_digits=8, decimal_places=2)
-    created_at = models.DateTimeField(auto_now_add=True)
+#class Apartment(models.Model):
+#    name = models.CharField(max_length=100)
+#    description = RichTextUploadingField()
+#    city = models.CharField(max_length=100)
+#    address = models.CharField(max_length=255)
+#    image = models.ImageField(upload_to='static/apartment_images', default=None)
+#    num_bedrooms = models.IntegerField()
+# #   num_bathrooms = models.IntegerField()
+#    max_guests = models.IntegerField()
+#    price_per_month = models.DecimalField(max_digits=8, decimal_places=2)
+#    created_at = models.DateTimeField(auto_now_add=True, default='20th/03/1778')
+#
+#    def __str__(self):
+#        return self.name
+#
+#    def save(self, *args, **kwargs):
+#        super(Hostel, self).save(*args, **kwargs)
+#
+#        img = Image.open(self.image.path)
+#
+#        #if img.height > 500 or img.width > 500:
+#        output_size = (500, 500)
+#        img.thumbnail(output_size)
+#        img.save(self.image.path)
 
-    def __str__(self):
-        return self.name
+#class Property(models.Model):
+#    owner = models.ForeignKey(room_user, on_delete=models.CASCADE)
+#    name = models.CharField(max_length=100)
+#    location = models.CharField(max_length=100)
+#    property_type = models.CharField(max_length=200)
+#    description = RichTextUploadingField()
+#    price = models.DecimalField(max_digits=10, decimal_places=2)
+#    date_added = models.DateTimeField(auto_now_add=True)    
 
 
 class Hostel(models.Model):
-    '''
-    these are the categories the hostels will be grouped into
-    '''
-    CATEGORIES = [(1, 'GHS500-GHS1000'), (2, 'GHS1100-GHS1500'),
-              (3, 'GHS1600-GHS2000'), (4, 'GHS2100-GHS2500'),
-              (5, 'GHS2600-GHS3000'), (6, '3000 & above')]
     '''
     defining the database fields of the databases
     '''
@@ -62,11 +77,10 @@ class Hostel(models.Model):
                               upload_to='static/images',
                               default=None)
     date_added = models.DateTimeField(default=timezone.now)
-    no_of_rooms = models.IntegerField()
+    no_of_rooms = models.PositiveIntegerField()
     hostel_coordinates = models.CharField(max_length=100)
-    category = models.IntegerField(choices=CATEGORIES, default=1)
-    cost_per_room = models.FloatField()
-    duration = models.IntegerField()
+    cost_per_room = models.DecimalField(max_digits=8, decimal_places=2)
+    duration = models.PositiveIntegerField()
     wifi = models.CharField(max_length=20)
     details = RichTextUploadingField()
 
@@ -80,7 +94,7 @@ class Hostel(models.Model):
         img = Image.open(self.image.path)
 
         #if img.height > 500 or img.width > 500:
-        output_size = (500, 500)
+        output_size = (350, 350)
         img.thumbnail(output_size)
         img.save(self.image.path)
     
@@ -126,8 +140,8 @@ class Booking(models.Model):
     tenant = models.ForeignKey(room_user, on_delete=models.CASCADE)
     check_in = models.DateTimeField(default=timezone.now)
     momo_no = models.CharField(max_length=10, null=True, blank=True)
-    cost = models.FloatField()
-    room_no = models.IntegerField()
+    cost = models.DecimalField(max_digits=8, decimal_places=2)
+    room_no = models.PositiveIntegerField()
     account_no = models.CharField(max_length=100, null=True, blank=True)
     message = models.CharField(max_length=100)
     is_verified = models.BooleanField(default=False)

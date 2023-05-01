@@ -131,3 +131,18 @@ nav img {
     text-decoration: underline;
     transition: 0.6ms;
 }
+
+.list-style li{
+    list-style-type: none;
+}
+
+.footer-position{
+    position: sticky;
+    bottom: 0.1%;
+}
+
+/*login*/
+
+.user{
+    margin: 10em 1em 0em 1em;
+}

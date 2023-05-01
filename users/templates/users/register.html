@@ -1,27 +1,27 @@
 {% extends 'hostels/base.html' %}
 {% load static %}
 {% load crispy_forms_tags %}
-{% block title %}Ulas|Register{% endblock %}
+{% block title %}ULAS | Sign Up{% endblock %}
 {% block content %}
-<section class="mt-1 pb-5 mb-5">
+<section class="user pb-5">
     <div class="container">
-        <div class="row bg-light d-flex justify-content-center">
-            <p class="lead text-center p-3 bg-success text-warning">
+        <div class="row d-flex justify-content-center">
+            <div class="col-sm-12 col-md-12 col-lg-6 bg-light">
+                <p class="lead text-center p-3 text-dark">
                 Join Us Today.
             </p>
-            <div class="col-sm-12 col-md-12 col-lg-6">
                 <form method="POST">
                     {% csrf_token %}
                     <div class="form-group">
                         <div class="text-success">
                             {{form|crispy}}
                             <div class="form-group text-center mt-3">
-                                <button class="btn btn-outline-success" type="submit">Sign Up</button>
+                                <button class="btn btn-outline-danger" type="submit">Sign Up</button>
                             </div>
                         </div>
                         <div class="border-top pt-3 m-3">
                             <small class="text-muted  text-white">
-                                Already have an account? <a href="#" class="text-success">Login</a>
+                                Already have an account? <a href="{% url 'login' %}" class="text-success">Login</a>
                             </small>
                         </div>
                     </div>

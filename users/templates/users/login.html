@@ -3,22 +3,20 @@
 {% load crispy_forms_tags %}
 
 
-{% block title %}Ulas|Login{% endblock %}
+{% block title %}ULAS | Login{% endblock %}
 {% block content %}
-<section class="mt-1 mb-5 pb-5">
+<section class="pb-5 user">
     <div class="container">
-        <div class="row bg-light d-flex justify-content-center">
-            <p class="lead text-center p-3 bg-success text-warning">
-                Enter your correct details below to log into your account.
-            </p>
-            <div class="col-sm-12 col-md-12 col-lg-6">
+        <div class="row d-flex justify-content-center">
+            <div class="col-sm-12 col-md-5 col-md-offset-3 bg-light">
+                <p class="lead text-center p-3 text-dark fw-bolder">Login</p>
                 <form method="POST">
                     {% csrf_token %}
                     <div class="form-group">
                         <div class="text-success">
                             {{form|crispy}}
                             <div class="form-group text-center mt-3">
-                                <button class="btn btn-outline-success" type="submit">Sign In</button>
+                                <button class="btn btn-outline-danger" type="submit">Sign In</button>
                                 <small class="text-muted ml-2">
                                     <a href="{% url 'password-reset' %}">Forgot Password</a>
                                 </small>

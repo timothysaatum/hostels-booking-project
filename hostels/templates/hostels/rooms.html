@@ -45,12 +45,12 @@
                 <ul
                     class="nav nav-fill text-uppercase small position-relative flex-nowrap text-dark font-color fw-bolder">
                     <li class="nav-item">
-                        <input class="nav-link fw-bold text-uppercase text-dark" type="button" name="apartment" value="apartment"
-                            id="apartment">
+                        <input class="nav-link fw-bold text-uppercase text-dark" type="button" name="apartment"
+                            value="apartment" id="apartment">
                     </li>
                     <li class="nav-item">
-                        <input class="nav-link fw-bold text-uppercase text-dark" type="button" name="food" value="food"
-                            id="food">
+                        <input class="nav-link fw-bold text-uppercase text-dark" type="button" name="business"
+                            value="business" id="business">
                     </li>
                     <li class="nav-item">
                         <input class="nav-link fw-bold text-uppercase text-dark" type="button" name="uds" value="uds"
@@ -109,17 +109,17 @@
 {% block content %}
 <section class="room-mt bg-light shadow content">
     <div class="container d-flex justify-content-between align-items-center">
-        <h2 class="text-capitalize mb-5">{% for hostel in hostels %}{% if forloop.counter == 1 %}{{hostel.school.name}}
-            student hostels{% endif %}{% endfor %}</h2>
+        <h2 class="text-capitalize mb-2">{% for hostel in hostels %}{% if forloop.counter == 1 %}{{hostel.school.name}}-
+            hostels{% endif %}{% endfor %}</h2>
         <button class="btn btn-sm btn-outline h7 py-1" role="button" type="button"><i
-                class="fa-solid fa-list fa-2x"></i></button>
+                class="fa-solid fa-sliders fa-2x"></i></button>
     </div>
     <hr>
     <div class="container">
         <div class="row d-flex justify-content-between sm-margin">
             {% for hostel in hostels %}
             <div class="col-md-6 col-lg-3 mb-3" data-aos="fade-up">
-                <a href="{% url 'hostel-detail' hostel.pk %}"><img src="{{hostel.image.url}}" alt="bed one"
+                <a href="{% url 'hostel-detail' hostel.pk %}"><img src="{{hostel.image.url}}" alt="{{hostel.hostel_name}}"
                         class="img-fluid round">
                     <div class="d-flex justify-content-between">
                         <p class="text-capitalize text-dark fw-bold title-font">{{hostel.hostel_name}}</p>
@@ -133,7 +133,7 @@
                         <span class="border-end text-dark"><i class="fa-solid fa-person-walking text-danger"></i>
                             {{hostel.get_dist}}</span>
                     </div>
-                    <small class="text-muted">{{hostel.details|safe|truncatechars:45}}</small>
+                    <small class="text-muted">{{hostel.details|safe|truncatechars:36}}</small>
                     <p class="text-dark pt-2 text-capitalize mb-1"><b>{{hostel.school.name}}| {{hostel.campus}}</b></p>
 
                 </a>
@@ -145,4 +145,50 @@
     </div>
 </section>
 {% endblock %}
-{% block footer %}{% endblock footer %}
+{% block footer %}
+<section
+    class="border-top d-flex justify-content-between align-items-center px-sm-2 px-md-5 mt-2 footer-position bg-light">
+    <a href="{% url 'login' %}" class="text-dark"><i class="fa-regular fa-user m-2"></i>Sign in <i
+            class="fa-solid fa-chevron-right"></i></a>
+    <a href="#" class="text-dark"><i class="fa-solid fa-user-shield"></i> privacy <i
+            class="fa-solid fa-chevron-right"></i></a>
+    <button class="btn btn-sm text-dark" id="footer" onclick="toggleContent()"><i
+            class="fa-solid fa-angle-up fa-2x"></i></button>
+</section>
+<section class="d-flex justify-content-between list-styl d-none" id="footer-content">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12 col-md-3">
+                <ul class="text-dark">
+                    <li>About</li>
+                    <li>About</li>
+                    <li>About</li>
+                    <li>About</li>
+                    <li>About</li>
+                    <li>About</li>
+                </ul>
+            </div>
+            <div class="col-sm-12 col-md-3">
+                <ul class="text-dark">
+                    <li>About</li>
+                    <li>About</li>
+                    <li>About</li>
+                    <li>About</li>
+                    <li>About</li>
+                    <li>About</li>
+                </ul>
+            </div>
+            <div class="col-sm-12 col-md-3">
+                <ul class="text-dark">
+                    <li>About</li>
+                    <li>About</li>
+                    <li>About</li>
+                    <li>About</li>
+                    <li>About</li>
+                    <li>About</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock footer %}
