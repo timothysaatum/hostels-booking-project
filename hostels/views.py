@@ -26,6 +26,7 @@ class RoomsListView(ListView):
     slug_url_kwarg = 'pk'
     ordering = ['-date_added']
 
+
     def get_queryset(self):
         if self.request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
             school = self.request.GET.get('query')
@@ -34,6 +35,13 @@ class RoomsListView(ListView):
             print(hostels)
         hostels = Hostel.objects.all()
         return hostels
+
+    def get_template_names(self):
+        if self.request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
+            return ['hostels/results.html']
+        else:
+            return [self.template_name]
+
 
 
 class HostelDetailView(DetailView):

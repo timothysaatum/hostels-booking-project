@@ -107,10 +107,9 @@
 </section>
 {% endblock navbar %}
 {% block content %}
-<section class="room-mt bg-light shadow content">
+<section class="room-mt bg-light shadow">
     <div class="container d-flex justify-content-between align-items-center">
-        <h2 class="text-capitalize mb-2">{% for hostel in hostels %}{% if forloop.counter == 1 %}{{hostel.school.name}}-
-            hostels{% endif %}{% endfor %}</h2>
+        <h2 class="text-capitalize mb-2">Rooms</h2>
         <button class="btn btn-sm btn-outline h7 py-1" role="button" type="button"><i
                 class="fa-solid fa-sliders fa-2x"></i></button>
     </div>
@@ -119,8 +118,8 @@
         <div class="row d-flex justify-content-between sm-margin">
             {% for hostel in hostels %}
             <div class="col-md-6 col-lg-3 mb-3" data-aos="fade-up">
-                <a href="{% url 'hostel-detail' hostel.pk %}"><img src="{{hostel.image.url}}" alt="{{hostel.hostel_name}}"
-                        class="img-fluid round">
+                <a href="{% url 'hostel-detail' hostel.pk %}"><img src="{{hostel.image.url}}"
+                        alt="{{hostel.hostel_name}}" class="img-fluid round">
                     <div class="d-flex justify-content-between">
                         <p class="text-capitalize text-dark fw-bold title-font">{{hostel.hostel_name}}</p>
                         <span class="p-1 text-dark fw-bolder">Gh₵{{hostel.get_cost}}</span>

@@ -13,18 +13,15 @@ $(document).ready(function () {
     $("#show").toggle(500);
   });
 
-  $(
-    "#apartment, #food, #uds, #knust, #ucc, #legon, #stu, #uenr, #uhas, #tatco, #batco, #cktedam"
-  ).click(function () {
+  $(document).on('click', "#apartment, #food, #uds, #knust, #ucc, #legon, #stu, #uenr, #uhas, #tatco, #batco, #cktedam", function () {
     const queryValue = $(this).val();
-    console.log(queryValue);
     $.ajax({
       url: "/rooms/",
       type: "GET",
       data: { query: queryValue },
-      success: function (hostels) {
+      success: function (hostel) {
         //window.location.href = "/rooms/?response=" + encodeURIComponent(response);
-        $(".content").html(hostels);
+        $(".content").html(hostel);
       },
       error: function (xhr, status, error) {
         console.log(error);
