@@ -3,7 +3,7 @@ from geographiclib.geodesic import Geodesic
 
 def calc_distance(hostel_coordinates, school_coordinates):
 	'''
-	we will be usins the central administration gps address
+	we will be using the central gps address of every school
 	'''
 	lat, longi = school_coordinates.split(',')
 	'''

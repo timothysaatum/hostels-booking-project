@@ -15,7 +15,7 @@ h2,
 h3,
 h4,
 h5,
-h6,.h7 {
+h6,.h7, a {
     color: #191970;
     font-family: 'Ubuntu', sans-serif;
 }
@@ -31,7 +31,17 @@ h6,.h7 {
     margin-top: 10em;
 }
 
-@media (max-width: 768px) {}
+@media (max-width: 768px) {
+    .mobile-btn{
+        border-radius: 12em;
+    }
+
+    .fix-bottom{
+        position: sticky;
+        bottom: 0.3%;
+        top: inherit;
+    }
+}
 
 @media (max-width: 425px) {
     .sm-margin{
@@ -64,6 +74,10 @@ p {
 .d-hover {
     border: solid transparent;
     border-radius: 4%;
+}
+
+.d-hover a:hover{
+    color: white;
 }
 
 .service-link:hover {
@@ -145,4 +159,48 @@ nav img {
 
 .user{
     margin: 10em 1em 0em 1em;
+}
+
+/*details page*/
+.details-mt{
+    margin-top: 6em;
+}
+
+.b-radius{
+    border-radius: 5em;
+}
+
+.reserve{
+    position: fixed;
+    left: 70%;
+    top: auto;
+    bottom: 30%;
+    right: auto;
+}
+
+.profile-img{
+    width: 5em;
+    border: transparent;
+    border-radius: 40em;
+}
+
+/*user authentication*/
+.show-div li{
+    list-style-type: none;
+    color: red;
+    font-weight: bold;
+}
+.show-div{
+    position: fixed;
+    top: 10%;
+    left: 75%;
+    right: 5%;
+    z-index: 9999;
+}
+
+.search-form{
+    position: fixed;
+    z-index: 9999;
+    top: 15%;
+    left: 30%;
 }

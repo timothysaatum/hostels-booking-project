@@ -8,6 +8,7 @@ from django.contrib.auth import get_user_model
 from PIL import Image
 from .distance import calc_distance
 from .tasks import add_after_expiry_task
+from multiselectfield import MultiSelectField
 #from django.utils.text import slugify
 
 room_user = get_user_model()
@@ -65,8 +66,17 @@ class School(models.Model):
 #    date_added = models.DateTimeField(auto_now_add=True)    
 
 
+AMENITIES = [
+    ('wifi', 'wifi'),
+    ('water', 'water'),
+    ('kitchen', 'kitchen'),
+    ('study area', 'study area'),
+    ('power supply', 'power supply'),
+    ('air condition', 'air condition'),
+]
+
 class Hostel(models.Model):
-    '''
+    '''    
     defining the database fields of the databases
     '''
     school = models.ForeignKey(School, on_delete=models.CASCADE)
@@ -81,6 +91,7 @@ class Hostel(models.Model):
     hostel_coordinates = models.CharField(max_length=100)
     cost_per_room = models.DecimalField(max_digits=8, decimal_places=2)
     duration = models.PositiveIntegerField()
+    amenities = MultiSelectField(choices=AMENITIES, max_choices=500, max_length=500)
     wifi = models.CharField(max_length=20)
     details = RichTextUploadingField()
 

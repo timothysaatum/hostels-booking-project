@@ -1,47 +1,162 @@
 {% extends 'hostels/base.html' %}
 {% load static %}
-
+{% load tags %}
 
 {% block title %}Hostel Detail{% endblock %}
 {% block content %}
-<section class="room-mt mb-5">
-<p class="mx-3 lead text-capitalize"><a href="{% url 'rooms' %}">{{ object.hostel_name }}({{hostel.school.name}}-{{hostel.campus}})</a></p>
-<hr>
+<section class="details-mt mb-2">
+    <p class="mx-3 lead text-uppercase"><a href="{% url 'rooms' %}"
+            class="text-danger fw-bold" target="_blank">{{object.hostel_name}}({{hostel.school.name}}-{{hostel.campus}})</a></p>
+    <hr>
+    <blockquote class="mx-2 fw-bold">Landlord's name</blockquote>
 </section>
 <section>
     <div class="container">
-        <div class="row">
-            <div class="col-sm-3 col-md-3 mt-1">
-                <img src="{{object.image.url}}" class="img-fluid">
-            </div>
-            <div class="col-sm-3 col-md-3 mt-1">
-                <img src="{{object.image.url}}" class="img-fluid">
-            </div>
-            <div class="col-sm-3 col-md-3 mt-1">
-                <img src="{{object.image.url}}" class="img-fluid">
-            </div>
-            <div class="col-sm-3 col-md-3 mt-1">
-                <img src="{{object.image.url}}" class="img-fluid">
-            </div>
-            <div class="col-sm-3 col-md-3 mt-1">
-                <img src="{{object.image.url}}" class="img-fluid">
-            </div>
-            <div class="col-sm-3 col-md-3 mt-1">
-                <img src="{{object.image.url}}" class="img-fluid">
-            </div>
-            <div class="col-sm-3 col-md-3 mt-1">
-                <img src="{{object.image.url}}" class="img-fluid">
-            </div>
-            <div class="col-sm-3 col-md-3 mt-1">
-                <img src="{{object.image.url}}" class="img-fluid">
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-2 col-sm-12 m-2 d-flex justify-content-center border py-3">
-               <span class="text-muted text-capitalize"><i class="fa-solid fa-wifi text-danger fa-2x"> </i> {{object.wifi}}</span>
+        <h4 class="mb-3 text-capitalize text-decoration-underline">Interior view of where you will stay!</h4>
+        <div class="d-flex justify-content-center">
+            <div class="row">
+                <div class="col-md-5">
+                    <img src="{{object.image.url}}" class="img-fluid">
+                </div>
+                <div class="col-md-3">
+                    <img src="{{object.image.url}}" class="img-fluid">
+                </div>
+                <div class="col-md-3">
+                    <img src="{{object.image.url}}" class="img-fluid">
+                </div>
             </div>
         </div>
     </div>
-
+    <div class="container">
+        <h4 class="text-capitalize mb-3 mt-5">What this place offer</h4>
+        <div class="row">
+            <div class="col-md-9">
+                <!--offers inner row-->
+                <div class="row">
+                    <div class="col-md-6 col-sm-12 py-1">
+                        <span class="text-muted text-capitalize"><i
+                                class="fa-solid fa-wifi text-danger border p-1 b-radius bg-light shadow"> </i>.
+                            {{object.wifi}}</span>
+                    </div>
+                    <div class="col-md-6 col-sm-12 py-1">
+                        <span class="text-muted text-capitalize"><i
+                                class="fa-solid fa-bath text-danger border p-1 b-radius bg-light shadow"></i>. 5 bath
+                            rooms</span>
+                    </div>
+                    <div class="col-md-6 col-sm-12 py-1">
+                        <span class="text-muted text-capitalize"><i
+                                class="fa-solid fa-toilet text-danger border p-1 b-radius bg-light shadow"></i>. 1
+                            toilet</span>
+                    </div>
+                    <div class="col-md-6 col-sm-12 py-1">
+                        <span class="text-muted text-capitalize"><i
+                                class="fa-solid fa-toilet text-danger border p-1 b-radius bg-light shadow"></i>. {{object.amenities}}</span>
+                    </div>
+                    <div class="col-md-6 col-sm-12 py-1">
+                        <span class="text-muted text-capitalize"><i
+                                class="fa-solid fa-droplet text-danger border p-1 b-radius bg-light shadow"></i>. Water
+                            available</span>
+                    </div>
+                    <div class="col-md-6 col-sm-12 py-1">
+                        <span class="text-muted text-capitalize"><i
+                                class="fa-solid fa-droplet text-danger border p-1 b-radius bg-light shadow"></i>. Water
+                            available</span>
+                    </div>
+                    <div class="col-md-6 col-sm-12 py-1">
+                        <span class="text-muted text-capitalize"><i
+                                class="fa-solid fa-book-open-reader text-danger border p-1 b-radius bg-light shadow"></i>.
+                            Large & serene study area</span>
+                    </div>
+                    <div class="col-md-6 col-sm-12 py-1">
+                        <span class="text-muted text-capitalize"><i
+                                class="fa-solid fa-plug text-danger border p-1 b-radius bg-light shadow"></i>. Constant
+                            power supply.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+            <div class="col-md-8 col-sm-12 mt-5 mb-5 p-2">
+        <p class="text-dark">Every booking you make through <span class="text-danger fw-bolder">ULAS</span> eliminates
+            the risk of being scammed, getting harassed by annoying landlords to mention just a few. the risk of being scammed, getting harassed by annoying landlords to mention just a few. the risk of being scammed, getting harassed by annoying landlords to mention just a few.</p>
+        <h4>Things you should know</h4>
+        <p class="text-dark"> {{object.details|safe}} </p>
+    </div>
+    </div>
+     <div class="container">
+        <h4 class="text-capitalize text-decoration-underline">Exterior view of where you will stay!</h4>
+        <div class="d-flex justify-content-center">
+            <div class="row">
+                <div class="col-md-5">
+                    <img src="{{object.image.url}}" class="img-fluid">
+                </div>
+                <div class="col-md-3">
+                    <img src="{{object.image.url}}" class="img-fluid">
+                </div>
+                <div class="col-md-3">
+                    <img src="{{object.image.url}}" class="img-fluid">
+                </div>
+            </div>
+        </div>
+    </div>
 </section>
+<section class="mt-5">
+    <div class="container mt-5">
+        <h1>People at this place</h1>
+        <div class="row">
+            <div class="col-md-2 d-flex justify-content-between mt-2">
+                <img src="{{object.image.url}}" class="profile-img img-fluid" alt="{{object.hostel_name}}">
+                <small class="text-dark fw-bolder"><span> <a href="#">@Jones Tweneboah</a> </span> 0594438287</small>              
+            </div>
+            <div class="col-md-2 d-flex justify-content-between mt-2">
+                <img src="{{object.image.url}}" class="profile-img img-fluid" alt="{{object.hostel_name}}">
+                <small class="text-dark fw-bolder"><span> <a href="#">@Jones Tweneboah</a> </span> 0594438287</small>              
+            </div>
+            <div class="col-md-2 d-flex justify-content-between mt-2">
+                <img src="{{object.image.url}}" class="profile-img img-fluid" alt="{{object.hostel_name}}">
+                <small class="text-dark fw-bolder"><span> <a href="#">@Jones Tweneboah</a> </span> 0594438287</small>              
+            </div>
+            <div class="col-md-2 d-flex justify-content-between mt-2">
+                <img src="{{object.image.url}}" class="profile-img img-fluid" alt="{{object.hostel_name}}">
+                <small class="text-dark fw-bolder"><span> <a href="#">@Jones Tweneboah</a> </span> 0594438287</small>              
+            </div>
+            <div class="col-md-2 d-flex justify-content-between mt-2">
+                <img src="{{object.image.url}}" class="profile-img img-fluid" alt="{{object.hostel_name}}">
+                <small class="text-dark fw-bolder"><span> <a href="#">@Jones Tweneboah</a> </span> 0594438287</small>              
+            </div>
+        </div>
+    </div>
+</section>
+<!--reserve-->
+<div class="col-lg-3 col-md-4 reserve bg-light shadow">
+    <h3 class="mx-2 text-capitalize font-monospace d-flex d-none d-sm-block d-lg-block">{{object.hostel_name}}</h3>
+    <p class="mx-5 mt-3 mb-1 px-1 text-dark text-center border bg-light shadow  d-none d-sm-block d-lg-block"><span
+            class="fw-bolder text-danger text-decoration-underline">Gh₵{{object.get_cost}}</span> for two semesters</p>
+    <div class="d-flex d-none d-sm-block d-lg-block mx-3">
+        <ul>
+            <li><span class="fw-bold">{{object.get_dist}} walk to campus</span></li>
+        </ul>
+    </div>
+    <div class="mx-5 d-none d-sm-block d-lg-block"><label for="guest" class="fw-bold">Guests</label>
+        <select id="guest" name="guest" class="px-3">
+            <option value="1" selected>I am coming alone.</option>
+            <option value="2">2 guests.</option>
+            <option value="3">3 guests.</option>
+            <option value="4">4 guests.</option>
+        </select>
+    </div>
+    <!--on large devices-->
+    <div class="text-center my-3 d-none mx-1 btn-reserve py-2 d-sm-none d-md-block">
+            <a href="{% url 'pay' object.pk %}" role="button" class="text-decoration-none btn btn-danger btn-lg text-center">Reserve this hostel</span></a>
+        </div>
+    </div>
+</div>
+<!--for phones-->
+<div class="d-flex justify-content-between bg-light  shadow d-block d-md-none mx-2 fix-bottom px-2 btn-reserve">
+    <p class="text-dark text-center"><span
+            class="fw-bolder text-danger text-decoration-underline">Gh₵{{object.get_cost}}</span></p>
+    <a href="{% url 'pay' object.pk %}" role="button" class="text-decoration-none btn btn-danger btn-md btn-reserve mobile-btn">Reserve this hostel</span></a>
+</div>
+
 {% endblock content %}

@@ -22,8 +22,8 @@ def get_access_token(api_key, api_secret):
 	setting the request headers
 	'''
 
-	#headers = {'Authorization':f'Basic{encoded_auth_string}'}
-	headers = {'Authorization':encoded_auth_string}
+	headers = {'Authorization':f'Basic{encoded_auth_string}'}
+	#headers = {'Authorization':encoded_auth_string}
 
 	'''
 	making a request to the token endpoint
@@ -54,7 +54,7 @@ def make_withdrawal(amount=None, account_number=None, access_token=None):
 			'partyId': '0594438287'
 		}
 		'payerMessage':'Payment for hostel fee',
-		'payeeNote':'withdrawn to ulas'
+		'payeeNote':'withdrawn to TrustUnacom'
 	}
 
 

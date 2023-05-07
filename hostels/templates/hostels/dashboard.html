@@ -4,15 +4,19 @@
 
 {% block title %}Booking Details{% endblock %}
 {% block content %}
-<section class="mt-4 pb-5 mb-5 mb-3 pb-3">
+<section class="user">
     <div class="container">
         <div class="row bg-light  d-flex justify-content-center pb-5 mb-5">
             <div class="col-sm-12 col-md-12 col-lg-8">
-            	 <p class="lead text-center p-3 bg-success text-warning">
+            	 <p class="lead text-center p-3 fw-bold text-dark">
                 Booking Details.
             	</p>
                 <div class="text-success d-flex justify-content-center">
-                    {{details}}
+                    {% for booking in dash %}
+                    {{booking.hostel}}
+                    {% empty %}
+                    You have got no booking yet
+                    {% endfor %}
                 </div>
             </div>
         </div>

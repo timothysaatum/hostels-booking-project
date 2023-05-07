@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'crispy_bootstrap5',
     'users',
     "phonenumber_field",
+    'multiselectfield',
     #default apps
     'django.contrib.admin',
     'django.contrib.auth',
@@ -75,7 +76,6 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                #'hostels.context_processors.category',
             ],
         },
     },

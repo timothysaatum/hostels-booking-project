@@ -8,24 +8,33 @@ $(document).ready(function () {
     $(".toggle").toggleClass("text-light");
   });
 
-  //displaying user login, logout and create account on click
+  $(document).on(
+    "click",
+    "#apartment, #food, #uds, #knust, #ucc, #legon, #stu, #uenr, #uhas, #tatco, #batco, #cktedam",
+    function () {
+      const queryValue = $(this).val();
+      $.ajax({
+        url: "/rooms/",
+        type: "GET",
+        dataType: "json",
+        data: { query: queryValue },
+        success: function (hostel) {
+          //window.location.href = "/rooms/?response=" + data['query']
+          const html = ''
+          $(".results").html(hostel);
+        },
+        error: function (xhr, status, error) {
+          console.log(error);
+        },
+      });
+    }
+  );
+  //sign in and login buttons
+  $(".show-div, .search-form").hide();
   $("#account").click(function () {
-    $("#show").toggle(500);
+    $(".show-div").toggle();
   });
-
-  $(document).on('click', "#apartment, #food, #uds, #knust, #ucc, #legon, #stu, #uenr, #uhas, #tatco, #batco, #cktedam", function () {
-    const queryValue = $(this).val();
-    $.ajax({
-      url: "/rooms/",
-      type: "GET",
-      data: { query: queryValue },
-      success: function (hostel) {
-        //window.location.href = "/rooms/?response=" + encodeURIComponent(response);
-        $(".content").html(hostel);
-      },
-      error: function (xhr, status, error) {
-        console.log(error);
-      },
-    });
+  $("#search").click(function () {
+    $(".search-form").toggle();
   });
 });

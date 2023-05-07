@@ -13,7 +13,7 @@
                 <form method="POST">
                     {% csrf_token %}
                     <div class="form-group">
-                        <div class="text-success">
+                        <div class="text-danger">
                             {{form|crispy}}
                             <div class="form-group text-center mt-3">
                                 <button class="btn btn-outline-danger" type="submit">Sign In</button>
@@ -24,7 +24,7 @@
                         </div>
                         <div class="border-top pt-3 m-3">
                             <small class="text-muted  text-white">
-                                Don't have an account? <a href="{% url 'register' %}" class="text-success">Sign Up</a>
+                                Don't have an account? <a href="{% url 'register' %}" class="text-danger">Sign Up</a>
                             </small>
                         </div>
                     </div>

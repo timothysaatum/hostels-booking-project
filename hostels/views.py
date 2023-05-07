@@ -6,6 +6,8 @@ from django.contrib.auth.decorators import login_required
 from .forms import PayForm
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
+from django.core import serializers
 # from atlas.transaction import initiate_payment
 
 
@@ -31,16 +33,19 @@ class RoomsListView(ListView):
         if self.request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
             school = self.request.GET.get('query')
             print(school)
-            hostels = Hostel.objects.filter(school__name__icontains=school)
-            print(hostels)
-        hostels = Hostel.objects.all()
-        return hostels
-
-    def get_template_names(self):
-        if self.request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
-            return ['hostels/results.html']
+            hosts = Hostel.objects.filter(school__name__icontains=school)
+            #hostels = serializers.serialize('json', hostels)
+            print(hosts)
+            return hosts
         else:
-            return [self.template_name]
+            hostels = Hostel.objects.all()
+            return hostels
+
+    #def get_template_names(self):
+    #    if self.request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
+    #        return ['hostels/rooms.html']
+    #    else:
+    #        return [self.template_name]
 
 
 
@@ -48,22 +53,16 @@ class HostelDetailView(DetailView):
     model = Hostel
 
 
-def category_500_1000(request):
-    category_500_1000 = Hostel.objects.filter(category=1)
-    return render(request, 'hostels/category_500_1000.html',
-                  {'category_500_1000': category_500_1000})
+def services(request):
+    return render(request, 'hostels/services.html')
 
 
-def category_1100_1500(request):
-    category_1100_1500 = Hostel.objects.filter(category=2)
-    return render(request, 'hostels/category_1100_1500.html',
-                  {'category_1100_1500': category_1100_1500})
+def mission(request):
+    return render(request, 'hostels/mission.html')
 
 
-def category_1600_2000(request):
-    category_1600_2000 = Hostel.objects.filter(category=3)
-    return render(request, 'hostels/category_1600_2000.html',
-                  {'category_1600_2000': category_1600_2000})
+def howitworks(request):
+    return render(request, 'hostels/howitworks.html')
 
 
 def about(request):
@@ -81,7 +80,7 @@ def food(request):
     # rests = Restaurant.objects.all()
     return render(request, 'hostels/food.html')
 
-
+@login_required
 def make_booking(request, pk):
     hostel = Hostel.objects.get(pk=pk)
     if request.method == 'POST':
@@ -93,13 +92,13 @@ def make_booking(request, pk):
             Booking.objects.create(hostel=hostel, tenant=request.user, momo_no=momo_no, cost=hostel.get_cost(
             ), room_no=pk, account_no=account_no, message=message)
             # initiate_payment(amount=hostel.cost_per_room, account_number=momo_no)
-        return redirect('rooms')
+        return redirect('booking-details')
 
     form = PayForm()
 
     return render(request, 'hostels/booking_form.html', {'form': form})
 
 
-class BookingDetailView(DetailView):
-    model = Booking
-    context_object_name = 'details'
+def dashboard(request):
+    dash = Booking.objects.filter(tenant=request.user)
+    return render(request, 'hostels/dashboard.html', {'dash':dash})
