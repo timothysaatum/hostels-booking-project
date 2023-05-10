@@ -4,6 +4,7 @@ from phonenumber_field.modelfields import PhoneNumberField
 from django.utils import timezone
 from .managers import CustomManager
 from django.contrib.auth.models import AbstractBaseUser
+from django.urls import reverse
 #from PIL import Image
 
 
@@ -40,4 +41,36 @@ class RoomUser(AbstractBaseUser):
 	@property
 	def is_staff(self):
 		return self.is_admin
+
+
+class Complain(models.Model):
+	email = models.EmailField()
+	phone = PhoneNumberField()
+	address = models.CharField(max_length=300)
+	full_name = models.CharField(max_length=300)
+	message = models.TextField()
+	date_added = models.DateTimeField(default=timezone.now)
+
+	def get_absolute_url(self):
+		return reverse('complain') #kwargs={'pk': self.pk})
+
+	def __str__(self):
+		return self.full_name
+
+
+
+class Contact(models.Model):
+	email = models.EmailField()
+	phone = PhoneNumberField()
+	address = models.CharField(max_length=300)
+	full_name = models.CharField(max_length=300)
+	message = models.TextField()
+	date_added = models.DateTimeField(default=timezone.now)
+
+	def get_absolute_url(self):
+		return reverse('contact') #kwargs={'pk': self.pk})
+
+	def __str__(self):
+		return self.full_name
+
 

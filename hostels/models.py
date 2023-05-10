@@ -11,7 +11,7 @@ from .tasks import add_after_expiry_task
 from multiselectfield import MultiSelectField
 #from django.utils.text import slugify
 
-room_user = get_user_model()
+user = get_user_model()
 
 
 '''
@@ -29,43 +29,6 @@ class School(models.Model):
         return self.name
 
 
-
-
-#class Apartment(models.Model):
-#    name = models.CharField(max_length=100)
-#    description = RichTextUploadingField()
-#    city = models.CharField(max_length=100)
-#    address = models.CharField(max_length=255)
-#    image = models.ImageField(upload_to='static/apartment_images', default=None)
-#    num_bedrooms = models.IntegerField()
-# #   num_bathrooms = models.IntegerField()
-#    max_guests = models.IntegerField()
-#    price_per_month = models.DecimalField(max_digits=8, decimal_places=2)
-#    created_at = models.DateTimeField(auto_now_add=True, default='20th/03/1778')
-#
-#    def __str__(self):
-#        return self.name
-#
-#    def save(self, *args, **kwargs):
-#        super(Hostel, self).save(*args, **kwargs)
-#
-#        img = Image.open(self.image.path)
-#
-#        #if img.height > 500 or img.width > 500:
-#        output_size = (500, 500)
-#        img.thumbnail(output_size)
-#        img.save(self.image.path)
-
-#class Property(models.Model):
-#    owner = models.ForeignKey(room_user, on_delete=models.CASCADE)
-#    name = models.CharField(max_length=100)
-#    location = models.CharField(max_length=100)
-#    property_type = models.CharField(max_length=200)
-#    description = RichTextUploadingField()
-#    price = models.DecimalField(max_digits=10, decimal_places=2)
-#    date_added = models.DateTimeField(auto_now_add=True)    
-
-
 AMENITIES = [
     ('wifi', 'wifi'),
     ('water', 'water'),
@@ -79,6 +42,7 @@ class Hostel(models.Model):
     '''    
     defining the database fields of the databases
     '''
+    owner_name = models.CharField(max_length=100, default='gunarcom')
     school = models.ForeignKey(School, on_delete=models.CASCADE)
     campus = models.CharField(max_length=100, default='Main Campus')
     hostel_name = models.CharField(max_length=50, default='unnamed hostel')
@@ -148,12 +112,11 @@ class Booking(models.Model):
     defining the database fields
     '''
     hostel = models.ForeignKey(Hostel, on_delete=models.CASCADE)
-    tenant = models.ForeignKey(room_user, on_delete=models.CASCADE)
+    tenant = models.ForeignKey(user, on_delete=models.CASCADE)
     check_in = models.DateTimeField(default=timezone.now)
     momo_no = models.CharField(max_length=10, null=True, blank=True)
     cost = models.DecimalField(max_digits=8, decimal_places=2)
     room_no = models.PositiveIntegerField()
-    account_no = models.CharField(max_length=100, null=True, blank=True)
     message = models.CharField(max_length=100)
     is_verified = models.BooleanField(default=False)
 

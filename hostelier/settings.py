@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'hostels',
     'atlass',
+    'properties',
     'crispy_bootstrap5',
     'users',
     "phonenumber_field",

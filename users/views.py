@@ -2,6 +2,10 @@ from django.shortcuts import render, redirect
 from .forms import UserRegisterForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.views.generic.edit import CreateView
+from django.views.generic import TemplateView
+from .models import Complain, Contact
+from django.utils.decorators import method_decorator
 
 
 
@@ -22,3 +26,29 @@ def register(request):
 @login_required
 def profile(request):
     return render(request, 'users/profile.html')
+
+
+class ComplainView(CreateView):
+    model = Complain
+    fields = ('email', 'phone', 'address', 'full_name', 'message')
+    template_name = 'users/complains.html'
+
+
+class ContactView(CreateView):
+    model = Contact
+    fields = ('email', 'phone', 'address', 'full_name', 'message')
+    template_name = 'users/contact.html'
+
+
+class DataHandlingView(TemplateView):
+    template_name = 'users/datahandling.html'
+
+class TermsAndConditions(TemplateView):
+    template_name = 'users/terms_and_conditions.html'
+
+
+class PrivacyPolicy(TemplateView):
+    template_name = 'users/privacy.html'
+
+class FAQs(TemplateView):
+    template_name = 'users/faqs.html'

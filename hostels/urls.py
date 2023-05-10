@@ -1,6 +1,5 @@
 from django.urls import path
-from .views import (HostelDetailView, about, home, contact,
-                    food,
+from .views import (HostelDetailView, about, home,
                     services,
                     dashboard, howitworks,
                     mission, RoomsListView,
@@ -15,8 +14,6 @@ urlpatterns = [
     path('how-it-works/', howitworks, name="howitworks"),
     path('mission/', mission, name='mission'),
     path('about/', about, name='about'),
-    path('contact/', contact, name='contact'),
-    path('food/', food, name='food'),
     path('booking/summary', dashboard, name='booking-details'),
     path('rooms/request-to-book/<int:pk>/', make_booking, name='pay'),
 ]

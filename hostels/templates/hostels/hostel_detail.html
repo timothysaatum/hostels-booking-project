@@ -2,33 +2,46 @@
 {% load static %}
 {% load tags %}
 
-{% block title %}Hostel Detail{% endblock %}
+{% block title %}{{object.hostel_name}} Hostel - {{hostel.school.name}}-{{hostel.campus}} {% endblock %}
 {% block content %}
 <section class="details-mt mb-2">
     <p class="mx-3 lead text-uppercase"><a href="{% url 'rooms' %}"
             class="text-danger fw-bold" target="_blank">{{object.hostel_name}}({{hostel.school.name}}-{{hostel.campus}})</a></p>
     <hr>
-    <blockquote class="mx-2 fw-bold">Landlord's name</blockquote>
+    <blockquote class="mx-2 fw-bold">Hosted by @{{object.owner_name}}</blockquote>
 </section>
 <section>
     <div class="container">
         <h4 class="mb-3 text-capitalize text-decoration-underline">Interior view of where you will stay!</h4>
-        <div class="d-flex justify-content-center">
-            <div class="row">
-                <div class="col-md-5">
+         <div class="d-flex justify-content-center">
+            <div class="row g-1">
+                <div class="col-md-8">
+                    <div class="row g-1">
+                                        <div class="col-md-4">
                     <img src="{{object.image.url}}" class="img-fluid">
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-4 d-none d-sm-block d-lg-block">
                     <img src="{{object.image.url}}" class="img-fluid">
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-4 d-none d-sm-block d-lg-block">
                     <img src="{{object.image.url}}" class="img-fluid">
+                </div>
+                <div class="col-md-4 d-none d-sm-block d-lg-block">
+                    <img src="{{object.image.url}}" class="img-fluid">
+                </div>
+                <div class="col-md-4 d-none d-sm-block d-lg-block">
+                    <img src="{{object.image.url}}" class="img-fluid">
+                </div>
+                <div class="col-md-4 d-none d-sm-block d-lg-block">
+                    <img src="{{object.image.url}}" class="img-fluid">
+                </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
     <div class="container">
-        <h4 class="text-capitalize mb-3 mt-5">What this place offer</h4>
+        <h4 class="text-capitalize mb-3 mt-5 text-decoration-underline">What this place offers</h4>
         <div class="row">
             <div class="col-md-9">
                 <!--offers inner row-->
@@ -78,24 +91,38 @@
     </div>
     <div class="container">
             <div class="col-md-8 col-sm-12 mt-5 mb-5 p-2">
-        <p class="text-dark">Every booking you make through <span class="text-danger fw-bolder">ULAS</span> eliminates
-            the risk of being scammed, getting harassed by annoying landlords to mention just a few. the risk of being scammed, getting harassed by annoying landlords to mention just a few. the risk of being scammed, getting harassed by annoying landlords to mention just a few.</p>
-        <h4>Things you should know</h4>
-        <p class="text-dark"> {{object.details|safe}} </p>
+                <h4 class="text-decoration-underline">Important !</h4>
+        <p class="text-dark">Every booking you make through <span class="text-danger fw-bolder">gunarcom</span> eliminates
+            the risk of being scammed, getting harassed by annoying landlords to mention just a few.</p>
+        <h4 class="text-decoration-underline">Things you should know</h4>
+        <p class="text-dark">{{object.details}}</p>
     </div>
     </div>
      <div class="container">
         <h4 class="text-capitalize text-decoration-underline">Exterior view of where you will stay!</h4>
-        <div class="d-flex justify-content-center">
-            <div class="row">
-                <div class="col-md-5">
+       <div class="d-flex justify-content-center">
+            <div class="row g-1">
+                <div class="col-md-8">
+                    <div class="row g-1">
+                                        <div class="col-md-4">
                     <img src="{{object.image.url}}" class="img-fluid">
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-4 d-none d-sm-block d-lg-block">
                     <img src="{{object.image.url}}" class="img-fluid">
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-4 d-none d-sm-block d-lg-block">
                     <img src="{{object.image.url}}" class="img-fluid">
+                </div>
+                <div class="col-md-4 d-none d-sm-block d-lg-block">
+                    <img src="{{object.image.url}}" class="img-fluid">
+                </div>
+                <div class="col-md-4 d-none d-sm-block d-lg-block">
+                    <img src="{{object.image.url}}" class="img-fluid">
+                </div>
+                <div class="col-md-4 d-none d-sm-block d-lg-block">
+                    <img src="{{object.image.url}}" class="img-fluid">
+                </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -103,26 +130,26 @@
 </section>
 <section class="mt-5">
     <div class="container mt-5">
-        <h1>People at this place</h1>
+        <h4>People at this place</h4>
         <div class="row">
             <div class="col-md-2 d-flex justify-content-between mt-2">
-                <img src="{{object.image.url}}" class="profile-img img-fluid" alt="{{object.hostel_name}}">
+                <img src="{{object.image.url}}" class="profile-img" alt="{{object.hostel_name}}">
                 <small class="text-dark fw-bolder"><span> <a href="#">@Jones Tweneboah</a> </span> 0594438287</small>              
             </div>
             <div class="col-md-2 d-flex justify-content-between mt-2">
-                <img src="{{object.image.url}}" class="profile-img img-fluid" alt="{{object.hostel_name}}">
+                <img src="{{object.image.url}}" class="profile-img" alt="{{object.hostel_name}}">
                 <small class="text-dark fw-bolder"><span> <a href="#">@Jones Tweneboah</a> </span> 0594438287</small>              
             </div>
             <div class="col-md-2 d-flex justify-content-between mt-2">
-                <img src="{{object.image.url}}" class="profile-img img-fluid" alt="{{object.hostel_name}}">
+                <img src="{{object.image.url}}" class="profile-img" alt="{{object.hostel_name}}">
                 <small class="text-dark fw-bolder"><span> <a href="#">@Jones Tweneboah</a> </span> 0594438287</small>              
             </div>
             <div class="col-md-2 d-flex justify-content-between mt-2">
-                <img src="{{object.image.url}}" class="profile-img img-fluid" alt="{{object.hostel_name}}">
+                <img src="{{object.image.url}}" class="profile-img" alt="{{object.hostel_name}}">
                 <small class="text-dark fw-bolder"><span> <a href="#">@Jones Tweneboah</a> </span> 0594438287</small>              
             </div>
             <div class="col-md-2 d-flex justify-content-between mt-2">
-                <img src="{{object.image.url}}" class="profile-img img-fluid" alt="{{object.hostel_name}}">
+                <img src="{{object.image.url}}" class="profile-img" alt="{{object.hostel_name}}">
                 <small class="text-dark fw-bolder"><span> <a href="#">@Jones Tweneboah</a> </span> 0594438287</small>              
             </div>
         </div>
@@ -148,7 +175,7 @@
     </div>
     <!--on large devices-->
     <div class="text-center my-3 d-none mx-1 btn-reserve py-2 d-sm-none d-md-block">
-            <a href="{% url 'pay' object.pk %}" role="button" class="text-decoration-none btn btn-danger btn-lg text-center">Reserve this hostel</span></a>
+            <a href="{% url 'pay' object.pk %}" role="button" class="text-decoration-none btn btn-danger btn-lg text-center">book a room @{{object.hostel_name|truncatechars:5}}</span></a>
         </div>
     </div>
 </div>
@@ -156,7 +183,7 @@
 <div class="d-flex justify-content-between bg-light  shadow d-block d-md-none mx-2 fix-bottom px-2 btn-reserve">
     <p class="text-dark text-center"><span
             class="fw-bolder text-danger text-decoration-underline">Gh₵{{object.get_cost}}</span></p>
-    <a href="{% url 'pay' object.pk %}" role="button" class="text-decoration-none btn btn-danger btn-md btn-reserve mobile-btn">Reserve this hostel</span></a>
+    <a href="{% url 'pay' object.pk %}" role="button" class="text-decoration-none btn btn-danger btn-sm btn-reserve mobile-btn">book a room @{{object.hostel_name|truncatechars:5}}</span></a>
 </div>
 
 {% endblock content %}

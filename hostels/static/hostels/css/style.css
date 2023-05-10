@@ -21,7 +21,7 @@ h6,.h7, a {
 }
 .title-font{
     font-family: 'Ubuntu', sans-serif;
-    color: #2F4F4F;
+    color: #0000;
 }
 .nav-border button {
     font-size: smaller;
@@ -181,7 +181,7 @@ nav img {
 .profile-img{
     width: 5em;
     border: transparent;
-    border-radius: 40em;
+    border-radius: 15em;
 }
 
 /*user authentication*/
@@ -203,4 +203,10 @@ nav img {
     z-index: 9999;
     top: 15%;
     left: 30%;
+}
+
+.text-color{
+    color: black;
+    font-size: smaller;
+    font-weight: bolder;
 }

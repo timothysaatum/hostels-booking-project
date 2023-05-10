@@ -2,8 +2,8 @@ import base64
 import requests
 import uuid
 
-#primary key = d84a6ccb46e24ad2b800b528763cdb45
-#secondary key = aba2eae9b77446a7ab4425846c1094e2
+primary_key = 'd84a6ccb46e24ad2b800b528763cdb45'
+#secondary_key = aba2eae9b77446a7ab4425846c1094e2
 
 def get_access_token(api_key, api_secret):
 	'''
@@ -22,8 +22,11 @@ def get_access_token(api_key, api_secret):
 	setting the request headers
 	'''
 
-	headers = {'Authorization':f'Basic{encoded_auth_string}'}
-	#headers = {'Authorization':encoded_auth_string}
+	headers = {
+		'Authorization' : f'Basic {encoded_auth_string}', 
+		'Ocp-Apim-Subscription-Key' : primary_key,
+'		 Content-Type' : 'application/json',
+	}
 
 	'''
 	making a request to the token endpoint
@@ -52,9 +55,9 @@ def make_withdrawal(amount=None, account_number=None, access_token=None):
 		'payer':{
 			'partyIdType':'MSISDN',
 			'partyId': '0594438287'
-		}
+		},
 		'payerMessage':'Payment for hostel fee',
-		'payeeNote':'withdrawn to TrustUnacom'
+		'payeeNote':'Paid to gunarcom'
 	}
 
 
