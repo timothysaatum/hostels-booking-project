@@ -37,9 +37,11 @@ h6,.h7, a {
     }
 
     .fix-bottom{
+        margin-top: 1rem;
+        padding-bottom: 0rem;
         position: sticky;
-        bottom: 0.3%;
-        top: inherit;
+        bottom: 0.05%;
+        top: 5%;
     }
 }
 
@@ -118,6 +120,7 @@ nav img {
 .round {
     border: solid transparent;
     border-radius: 10%;
+    object-fit: scale-down;
 }
 
 /*navbar*/
@@ -178,12 +181,6 @@ nav img {
     right: auto;
 }
 
-.profile-img{
-    width: 5em;
-    border: transparent;
-    border-radius: 15em;
-}
-
 /*user authentication*/
 .show-div li{
     list-style-type: none;
@@ -209,4 +206,17 @@ nav img {
     color: black;
     font-size: smaller;
     font-weight: bolder;
+}
+
+/*show all button*/
+.div-place{
+    position: relative;
+}
+.show-all{
+    position: absolute;
+    top: 67%;
+    right: 5%;
+    background-color: dark;
+    opacity: 0.7;
+    color: black;
 }

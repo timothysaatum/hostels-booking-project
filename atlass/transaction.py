@@ -44,7 +44,7 @@ def get_access_token(api_key, api_secret):
 def make_withdrawal(amount=None, account_number=None, access_token=None):
 	headers = {
 		'Content-Type':'application/json',
-		'Ocp-Apim-Subscription-key':'primary_key',
+		'Ocp-Apim-Subscription-key':primary_key
 		'Ocp-Apim-Subscription-secret':'primary_key',
 	}
 	endpoint = 'https://api.mtn.com/collection/v1_0/requesttopay'
