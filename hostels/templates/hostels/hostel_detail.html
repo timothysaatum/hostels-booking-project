@@ -5,38 +5,42 @@
 {% block title %}{{object.hostel_name}} Hostel - {{hostel.school.name}}-{{hostel.campus}} {% endblock %}
 {% block content %}
 <section class="details-mt mb-2">
-    <p class="mx-3 lead text-uppercase"><a href="{% url 'rooms' %}"
-            class="text-danger fw-bold" target="_blank">{{object.hostel_name}} ({{hostel.school.name}}-{{hostel.campus}})</a></p>
+    <p class="mx-3 lead text-uppercase"><a href="{% url 'rooms' %}" class="text-danger fw-bold"
+            target="_blank">{{object.hostel_name}} ({{hostel.school.name}}-{{hostel.campus}})</a></p>
     <hr>
     <blockquote class="mx-2 fw-bold">Hosted by @{{object.owner_name}}</blockquote>
 </section>
 <section>
     <div class="container">
         <h4 class="mb-3 text-capitalize text-decoration-underline">Interior view of where you will stay!</h4>
-         <div class="d-flex justify-content-center">
+        <div class="d-flex justify-content-center">
             <div class="row g-1">
                 <div class="col-md-8">
                     <div class="row g-1">
-                                        <div class="col-md-4 div-place">
-                    <img src="{{object.image.url}}" class="img-fluid">
-                    <button class="btn btn-light btn-md show-all d-block d-md-none" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa-solid fa-ellipsis-vertical"></i> <i class="fa-solid fa-ellipsis-vertical"></i> Show all</button>
-                </div>
-                <div class="col-md-4 d-none d-sm-block d-lg-block">
-                    <img src="{{object.image.url}}" class="img-fluid">
-                </div>
-                <div class="col-md-4 d-none d-sm-block d-lg-block">
-                    <img src="{{object.image.url}}" class="img-fluid">
-                </div>
-                <div class="col-md-4 d-none d-sm-block d-lg-block">
-                    <img src="{{object.image.url}}" class="img-fluid">
-                </div>
-                <div class="col-md-4 d-none d-sm-block d-lg-block">
-                    <img src="{{object.image.url}}" class="img-fluid">
-                </div>
-                <div class="col-md-4 d-none d-sm-block d-lg-block div-place">
-                    <img src="{{object.image.url}}" class="img-fluid">
-                    <button class="btn btn-light btn-md show-all" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa-solid fa-ellipsis-vertical"></i> <i class="fa-solid fa-ellipsis-vertical"></i> Show all</button>
-                </div>
+                        <div class="col-md-4 div-place">
+                            <img src="{{object.image.url}}" class="img-fluid">
+                            <button class="btn btn-light btn-md show-all d-block d-md-none" data-bs-toggle="modal"
+                                data-bs-target="#exampleModal"><i class="fa-solid fa-ellipsis-vertical"></i> <i
+                                    class="fa-solid fa-ellipsis-vertical"></i> Show all</button>
+                        </div>
+                        <div class="col-md-4 d-none d-sm-block d-lg-block">
+                            <img src="{{object.image.url}}" class="img-fluid">
+                        </div>
+                        <div class="col-md-4 d-none d-sm-block d-lg-block">
+                            <img src="{{object.image.url}}" class="img-fluid">
+                        </div>
+                        <div class="col-md-4 d-none d-sm-block d-lg-block">
+                            <img src="{{object.image.url}}" class="img-fluid">
+                        </div>
+                        <div class="col-md-4 d-none d-sm-block d-lg-block">
+                            <img src="{{object.image.url}}" class="img-fluid">
+                        </div>
+                        <div class="col-md-4 d-none d-sm-block d-lg-block div-place">
+                            <img src="{{object.image.url}}" class="img-fluid">
+                            <button class="btn btn-light btn-md show-all" data-bs-toggle="modal"
+                                data-bs-target="#exampleModal"><i class="fa-solid fa-ellipsis-vertical"></i> <i
+                                    class="fa-solid fa-ellipsis-vertical"></i> Show all</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -65,7 +69,8 @@
                     </div>
                     <div class="col-md-6 col-sm-12 py-1">
                         <span class="text-muted text-capitalize"><i
-                                class="fa-solid fa-toilet text-danger border p-1 b-radius bg-light shadow"></i>. {{object.amenities}}</span>
+                                class="fa-solid fa-toilet text-danger border p-1 b-radius bg-light shadow"></i>.
+                            {{object.amenities}}</span>
                     </div>
                     <div class="col-md-6 col-sm-12 py-1">
                         <span class="text-muted text-capitalize"><i
@@ -92,40 +97,45 @@
         </div>
     </div>
     <div class="container">
-            <div class="col-md-8 col-sm-12 mt-5 mb-5 p-2">
-                <h4 class="text-decoration-underline">Important !</h4>
-        <p class="text-dark">Every booking you make through <span class="text-danger fw-bolder">gunarcom</span> eliminates
-            the risk of being scammed, getting harassed by annoying landlords to mention just a few.</p>
-        <h4 class="text-decoration-underline">Things you should know</h4>
-        <small class="text-dark">{{ object.details }}</small>
+        <div class="col-md-8 col-sm-12 mt-5 mb-5 p-2">
+            <h4 class="text-decoration-underline">Important !</h4>
+            <p class="text-dark">Every booking you make through <span class="text-danger fw-bolder">gunarcom</span>
+                eliminates
+                the risk of being scammed, getting harassed by annoying landlords to mention just a few.</p>
+            <h4 class="text-decoration-underline">Things you should know</h4>
+            <small class="text-dark">{{ object.details }}</small>
+        </div>
     </div>
-    </div>
-     <div class="container">
+    <div class="container">
         <h4 class="text-capitalize text-decoration-underline">Exterior view of where you will stay!</h4>
-       <div class="d-flex justify-content-center">
+        <div class="d-flex justify-content-center">
             <div class="row g-1">
                 <div class="col-md-8">
                     <div class="row g-1">
-                                        <div class="col-md-4 div-place">
-                    <img src="{{object.image.url}}" class="img-fluid">
-                    <button class="btn btn-light btn-md show-all d-block d-md-none" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa-solid fa-ellipsis-vertical"></i> <i class="fa-solid fa-ellipsis-vertical"></i> Show all</button>
-                </div>
-                <div class="col-md-4 d-none d-sm-block d-lg-block">
-                    <img src="{{object.image.url}}" class="img-fluid">
-                </div>
-                <div class="col-md-4 d-none d-sm-block d-lg-block">
-                    <img src="{{object.image.url}}" class="img-fluid">
-                </div>
-                <div class="col-md-4 d-none d-sm-block d-lg-block">
-                    <img src="{{object.image.url}}" class="img-fluid">
-                </div>
-                <div class="col-md-4 d-none d-sm-block d-lg-block">
-                    <img src="{{object.image.url}}" class="img-fluid">
-                </div>
-                <div class="col-md-4 d-none d-sm-block d-lg-block div-place">
-                    <img src="{{object.image.url}}" class="img-fluid">
-                    <button class="btn btn-light btn-md show-all" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa-solid fa-ellipsis-vertical"></i> <i class="fa-solid fa-ellipsis-vertical"></i> Show all</button>
-                </div>
+                        <div class="col-md-4 div-place">
+                            <img src="{{object.image.url}}" class="img-fluid">
+                            <button class="btn btn-light btn-md show-all d-block d-md-none" data-bs-toggle="modal"
+                                data-bs-target="#exampleModal"><i class="fa-solid fa-ellipsis-vertical"></i> <i
+                                    class="fa-solid fa-ellipsis-vertical"></i> Show all</button>
+                        </div>
+                        <div class="col-md-4 d-none d-sm-block d-lg-block">
+                            <img src="{{object.image.url}}" class="img-fluid">
+                        </div>
+                        <div class="col-md-4 d-none d-sm-block d-lg-block">
+                            <img src="{{object.image.url}}" class="img-fluid">
+                        </div>
+                        <div class="col-md-4 d-none d-sm-block d-lg-block">
+                            <img src="{{object.image.url}}" class="img-fluid">
+                        </div>
+                        <div class="col-md-4 d-none d-sm-block d-lg-block">
+                            <img src="{{object.image.url}}" class="img-fluid">
+                        </div>
+                        <div class="col-md-4 d-none d-sm-block d-lg-block div-place">
+                            <img src="{{object.image.url}}" class="img-fluid">
+                            <button class="btn btn-light btn-md show-all" data-bs-toggle="modal"
+                                data-bs-target="#exampleModal"><i class="fa-solid fa-ellipsis-vertical"></i> <i
+                                    class="fa-solid fa-ellipsis-vertical"></i> Show all</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -153,57 +163,61 @@
     </div>
     <!--on large devices-->
     <div class="text-center my-3 d-none mx-1 btn-reserve py-2 d-sm-none d-md-block">
-            <a href="{% url 'pay' object.pk %}" role="button" class="text-decoration-none btn btn-danger btn-lg text-center">book a room @{{object.hostel_name|truncatechars:5}}</span></a>
-        </div>
+        <a href="{% url 'pay' object.pk %}" role="button"
+            class="text-decoration-none btn btn-danger btn-lg text-center">book a room
+            @{{object.hostel_name|truncatechars:5}}</span></a>
     </div>
+</div>
 </div>
 <!--for phones-->
 <div class="d-flex justify-content-between bg-light  shadow d-block d-md-none mx-2 fix-bottom px-2 btn-reserve">
     <p class="text-dark text-center"><span
             class="fw-bolder text-danger text-decoration-underline">Gh₵{{object.get_cost}}</span></p>
-    <a href="{% url 'pay' object.pk %}" role="button" class="text-decoration-none btn btn-danger btn-sm btn-reserve mobile-btn">book a room @{{object.hostel_name|truncatechars:5}}</span></a>
+    <a href="{% url 'pay' object.pk %}" role="button"
+        class="text-decoration-none btn btn-danger btn-sm btn-reserve mobile-btn">book a room
+        @{{object.hostel_name|truncatechars:5}}</span></a>
 </div>
 
 <!-- show more -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg modal-dialog-scrollable">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">{{object.hostel_name}}</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <div class="row g-1">
-            <div class="col-md-4 col-sm-12">
-                <img src="{{object.image.url}}" class="img-fluid">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">{{object.hostel_name}}</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="col-md-4 col-sm-12">
-                <img src="{{object.image.url}}" class="img-fluid">
-            </div>
-            <div class="col-md-4 col-sm-12">
-                <img src="{{object.image.url}}" class="img-fluid">
-            </div>
-            <div class="col-md-4 col-sm-12">
-                <img src="{{object.image.url}}" class="img-fluid">
-            </div>
-            <div class="col-md-4 col-sm-12">
-                <img src="{{object.image.url}}" class="img-fluid">
-            </div>
-            <div class="col-md-4 col-sm-12">
-                <img src="{{object.image.url}}" class="img-fluid">
-            </div>
-            <div class="col-md-4 col-sm-12">
-                <img src="{{object.image.url}}" class="img-fluid">
-            </div>
-            <div class="col-md-4 col-sm-12">
-                <img src="{{object.image.url}}" class="img-fluid">
-            </div>
-            <div class="col-md-4 col-sm-12">
-                <img src="{{object.image.url}}" class="img-fluid">
+            <div class="modal-body">
+                <div class="row g-1">
+                    <div class="col-md-4 col-sm-12">
+                        <img src="{{object.image.url}}" class="img-fluid">
+                    </div>
+                    <div class="col-md-4 col-sm-12">
+                        <img src="{{object.image.url}}" class="img-fluid">
+                    </div>
+                    <div class="col-md-4 col-sm-12">
+                        <img src="{{object.image.url}}" class="img-fluid">
+                    </div>
+                    <div class="col-md-4 col-sm-12">
+                        <img src="{{object.image.url}}" class="img-fluid">
+                    </div>
+                    <div class="col-md-4 col-sm-12">
+                        <img src="{{object.image.url}}" class="img-fluid">
+                    </div>
+                    <div class="col-md-4 col-sm-12">
+                        <img src="{{object.image.url}}" class="img-fluid">
+                    </div>
+                    <div class="col-md-4 col-sm-12">
+                        <img src="{{object.image.url}}" class="img-fluid">
+                    </div>
+                    <div class="col-md-4 col-sm-12">
+                        <img src="{{object.image.url}}" class="img-fluid">
+                    </div>
+                    <div class="col-md-4 col-sm-12">
+                        <img src="{{object.image.url}}" class="img-fluid">
+                    </div>
+                </div>
             </div>
         </div>
-      </div>
     </div>
-  </div>
 </div>
 {% endblock content %}

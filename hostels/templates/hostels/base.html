@@ -48,14 +48,16 @@
     <!--logo search bar & user icon-->
     <section class="bg-light bg-onscroll fixed-top">
       <nav>
-        <div class="container-fluid d-flex justify-content-between p-3 mx-1">
-          <div class="col-md-1 d-flex align-items-center">
+        <div class="container-fluid d-flex justify-content-between p-2 mx-1">
+          <div class="d-none d-sm-block d-md-block">
+            <div class="col-md-1 d-flex align-items-center">
             <a href="{% url 'home' %}" class="nav-brand d-none d-sm-block"
               ><img
                 src="{% static 'hostels/images/logo.png' %}"
                 alt=""
                 class="img-fluid"
             /></a>
+          </div>
           </div>
           <div class="d-flex align-items-center nav-border">
             <a
