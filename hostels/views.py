@@ -15,7 +15,7 @@ user = get_user_model()
 
 
 def home(request):
-    students_hostels = Hostel.objects.all()[0:12]
+    students_hostels = Hostel.objects.all().order_by('-date_added')[0:12]
     #apartments = Apartment.objects.all()[0:8]
     return render(request, 'hostels/index.html', {'hostels':students_hostels})
 
@@ -26,19 +26,18 @@ class RoomsListView(ListView):
     context_object_name = 'hostels'
     template_name = 'hostels/rooms.html'
     slug_url_kwarg = 'pk'
-    ordering = ['-date_added']
 
 
     def get_queryset(self):
         if self.request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
             school = self.request.GET.get('query')
             print(school)
-            hosts = Hostel.objects.filter(school__name__icontains=school)
+            hosts = Hostel.objects.filter(school__name__icontains=school).order_by('-date_added')
             #hostels = serializers.serialize('json', hostels)
             print(hosts)
             return hosts
         else:
-            hostels = Hostel.objects.all()
+            hostels = Hostel.objects.all().order_by('-date_added')
             return hostels
 
     #def get_template_names(self):
@@ -80,7 +79,9 @@ def make_booking(request, pk):
         if form.is_valid():
             momo_no = form.cleaned_data['momo_no']
             message = form.cleaned_data['message']
-            Booking.objects.create(hostel=hostel, tenant=request.user, momo_no=momo_no, cost=hostel.get_cost(
+            rooms = hostel.no_of_rooms
+            
+            Booking.objects.create(hostel=hostel, tenant=request.user, mobile_money_number=momo_no, cost=hostel.get_cost(
             ), room_no=pk, message=message)
             if momo_no != '' or None:
                 pass

@@ -114,7 +114,7 @@ class Booking(models.Model):
     hostel = models.ForeignKey(Hostel, on_delete=models.CASCADE)
     tenant = models.ForeignKey(user, on_delete=models.CASCADE)
     check_in = models.DateTimeField(default=timezone.now)
-    momo_no = models.CharField(max_length=10, null=True, blank=True)
+    mobile_money_number = models.CharField(max_length=10, null=True, blank=True)
     cost = models.DecimalField(max_digits=8, decimal_places=2)
     room_no = models.PositiveIntegerField()
     message = models.CharField(max_length=100)
@@ -133,6 +133,11 @@ class Booking(models.Model):
     '''
     def price(self):
         return self.hostel.get_cost()
+
+    '''assigning a room number to the tenant'''
+    def get_rooms(self):
+        number_of_rooms = self.hostel.no_of_rooms
+
     '''
     getting the hostel name
     '''
