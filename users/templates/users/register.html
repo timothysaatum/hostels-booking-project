@@ -7,13 +7,13 @@
     <div class="container">
         <div class="row d-flex justify-content-center">
             <div class="col-sm-12 col-md-12 col-lg-6 bg-light">
-                <p class="lead text-center p-3 text-dark">
+                <p class="lead text-center p-3 text-dark fw-bold">
                 Join Us Today.
             </p>
                 <form method="POST">
                     {% csrf_token %}
                     <div class="form-group">
-                        <div class="text-success">
+                        <div class="text-danger">
                             {{form|crispy}}
                             <div class="form-group text-center mt-3">
                                 <button class="btn btn-outline-danger" type="submit">Sign Up</button>
@@ -21,7 +21,7 @@
                         </div>
                         <div class="border-top pt-3 m-3">
                             <small class="text-muted  text-white">
-                                Already have an account? <a href="{% url 'login' %}" class="text-success">Login</a>
+                                Already have an account? <a href="{% url 'login' %}" class="text-danger">Login</a>
                             </small>
                         </div>
                     </div>

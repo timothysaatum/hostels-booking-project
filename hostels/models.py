@@ -114,10 +114,16 @@ class Booking(models.Model):
     hostel = models.ForeignKey(Hostel, on_delete=models.CASCADE)
     tenant = models.ForeignKey(user, on_delete=models.CASCADE)
     check_in = models.DateTimeField(default=timezone.now)
-    mobile_money_number = models.CharField(max_length=10, null=True, blank=True)
+    phone_number = models.CharField(max_length=10, null=True, blank=True)
     cost = models.DecimalField(max_digits=8, decimal_places=2)
     room_no = models.PositiveIntegerField()
-    message = models.CharField(max_length=100)
+    first_name = models.CharField(max_length=50)
+    last_name = models.CharField(max_length=50)
+    email_address = models.EmailField()
+    city_or_town = models.CharField(max_length=100)
+    university_identification_number = models.PositiveIntegerField()
+    region_of_residence = models.CharField(max_length=100)
+    digital_address = models.CharField(max_length=100)
     is_verified = models.BooleanField(default=False)
 
     '''

@@ -19,7 +19,7 @@ class HostelAdmin(admin.ModelAdmin):
 
 
 class BookingAdmin(admin.ModelAdmin):
-    list_display = ('get_hostel', 'tenant', 'check_in', 'price', 'is_verified', 'expiration_date', 'days_remaining', 'message')
+    list_display = ('get_hostel', 'tenant', 'check_in', 'price', 'room_no', 'is_verified', 'expiration_date', 'days_remaining')
 
 
 class SchoolAdmin(admin.ModelAdmin):

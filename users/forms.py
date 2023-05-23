@@ -11,7 +11,7 @@ class UserRegisterForm(UserCreationForm):
 	telephone = PhoneNumberField(
         widget=forms.TextInput(attrs={'placeholder': 'E.g +233 246 743 489'}),
         required=True)
-	ghana_card_number = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'GH-xxxxxxxxx-x'}))
+	ghana_card_number = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'GHA-xxxxxxxxx-x'}))
 
 	class Meta:
 		model = RoomUser

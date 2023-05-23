@@ -13,4 +13,4 @@ class Appartment(TemplateView):
 
 
 class Recreational(TemplateView):
-	template_name = 'properties/recreation.html'
+	template_name = 'properties/recreational.html'
