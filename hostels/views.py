@@ -1,11 +1,13 @@
 from django.shortcuts import render, redirect, reverse
 from django.views.generic import ListView, DetailView, CreateView, TemplateView
 from .models import Hostel, Booking
+from properties.models import Apartment, Property
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
-from .forms import PayForm
+from .forms import PayForm, CreateHostelForm
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
+from django.urls import reverse_lazy
 from django.http import JsonResponse
 from django.core import serializers
 import smtplib
@@ -20,9 +22,12 @@ user = get_user_model()
 def home(request):
 
     students_hostels = Hostel.objects.all().order_by('-date_added')[0:12]
-    #apartments = Apartment.objects.all()[0:8]
+    apartments = Apartment.objects.all().order_by('-created_at')[0:12]
+    general_properties = Property.objects.all().order_by('-date_added')[0:12]
 
-    return render(request, 'hostels/index.html', {'hostels':students_hostels})
+
+    return render(request, 'hostels/index.html', {'hostels':students_hostels, 'apartments':apartments, 
+        'general_properties':general_properties})
 
 
 @method_decorator(csrf_exempt, name='dispatch')
@@ -97,34 +102,27 @@ def make_booking(request, pk):
 
         if form.is_valid():
 
-            momo_no = form.cleaned_data['momo_no']
-            message = form.cleaned_data['message']
+            phone_number = form.cleaned_data['phone_number']
+            first_name = form.cleaned_data['first_name']
+            last_name = form.cleaned_data['last_name']
+            email_address = form.cleaned_data['email_address']
+            city_or_town = form.cleaned_data['city_or_town']
+            university_identification_number = form.cleaned_data['university_identification_number']
+            region_of_residence = form.cleaned_data['region_of_residence']
+            digital_address = form.cleaned_data['digital_address']
 
             hostel = Hostel.objects.get(pk=pk)
             rooms = hostel.no_of_rooms
 
-            try:
-                booking_is_available = Booking.objects.exists()
-            except ObjectDoesNotExist:
-                booking_is_available = None
+            #booking = Booking.objects.filter()
 
-            if booking_is_available:
-
-                latest_room_no = booking_is_available.latest('room_no')
-
-            else:
-                pass
-
-            if latest_room_no != rooms:
-                ROOM_NO = latest_room_no + 1
-
-            elif latest_room_no ==  rooms:
-                ROOM_NO = rooms
-            else:
-                ROOM_NO
-
-            Booking.objects.create(hostel=hostel, tenant=request.user, mobile_money_number=momo_no, cost=hostel.get_cost(
-            ), room_no=ROOM_NO, message=message)
+            Booking.objects.create(hostel=hostel, tenant=request.user, phone_number=phone_number, 
+                cost=hostel.get_cost(
+            ), room_no=3, first_name=first_name, last_name=last_name, 
+                email_address=email_address, city_or_town=city_or_town, 
+            university_identification_number=university_identification_number, 
+            region_of_residence=region_of_residence, 
+            digital_address=digital_address)
 
 
             #with smtplib.SMTP('smtp.gmail.com', 587) as smtp:
@@ -143,6 +141,18 @@ def make_booking(request, pk):
     form = PayForm()
 
     return render(request, 'hostels/booking_form.html', {'form': form})
+
+
+class CreateHostel(CreateView):
+    model = Hostel
+    template_name = 'hostels/create.html'
+    fields = ['owner_name', 'school', 'campus', 'hostel_name', 
+                'contact', 'image', 'no_of_rooms',
+                'hostel_coordinates', 'cost_per_room', 'duration', 
+                'wifi', 'toilet', 'study_area', 'water',
+                'bath_rooms', 'ac_fan', 'power_supply', 'details']
+
+    success_url = reverse_lazy('rooms')           
 
 @login_required
 def dashboard(request):

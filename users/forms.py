@@ -16,3 +16,4 @@ class UserRegisterForm(UserCreationForm):
 	class Meta:
 		model = RoomUser
 		fields = ['email','first_name', 'last_name', 'telephone', 'ghana_card_number', 'gender', 'password1', 'password2']
+

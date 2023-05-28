@@ -3,12 +3,13 @@ from .views import (HostelDetailView, about, home,
                     services,
                     dashboard, howitworks,
                     mission, RoomsListView,
-                    make_booking)
+                    make_booking, CreateHostel)
 
 
 urlpatterns = [
     path('', home, name='home'),
     path('rooms/', RoomsListView.as_view(), name='rooms'),
+    path('hostel/create/', CreateHostel.as_view(), name='create'),
     path('hostel/<int:pk>/', HostelDetailView.as_view(), name='hostel-detail'),
     path('services/', services, name='services'),
     path('how-it-works/', howitworks, name="howitworks"),

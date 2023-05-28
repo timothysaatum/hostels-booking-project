@@ -32,8 +32,8 @@ ALLOWED_HOSTS = config('CURRENT_ALLOWED_HOST', cast = Csv())
 
 INSTALLED_APPS = [
     #created apps
-    'ckeditor',
     'celery',
+    'ckeditor',
     'ckeditor_uploader',
     'crispy_forms',
     'hostels',

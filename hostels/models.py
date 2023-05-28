@@ -2,7 +2,7 @@ from django.urls import reverse
 from django.db import models
 from django.utils import timezone
 from datetime import date
-from ckeditor_uploader.fields import RichTextUploadingField
+#from ckeditor_uploader.fields import RichTextUploadingField
 from phonenumber_field.modelfields import PhoneNumberField
 from django.contrib.auth import get_user_model
 from PIL import Image
@@ -29,35 +29,35 @@ class School(models.Model):
         return self.name
 
 
-AMENITIES = [
-    ('wifi', 'wifi'),
-    ('water', 'water'),
-    ('kitchen', 'kitchen'),
-    ('study area', 'study area'),
-    ('power supply', 'power supply'),
-    ('air condition', 'air condition'),
-]
+
+#class HostelImages(models.Model):
+#    files = models.ImageField(blank=True,
+#                              upload_to='static/images',
+#                              default=None)
 
 class Hostel(models.Model):
     '''    
     defining the database fields of the databases
     '''
-    owner_name = models.CharField(max_length=100, default='gunarcom')
+    owner_name = models.CharField(max_length=100, default='unarcom')
     school = models.ForeignKey(School, on_delete=models.CASCADE)
     campus = models.CharField(max_length=100, default='Main Campus')
     hostel_name = models.CharField(max_length=50, default='unnamed hostel')
     contact = PhoneNumberField()
-    image = models.ImageField(blank=True,
-                              upload_to='static/images',
-                              default=None)
+    image = models.ImageField(blank=True, upload_to='unarcom/hostel/images', default=None)
     date_added = models.DateTimeField(default=timezone.now)
     no_of_rooms = models.PositiveIntegerField()
     hostel_coordinates = models.CharField(max_length=100)
     cost_per_room = models.DecimalField(max_digits=8, decimal_places=2)
     duration = models.PositiveIntegerField()
-    amenities = MultiSelectField(choices=AMENITIES, max_choices=500, max_length=500)
-    wifi = models.CharField(max_length=20)
-    details = RichTextUploadingField()
+    wifi = models.CharField(max_length=20, null=True, blank=True)
+    toilet = models.CharField(max_length=100, null=True, blank=True)
+    study_area = models.CharField(max_length=100, null=True, blank=True)
+    water = models.CharField(max_length=100, null=True, blank=True)
+    bath_rooms = models.CharField(max_length=200, null=True, blank=True)
+    ac_fan = models.CharField('AC/Fun', max_length=100, null=True, blank=True)
+    power_supply = models.CharField(max_length=200, null=True, blank=True)
+    details = models.TextField()
 
 
     '''
@@ -69,7 +69,7 @@ class Hostel(models.Model):
         img = Image.open(self.image.path)
 
         #if img.height > 500 or img.width > 500:
-        output_size = (350, 350)
+        output_size = (250, 350)
         img.thumbnail(output_size)
         img.save(self.image.path)
     
@@ -130,7 +130,7 @@ class Booking(models.Model):
     get and return the message of name of the message sent
     '''
     def __str__(self):
-        return self.message
+        return self.hostel.hostel_name
 
     def get_absolute_url(self):
         return reverse('booking-details', kwargs={'pk': self.pk})
@@ -147,7 +147,7 @@ class Booking(models.Model):
     '''
     getting the hostel name
     '''
-    def get_hostel(self):
+    def hostel_booked(self):
         return self.hostel.hostel_name
     '''
     auto calculating the expiry date of the rent

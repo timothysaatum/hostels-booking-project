@@ -5,10 +5,13 @@ from django.contrib.auth.decorators import login_required
 from django.views.generic.edit import CreateView
 from django.views.generic import TemplateView
 from .models import Complain, Contact
+from .models import RoomUser
 from django.utils.decorators import method_decorator
+from django.contrib.auth import get_user_model
 
 
 
+user = get_user_model()
 
 def register(request):
     if request.method == 'POST':
@@ -25,6 +28,7 @@ def register(request):
 
 @login_required
 def profile(request):
+    #user = RoomUser.objects.filter(id=request.user.id)
     return render(request, 'users/profile.html')
 
 

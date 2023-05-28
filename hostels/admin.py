@@ -12,14 +12,18 @@ from .models import Hostel, Booking, School
 #        }
 #
 class HostelAdmin(admin.ModelAdmin):
-    list_display = ('school', 'campus', 'hostel_name', 'amenities', 'contact', 'no_of_rooms', 'cost_per_room', 'date_added')
+    list_display = ('school', 'campus', 'hostel_name', 'contact', 'no_of_rooms', 
+        'cost_per_room', 'date_added')
     list_filter = ('school',)
     search_fields = ['hostel_name', 'date_added', 'hostel_coordinates']
     #form = HostelAdminForm
 
 
 class BookingAdmin(admin.ModelAdmin):
-    list_display = ('get_hostel', 'tenant', 'check_in', 'price', 'room_no', 'is_verified', 'expiration_date', 'days_remaining')
+    list_display = ('hostel_booked', 'tenant', 'first_name', 'last_name', 'city_or_town', 
+        'university_identification_number', 'region_of_residence', 'digital_address', 'check_in', 
+        'price', 'room_no', 'is_verified', 
+        'expiration_date', 'days_remaining')
 
 
 class SchoolAdmin(admin.ModelAdmin):
