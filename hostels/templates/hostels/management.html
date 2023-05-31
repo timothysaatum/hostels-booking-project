@@ -1,0 +1,50 @@
+{% extends 'hostels/base.html' %}
+{% load static %}
+
+{% block title %}Property Management{% endblock %}
+{% block content %}
+ <section class="user pb-5">
+    <div class="container">
+        <h1>Welcome {{user.first_name}} {{user.last_name}}...</h1>
+        <p class="text-dark">Manage every part of your property on the fly.</p>
+        <div class="row d-flex justify-content-center">
+            <div class="col col-md-3 border bg-light shadow m-2">
+                <a href="{% url 'create' %}" title="add hostel.">
+                    <div class="p-5 fw-bolder text-center">+ Add Hostel
+                    </div>
+                </a>
+            </div>
+            <div class="col col-md-3 border bg-light shadow m-2">
+                <a href="{% url 'rooms' %}" title="add Booking.">
+                    <div class="p-5 fw-bolder text-center">+ Add Booking
+                    </div>
+                </a>
+            </div>
+            <div class="col col-md-3 border bg-light shadow m-2">
+                <a href="{% url 'rooms' %}" title="Payments.">
+                    <div class="p-5 fw-bolder text-center">Payments
+                    </div>
+                </a>
+            </div>
+            <div class="col col-md-3 border bg-light shadow m-2">
+                <a href="{% url 'tenants' %}" title="Manage your tenants here.">
+                    <div class="p-5 fw-bolder text-center">Manage Tenants
+                    </div>
+                </a>
+            </div>
+            <div class="col col-md-3 border bg-light shadow m-2">
+                <a href="{% url 'rooms' %}" title="Contact your tenants.">
+                    <div class="p-5 fw-bolder text-center">Message Tenants
+                    </div>
+                </a>
+            </div>
+            <div class="col col-md-3 border bg-light shadow m-2">
+                <a href="{% url 'rooms' %}" title="Update your property.">
+                    <div class="p-5 fw-bolder text-center">Update Property
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

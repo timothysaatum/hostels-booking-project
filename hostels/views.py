@@ -11,6 +11,7 @@ from django.urls import reverse_lazy
 from django.http import JsonResponse
 from django.core import serializers
 import smtplib
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 #from atlass.transaction import initiate_payment
@@ -46,7 +47,6 @@ class RoomsListView(ListView):
             school = self.request.GET.get('query')
             print(school)
             hosts = Hostel.objects.filter(school__name__icontains=school).order_by('-date_added')
-            #hostels = serializers.serialize('json', hostels)
             print(hosts)
             return hosts
 
@@ -54,11 +54,6 @@ class RoomsListView(ListView):
             hostels = Hostel.objects.all().order_by('-date_added')
             return hostels
 
-    #def get_template_names(self):
-    #    if self.request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
-    #        return ['hostels/rooms.html']
-    #    else:
-    #        return [self.template_name]
 
 
 
@@ -143,16 +138,24 @@ def make_booking(request, pk):
     return render(request, 'hostels/booking_form.html', {'form': form})
 
 
-class CreateHostel(CreateView):
-    model = Hostel
-    template_name = 'hostels/create.html'
-    fields = ['owner_name', 'school', 'campus', 'hostel_name', 
-                'contact', 'image', 'no_of_rooms',
-                'hostel_coordinates', 'cost_per_room', 'duration', 
-                'wifi', 'toilet', 'study_area', 'water',
-                'bath_rooms', 'ac_fan', 'power_supply', 'details']
+class CreateHostel(LoginRequiredMixin, CreateView):
 
-    success_url = reverse_lazy('rooms')           
+    model = Hostel
+    form_class = CreateHostelForm
+    success_url = '/hostel/create/'
+    template_name = 'hostels/create.html'
+
+    def form_valid(self, form):
+
+        form.instance.hostel_amenities = form.cleaned_data['amenities']
+        amenities = form.cleaned_data['amenities']
+
+        #list_amenities = amenities.join(',')
+        form.instance.user_name = self.request.user
+        amen = ','.join(amenities)
+        print(amen)
+        return super().form_valid(form)
+
 
 @login_required
 def dashboard(request):
@@ -160,3 +163,13 @@ def dashboard(request):
     dash = Booking.objects.filter(tenant=request.user)
 
     return render(request, 'hostels/dashboard.html', {'dash':dash})
+
+@login_required
+def hostel_manager(request):
+    return render(request, 'hostels/management.html')
+
+@login_required
+def tenants(request):
+    tenants = Booking.objects.filter(id=request.user.id)
+    print(tenants)
+    return render(request, 'hostels/tenants.html', {'tenants':tenants})

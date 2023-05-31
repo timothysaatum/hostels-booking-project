@@ -15,8 +15,9 @@
                     {% csrf_token %}
                     <div class="form-group">
                         <div class="text-danger">
-                            {{form|crispy}}
-                            <div class="form-group text-center mt-3">
+                            {{ form|crispy }}
+                            {{ form.media }}
+                            <div class="form-group text-center my-3">
                                 <button class="btn btn-outline-danger" type="submit">Create</button>
                             </div>
                         </div>

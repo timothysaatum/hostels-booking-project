@@ -15,6 +15,26 @@ class PayForm(forms.Form):
 
 class CreateHostelForm(forms.ModelForm):
 
+	AMENITIES = [
+		('Water', 'Water'),
+		('Power Supply', 'Power Supply'),
+		('Toilet', 'Toilet'),
+		('Kitchen', 'Kitchen'),
+		('Individual Bath Room', 'Individual Bath Room'),
+		('Shared bath Room', 'Shared bath Room'),
+		('Individual Meters', 'Individual meters'),
+		('Wifi', 'Wifi'),
+		('AC/fan', 'AC/fan'),
+		('Study Area', 'Study Area'),
+		('Bed Available', 'Bed Available'),
+		('Wardrope', 'Wardrope'),
+		('Tiled floor', 'Tiled floor')
+	]
+
+	amenities = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple(attrs={'placeholder':'Check all that apply'}), choices=AMENITIES)
+
 	class Meta:
 		model = Hostel
-		fields = '__all__'
+		fields = ['owner_name', 'school', 'campus', 'hostel_name', 'contact', 'image', 'no_of_rooms',
+			'hostel_coordinates', 'cost_per_room', 'duration_of_rent', 'wifi', 'amenities', 'details',
+		]

@@ -1,0 +1,22 @@
+{% extends 'hostels/base.html' %}
+{% load static %}
+
+{% block title %}All Tenants{% endblock %}
+{% block content %}
+ <section class="user pb-5">
+    <div class="container">
+        <h1>Welcome {{user.first_name}} {{user.last_name}}...</h1>
+        <p class="text-dark">Manage your tenants from here.</p>
+        <div class="row g-2 d-flex justify-content-between">
+            {% for tenant in tenants %}
+            <div class="col col-md-3 border bg-light shadow">
+                <a href="{% url 'create' %}" title="add hostel">
+                <div class="p-5 fw-bolder text-center">{{tenant.first_name}}
+                </div>
+            </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

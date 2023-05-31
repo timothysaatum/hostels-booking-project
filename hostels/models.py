@@ -2,7 +2,7 @@ from django.urls import reverse
 from django.db import models
 from django.utils import timezone
 from datetime import date
-#from ckeditor_uploader.fields import RichTextUploadingField
+from ckeditor_uploader.fields import RichTextUploadingField
 from phonenumber_field.modelfields import PhoneNumberField
 from django.contrib.auth import get_user_model
 from PIL import Image
@@ -39,25 +39,21 @@ class Hostel(models.Model):
     '''    
     defining the database fields of the databases
     '''
-    owner_name = models.CharField(max_length=100, default='unarcom')
+    user_name = models.ForeignKey(user, on_delete=models.CASCADE)
+    owner_name = models.CharField(max_length=100, default='unarcom', help_text='Enter name of hostel owner')
     school = models.ForeignKey(School, on_delete=models.CASCADE)
-    campus = models.CharField(max_length=100, default='Main Campus')
+    campus = models.CharField(max_length=100, default='Main Campus', help_text='Enter campus the hostel is located')
     hostel_name = models.CharField(max_length=50, default='unnamed hostel')
-    contact = PhoneNumberField()
+    contact = PhoneNumberField(help_text='+233 589 693 6595')
     image = models.ImageField(blank=True, upload_to='unarcom/hostel/images', default=None)
     date_added = models.DateTimeField(default=timezone.now)
-    no_of_rooms = models.PositiveIntegerField()
-    hostel_coordinates = models.CharField(max_length=100)
-    cost_per_room = models.DecimalField(max_digits=8, decimal_places=2)
-    duration = models.PositiveIntegerField()
-    wifi = models.CharField(max_length=20, null=True, blank=True)
-    toilet = models.CharField(max_length=100, null=True, blank=True)
-    study_area = models.CharField(max_length=100, null=True, blank=True)
-    water = models.CharField(max_length=100, null=True, blank=True)
-    bath_rooms = models.CharField(max_length=200, null=True, blank=True)
-    ac_fan = models.CharField('AC/Fun', max_length=100, null=True, blank=True)
-    power_supply = models.CharField(max_length=200, null=True, blank=True)
-    details = models.TextField()
+    no_of_rooms = models.PositiveIntegerField(help_text='E.g 20')
+    hostel_coordinates = models.CharField(max_length=100, help_text='latitude, longitude')
+    cost_per_room = models.DecimalField(max_digits=8, decimal_places=2, help_text='4500')
+    duration_of_rent = models.PositiveIntegerField(help_text='2')
+    wifi = models.CharField(max_length=50)
+    hostel_amenities = models.CharField(max_length=200)
+    details = RichTextUploadingField(help_text='Enter anything that is not in the amenities')
 
 
     '''

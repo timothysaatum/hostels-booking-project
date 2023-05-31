@@ -112,15 +112,15 @@
             >profile</a
           >
         </li>
-        <li>
-          <a href="{% url 'register' %}" class="text-decoration-underline"
-            >Sign Up</a
-          >
-        </li>
         {% else %}
         <li>
           <a href="{% url 'login' %}" class="text-decoration-underline"
             >Login</a
+          >
+        </li>
+        <li>
+          <a href="{% url 'register' %}" class="text-decoration-underline"
+            >Sign Up</a
           >
         </li>
         {% endif %}

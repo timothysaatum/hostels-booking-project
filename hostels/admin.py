@@ -13,7 +13,7 @@ from .models import Hostel, Booking, School
 #
 class HostelAdmin(admin.ModelAdmin):
     list_display = ('school', 'campus', 'hostel_name', 'contact', 'no_of_rooms', 
-        'cost_per_room', 'date_added')
+        'cost_per_room', 'date_added', 'hostel_amenities')
     list_filter = ('school',)
     search_fields = ['hostel_name', 'date_added', 'hostel_coordinates']
     #form = HostelAdminForm
