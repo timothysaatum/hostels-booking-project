@@ -35,6 +35,7 @@ class School(models.Model):
 #                              upload_to='static/images',
 #                              default=None)
 
+
 class Hostel(models.Model):
     '''    
     defining the database fields of the databases
@@ -45,14 +46,14 @@ class Hostel(models.Model):
     campus = models.CharField(max_length=100, default='Main Campus', help_text='Enter campus the hostel is located')
     hostel_name = models.CharField(max_length=50, default='unnamed hostel')
     contact = PhoneNumberField(help_text='+233 589 693 6595')
-    image = models.ImageField(blank=True, upload_to='unarcom/hostel/images', default=None)
+    display_image = models.ImageField(blank=True, upload_to='unarcom/hostel/images', default=None)
     date_added = models.DateTimeField(default=timezone.now)
     no_of_rooms = models.PositiveIntegerField(help_text='E.g 20')
     hostel_coordinates = models.CharField(max_length=100, help_text='latitude, longitude')
     cost_per_room = models.DecimalField(max_digits=8, decimal_places=2, help_text='4500')
     duration_of_rent = models.PositiveIntegerField(help_text='2')
     wifi = models.CharField(max_length=50)
-    hostel_amenities = models.CharField(max_length=200)
+    hostel_amenities = models.JSONField(null=True, default=dict, blank=True)
     details = RichTextUploadingField(help_text='Enter anything that is not in the amenities')
 
 
@@ -62,12 +63,12 @@ class Hostel(models.Model):
     def save(self, *args, **kwargs):
         super(Hostel, self).save(*args, **kwargs)
 
-        img = Image.open(self.image.path)
+        img = Image.open(self.display_image.path)
 
         #if img.height > 500 or img.width > 500:
         output_size = (250, 350)
         img.thumbnail(output_size)
-        img.save(self.image.path)
+        img.save(self.display_image.path)
     
     def __str__(self):
         return self.hostel_name
@@ -97,7 +98,9 @@ class Hostel(models.Model):
     def get_decline_choice_url(self):
         return reverse('decline-choice', kwargs={'pk': self.pk})
 
-
+class HostelImages(models.Model):
+    hostel = models.ForeignKey(Hostel, on_delete=models.CASCADE)
+    images = models.ImageField(blank=True, upload_to='unarcom/hostel/images', default=None)
 
 '''
 The booking model will contain the data base for all the transactions 

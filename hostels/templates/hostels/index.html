@@ -79,7 +79,7 @@
 		<div class="row d-flex justify-content-between sm-margin">
 			{% for hostel in hostels %}
 			<div class="col-md-6 col-lg-3 mb-4" data-aos="fade-up">
-				<a href="{% url 'hostel-detail' hostel.pk %}"><img src="{{hostel.image.url}}" alt="{{hostel.hostel_name}}" class="img-fluid round">
+				<a href="{% url 'hostel-detail' hostel.pk %}"><img src="{{hostel.display_image.url}}" alt="{{hostel.hostel_name}}" class="img-fluid round">
 					<div class="d-flex justify-content-between">
 						<p class="text-capitalize text-color">{{hostel.hostel_name}}</p>
                         <span class="p-1 text-color">Gh₵{{hostel.get_cost}}</span>

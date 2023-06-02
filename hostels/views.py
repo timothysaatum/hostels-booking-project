@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, reverse
 from django.views.generic import ListView, DetailView, CreateView, TemplateView
-from .models import Hostel, Booking
+from .models import Hostel, Booking, HostelImages
 from properties.models import Apartment, Property
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
@@ -26,7 +26,6 @@ def home(request):
     apartments = Apartment.objects.all().order_by('-created_at')[0:12]
     general_properties = Property.objects.all().order_by('-date_added')[0:12]
 
-
     return render(request, 'hostels/index.html', {'hostels':students_hostels, 'apartments':apartments, 
         'general_properties':general_properties})
 
@@ -38,7 +37,6 @@ class RoomsListView(ListView):
     context_object_name = 'hostels'
     template_name = 'hostels/rooms.html'
     slug_url_kwarg = 'pk'
-
 
     def get_queryset(self):
 
@@ -61,6 +59,11 @@ class HostelDetailView(DetailView):
 
     model = Hostel
 
+    def get_context_data(self, **kwargs):
+        pk = self.kwargs.get('pk')
+        context = super(HostelDetailView, self).get_context_data(**kwargs)
+        context['image_list'] = HostelImages.objects.filter(hostel_id=pk)            
+        return context
 
 def services(request):
 
@@ -146,14 +149,8 @@ class CreateHostel(LoginRequiredMixin, CreateView):
     template_name = 'hostels/create.html'
 
     def form_valid(self, form):
-
-        form.instance.hostel_amenities = form.cleaned_data['amenities']
-        amenities = form.cleaned_data['amenities']
-
-        #list_amenities = amenities.join(',')
+        form.instance.hostel_amenities = dict(item.split('=') for item in form.cleaned_data['amenities'].split(','))
         form.instance.user_name = self.request.user
-        amen = ','.join(amenities)
-        print(amen)
         return super().form_valid(form)
 
 

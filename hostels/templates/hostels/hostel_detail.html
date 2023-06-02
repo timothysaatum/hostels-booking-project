@@ -11,32 +11,27 @@
 </section>
 <section>
     <div class="container">
-        <div class="text-center h7"><span class="px-2 py-2 fw-bold mb-5 bg-light">Property own by @{{object.owner_name}}</span></div>
+        <div class="text-center h7"><span class="px-2 py-2 fw-bold mb-5 bg-light">Property Host: {{object.owner_name}}</span></div>
         <h4 class="mb-3 mt-3 text-capitalize text-decoration-underline fw-bold">where you will stay!</h4>
         <div class="d-flex justify-content-center">
             <div class="row g-1">
                 <div class="col-md-8">
                     <div class="row g-1">
+                        {% for obj in image_list|slice:"4:5" %}
                         <div class="col-md-4 div-place">
-                            <img src="{{object.image.url}}" class="img-fluid">
+                            <img src="{{obj.images.url}}" class="img-fluid">
                             <button class="btn btn-light btn-md show-all d-block d-md-none" data-bs-toggle="modal"
                                 data-bs-target="#exampleModal"><i class="fa-solid fa-ellipsis-vertical"></i> <i
                                     class="fa-solid fa-ellipsis-vertical"></i> Show all</button>
                         </div>
+                        {% endfor %}
+                        {% for obj in image_list|slice:":4" %}
                         <div class="col-md-4 d-none d-sm-block d-lg-block">
-                            <img src="{{object.image.url}}" class="img-fluid">
+                            <img src="{{obj.images.url}}" class="img-fluid">
                         </div>
-                        <div class="col-md-4 d-none d-sm-block d-lg-block">
-                            <img src="{{object.image.url}}" class="img-fluid">
-                        </div>
-                        <div class="col-md-4 d-none d-sm-block d-lg-block">
-                            <img src="{{object.image.url}}" class="img-fluid">
-                        </div>
-                        <div class="col-md-4 d-none d-sm-block d-lg-block">
-                            <img src="{{object.image.url}}" class="img-fluid">
-                        </div>
+                        {% endfor %}
                         <div class="col-md-4 d-none d-sm-block d-lg-block div-place">
-                            <img src="{{object.image.url}}" class="img-fluid">
+                            <img src="{{object.display_image.url}}" class="img-fluid">
                             <button class="btn btn-light btn-md show-all" data-bs-toggle="modal"
                                 data-bs-target="#exampleModal"><i class="fa-solid fa-ellipsis-vertical"></i> <i
                                     class="fa-solid fa-ellipsis-vertical"></i> Show all</button>
@@ -52,49 +47,12 @@
             <div class="col-md-9">
                 <!--offers inner row-->
                 <div class="row">
-                    {{ object.hostel_amenities|slice:"3" }}
-                    {% if object.wifi %}
+                    {% for _, amenity in object.hostel_amenities.items %}
                     <div class="col-md-6 col-sm-12 py-1">
-                        <span class="text-muted text-capitalize"><i
-                                class="fa-solid fa-wifi text-danger border p-1 b-radius bg-light shadow"> </i>     {{ object.wifi }}</span>
+                        <span class="text-muted text-capitalize">
+                            <i class="fa-solid fa-check-double text-danger border p-1 b-radius bg-light shadow"></i> {{amenity}}</span>
                     </div>
-                    {% endif %}
-                    {% if object.bath_rooms %}
-                    <div class="col-md-6 col-sm-12 py-1">
-                        <span class="text-muted text-capitalize"><i
-                                class="fa-solid fa-bath text-danger border p-1 b-radius bg-light shadow"></i> {{ object.bath_rooms }}</span>
-                    </div>
-                    {% endif %}
-                    {% if object.toilet %}
-                    <div class="col-md-6 col-sm-12 py-1">
-                        <span class="text-muted text-capitalize"><i
-                                class="fa-solid fa-toilet text-danger border p-1 b-radius bg-light shadow"></i> {{ object.toilet }}</span>
-                    </div>
-                    {% endif %}
-                    {% if object.water %}
-                    <div class="col-md-6 col-sm-12 py-1">
-                        <span class="text-muted text-capitalize"><i
-                                class="fa-solid fa-droplet text-danger border p-1 b-radius bg-light shadow"></i> {{ object.water }}</span>
-                    </div>
-                    {% endif %}
-                    {% if object.study_area %}
-                    <div class="col-md-6 col-sm-12 py-1">
-                        <span class="text-muted text-capitalize"><i
-                                class="fa-solid fa-droplet text-danger border p-1 b-radius bg-light shadow"></i> {{ object.study_area }}</span>
-                    </div>
-                    {% endif %}
-                    {% if object.power_supply %}
-                    <div class="col-md-6 col-sm-12 py-1">
-                        <span class="text-muted text-capitalize"><i
-                                class="fa-solid fa-book-open-reader text-danger border p-1 b-radius bg-light shadow"></i> {{ object.power_supply }}</span>
-                    </div>
-                    {% endif %}
-                    {% if object.ac_fan %}
-                    <div class="col-md-6 col-sm-12 py-1">
-                        <span class="text-muted text-capitalize"><i
-                                class="fa-solid fa-plug text-danger border p-1 b-radius bg-light shadow"></i> {{ object.ac_fan }}</span>
-                    </div>
-                    {% endif %}
+                    {% endfor %}
                 </div>
             </div>
         </div>
@@ -106,16 +64,7 @@
         </div>
     </div>
     <!--Maps-->
-    <div class="container">
-        <h4 class="text-decoration-underline fw-bold">See this place on the maps.<span class="text-danger">
-        <div class="d-flex justify-content-center">
-            <div class="row g-1">
-                <div class="col-md-10 map">
-                    <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d15746.00697071983!2d-0.8961187!3d9.37728295!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sgh!4v1685018330465!5m2!1sen!2sgh" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-                </div>
-            </div>
-        </div>
-    </div>
+
 </section>
 
 <!--reserve-->
@@ -138,11 +87,11 @@
     </div>
     <!--on large devices-->
     <div class="text-center my-3 d-none mx-1 btn-reserve py-2 d-sm-none d-md-block">
-        <a href="{% url 'pay' object.pk %}" role="button"
+        <!--<a href="{% url 'pay' object.pk %}" role="button"
             class="text-decoration-none btn btn-danger btn-lg text-center">book a room
-            @{{object.hostel_name|truncatechars:5}}</span></a>
-           <!-- <a href="#javascriptVoid()" role="button"
-            class="text-decoration-none btn btn-danger btn-lg text-center">Contact: 0594438287</span></a>-->
+            @{{object.hostel_name|truncatechars:5}}</span></a>-->
+            <a href="tel:0594438287" role="button"
+            class="text-decoration-none btn btn-danger btn-lg text-center">Contact: 0594438287</span></a>
     </div>
 </div>
 </div>
@@ -153,7 +102,7 @@
     <!--<a href="{% url 'pay' object.pk %}" role="button"
         class="text-decoration-none btn btn-danger btn-sm btn-reserve mobile-btn">book a room
         @{{object.hostel_name|truncatechars:5}}</span></a>-->
-        <a href="#javascriptVoid()" role="button"
+        <a href="tel:0594438287" role="button"
         class="text-decoration-none btn btn-danger btn-sm btn-reserve mobile-btn">Contact: 0594438287</span></a>
 </div>
 
@@ -167,33 +116,11 @@
             </div>
             <div class="modal-body">
                 <div class="row g-1">
-                    <div class="col-md-4 col-sm-12">
-                        <img src="{{ object.image.url }}" class="img-fluid">
-                    </div>
-                    <div class="col-md-4 col-sm-12">
-                        <img src="{{ object.image.url }}" class="img-fluid">
-                    </div>
-                    <div class="col-md-4 col-sm-12">
-                        <img src="{{ object.image.url }}" class="img-fluid">
-                    </div>
-                    <div class="col-md-4 col-sm-12">
-                        <img src="{{ object.image.url }}" class="img-fluid">
-                    </div>
-                    <div class="col-md-4 col-sm-12">
-                        <img src="{{ object.image.url }}" class="img-fluid">
-                    </div>
-                    <div class="col-md-4 col-sm-12">
-                        <img src="{{ object.image.url }}" class="img-fluid">
-                    </div>
-                    <div class="col-md-4 col-sm-12">
-                        <img src="{{ object.image.url }}" class="img-fluid">
-                    </div>
-                    <div class="col-md-4 col-sm-12">
-                        <img src="{{ object.image.url }}" class="img-fluid">
-                    </div>
-                    <div class="col-md-4 col-sm-12">
-                        <img src="{{ object.image.url }}" class="img-fluid">
-                    </div>
+                    {% for obj in image_list %}
+                        <div class="col-md-4 col-sm-12">
+                            <img src="{{obj.images.url}}" class="img-fluid">
+                        </div>
+                    {% endfor %}
                 </div>
             </div>
         </div>

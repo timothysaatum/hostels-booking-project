@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Hostel, Booking, School
+from .models import Hostel, Booking, School, HostelImages
 #from django import forms
 
 
@@ -32,3 +32,4 @@ class SchoolAdmin(admin.ModelAdmin):
 admin.site.register(Hostel, HostelAdmin)
 admin.site.register(Booking, BookingAdmin)
 admin.site.register(School, SchoolAdmin)
+admin.site.register(HostelImages)
