@@ -122,6 +122,7 @@ AUTH_PASSWORD_VALIDATORS = [
         'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+#pwa binaries
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
@@ -160,3 +161,6 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = config('EMAIL_USER')
 EMAIL_HOST_PASSWORD = config('EMAIL_PASS')
 AUTH_USER_MODEL = 'users.RoomUser'
+
+PAYSTACK_PUBLIC_KEY = 'pk_test_01942e42eec90638f5f6a95bad4cf580e8997b1f'
+PAYSTACK_SECRET_KEY = 'sk_test_bc401f9a29ddc8d5bee2fa8a49c07dca6f678aec'

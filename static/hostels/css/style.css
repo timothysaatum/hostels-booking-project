@@ -60,7 +60,7 @@ h6,.h7, a {
 }
 
 .sec-bg h1,
-p {
+.p-color {
     color: white;
 }
 
@@ -83,7 +83,7 @@ p {
 }
 
 .service-link:hover {
-    background-color: #ffd700;
+    background-color: #FAEBD7;
     color: white;
     transition: 0.9s;
 }

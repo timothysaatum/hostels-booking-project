@@ -1,7 +1,7 @@
 {% extends 'hostels/base.html' %}
 {% load static %}
 
-{% block title %}Accomodations, Lands, stores, building materials{% endblock %}
+{% block title %}Hostels and Accommodation rental and sales company company{% endblock %}
 {% block content %}
 <section class="sec-bg margin-bottom">
 	<div class="p-5 dark">
@@ -78,8 +78,10 @@
 		<h2 class="text-capitalize text-decoration-underline text-center mb-4 pb-4">students Accommodation.</h2>
 		<div class="row d-flex justify-content-between sm-margin">
 			{% for hostel in hostels %}
+			{% if not hostel.no_of_rooms == 0 %}
 			<div class="col-md-6 col-lg-3 mb-4" data-aos="fade-up">
-				<a href="{% url 'hostel-detail' hostel.pk %}"><img src="{{hostel.display_image.url}}" alt="{{hostel.hostel_name}}" class="img-fluid round">
+				<a href="{% url 'hostel-detail' hostel.pk %}">
+					<div class="d-flex justify-content-center"><img src="{{hostel.display_image.url}}" alt="{{hostel.hostel_name}}" class="img-fluid round"></div>
 					<div class="d-flex justify-content-between">
 						<p class="text-capitalize text-color">{{hostel.hostel_name}}</p>
                         <span class="p-1 text-color">Gh₵{{hostel.get_cost}}</span>
@@ -96,6 +98,7 @@
                     <span class="d-block"><small class="text-color pt-2 text-capitalize mb-1">{{hostel.school.name}}| {{hostel.campus}}</small></span>
 				</a>
 			</div>
+			{% endif %}
 			{% empty %}
 			<div class="text-center">
 				<small>No hostel posted yet</small>

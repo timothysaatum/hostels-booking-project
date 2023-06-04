@@ -1,0 +1,39 @@
+{% extends 'hostels/base.html' %}
+{% load static %}
+
+
+{% block title %}Make Payment{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-center user">
+	<h1>You are about to make payment for {{booking.hostel.hostel_name}}</h1>
+</div>
+	<div class="d-flex justify-content-center user"><button onclick="payWithPaystack()" class="btn btn-outline-danger btn-lg">Book</button></div>
+	<script type="text/javascript" src="https://js.paystack.co/v1/inline.js"></script>
+	<script type="text/javascript">
+		function payWithPaystack(){
+			const currency = "GHS";
+			const plan = "";
+			const ref = "{{booking.ref}}";
+			const amount = "{{booking.cost}}";
+
+			let obj = {
+				key:"{{paystack_pub_key}}",
+				email:"{{booking.email_address}}",
+				amount:"{{amount_value}}",
+				ref:ref,
+				callback: function(response){
+					window.location.href = "{% url 'verify' booking.ref %}";
+				},
+			};
+			if (Boolean(currency)){
+				obj.currency = currency.toUpperCase();
+			}
+			if (Boolean(plan)){
+				obj.plan = plan.toUpperCase();
+			}
+
+			const handler = PaystackPop.setup(obj);
+			handler.openIframe();
+		}
+	</script>
+{% endblock %}

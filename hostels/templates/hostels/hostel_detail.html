@@ -19,7 +19,7 @@
                     <div class="row g-1">
                         {% for obj in image_list|slice:"4:5" %}
                         <div class="col-md-4 div-place">
-                            <img src="{{obj.images.url}}" class="img-fluid">
+                            <div class="d-flex justify-content-center"><img src="{{obj.images.url}}" class="img-fluid"></div>
                             <button class="btn btn-light btn-md show-all d-block d-md-none" data-bs-toggle="modal"
                                 data-bs-target="#exampleModal"><i class="fa-solid fa-ellipsis-vertical"></i> <i
                                     class="fa-solid fa-ellipsis-vertical"></i> Show all</button>
@@ -59,7 +59,7 @@
     </div>
     <div class="container">
         <div class="col-md-8 col-sm-12 mt-5 mb-5 p-2">
-            <h4 class="text-decoration-underline fw-bold">What should know about. <span class="text-danger">({{object.hostel_name}})</span></h4>
+            <h4 class="text-decoration-underline fw-bold">What you should know about. <span class="text-danger">({{object.hostel_name}})</span></h4>
             <p class="text-dark">{{ object.details|safe }}</p>
         </div>
     </div>
@@ -87,11 +87,11 @@
     </div>
     <!--on large devices-->
     <div class="text-center my-3 d-none mx-1 btn-reserve py-2 d-sm-none d-md-block">
-        <!--<a href="{% url 'pay' object.pk %}" role="button"
+        <a href="{% url 'pay' object.pk %}" role="button"
             class="text-decoration-none btn btn-danger btn-lg text-center">book a room
-            @{{object.hostel_name|truncatechars:5}}</span></a>-->
-            <a href="tel:0594438287" role="button"
-            class="text-decoration-none btn btn-danger btn-lg text-center">Contact: 0594438287</span></a>
+            @{{object.hostel_name|truncatechars:5}}</span></a>
+           <!-- <a href="tel:0594438287" role="button"
+            class="text-decoration-none btn btn-danger btn-lg text-center">Contact: 0594438287</span></a>-->
     </div>
 </div>
 </div>

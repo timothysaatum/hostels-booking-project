@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, reverse
 from django.views.generic import ListView, DetailView, CreateView, TemplateView
-from .models import Hostel, Booking, HostelImages
+from .models import Hostel, HostelImages
+from atlass.models import Booking, Account
 from properties.models import Apartment, Property
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
@@ -113,8 +114,8 @@ def make_booking(request, pk):
             rooms = hostel.no_of_rooms
 
             #booking = Booking.objects.filter()
-
-            Booking.objects.create(hostel=hostel, tenant=request.user, phone_number=phone_number, 
+            key = settings.PAYSTACK_PUBLIC_KEY
+            booking = Booking.objects.create(hostel=hostel, tenant=request.user, phone_number=phone_number, 
                 cost=hostel.get_cost(
             ), room_no=3, first_name=first_name, last_name=last_name, 
                 email_address=email_address, city_or_town=city_or_town, 
@@ -122,7 +123,15 @@ def make_booking(request, pk):
             region_of_residence=region_of_residence, 
             digital_address=digital_address)
 
+            booking.save()
 
+            #create an account for the user when they make a booking
+            acc = Account.objects.filter(user_id=request.user.id)
+            #checking to see if user already have an account
+            if not acc:
+                Account.objects.create(user_id=request.user.id, booking_for_id=pk)
+
+            #sending email to the user
             #with smtplib.SMTP('smtp.gmail.com', 587) as smtp:
             #    smtp.ehlo()
             #    smtp.starttls()
@@ -134,12 +143,32 @@ def make_booking(request, pk):
             #    msg = f'Subject: {subj}\n\n{body}'
             #
             #    smtp.sendmail(settings.EMAIL_HOST_USER, 'saatumtimothy@gmail.com', msg)
-        return redirect('booking-details')
+
+            context = {
+                'booking':booking,
+                'field_values':request.POST,
+                'paystack_pub_key':key,
+                'amount_value':booking.amount_value(),
+            }
+
+            return render(request, 'hostels/make_payment.html', context)
+
+        #return redirect('booking-details')
 
     form = PayForm()
 
     return render(request, 'hostels/booking_form.html', {'form': form})
 
+def verify_booking(request, ref):
+    booking = Booking.objects.filter(ref=ref)
+    verified = booking.verify_payment
+
+    if verified:
+        account = Account.objects.get(user=request.user)
+        account.balance += booking.cost
+        account.save()
+        return render(request, 'hostes/payment_success.html')
+    return render(request, 'hostes/payment_success.html')
 
 class CreateHostel(LoginRequiredMixin, CreateView):
 

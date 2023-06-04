@@ -3,7 +3,7 @@ from .views import (HostelDetailView, about, home,
                     services,
                     dashboard, howitworks,
                     mission, RoomsListView,
-                    make_booking, CreateHostel, hostel_manager, tenants)
+                    make_booking, CreateHostel, hostel_manager, tenants, verify_booking)
 
 
 urlpatterns = [
@@ -19,4 +19,5 @@ urlpatterns = [
     path('rooms/request-to-book/<int:pk>/', make_booking, name='pay'),
     path('property/management', hostel_manager, name='management'),
     path('property/tenants', tenants, name='tenants'),
+    path('verify-payment/<str:ref>/', verify_booking, name='verify')
 ]

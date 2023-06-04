@@ -1,4 +1,4 @@
-from .models import Booking
+from atlass.models import Booking
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 

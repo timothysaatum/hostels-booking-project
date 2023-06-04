@@ -1,5 +1,6 @@
 from django import forms
-from .models import Booking, Hostel, HostelImages
+from .models import Hostel, HostelImages
+from atlass.models import Booking
 
 
 class PayForm(forms.Form):
