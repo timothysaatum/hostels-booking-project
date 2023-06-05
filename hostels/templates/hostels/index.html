@@ -6,9 +6,11 @@
 <section class="sec-bg margin-bottom">
 	<div class="p-5 dark">
 		<h1 class="text-capitalize fw-bolder" data-aos="zoom-in-right">You deserve the best.</h1>
-		<p class="text-capitalize pt-3 pb-4 fw-bolder p-color" data-aos="zoom-in-right">decide where you stay when you travel.
+		<p class="text-capitalize pt-3 pb-4 fw-bolder p-color" data-aos="zoom-in-right">decide where you stay when you
+			travel.
 		</p>
-		<a href="{% url 'rooms' %}" class="btn btn-sm btn-danger text-capitalize" role="button" data-aos="zoom-in-right">explore our
+		<a href="{% url 'rooms' %}" class="btn btn-sm btn-danger text-capitalize" role="button"
+			data-aos="zoom-in-right">explore our
 			rentals</a>
 	</div>
 </section>
@@ -39,7 +41,8 @@
 						</span>
 					</div>
 					<h3 class="pt-1 mt-2 pt-3">Students Accomodation</h3>
-					<small class="text-dark text-center">Finding a place to stay after gaining admission is one of the crucial moments in a student's life. We understand that.</small>
+					<small class="text-dark text-center">Finding a place to stay after gaining admission is one of the
+						crucial moments in a student's life. We understand that.</small>
 				</a>
 			</div>
 			<div class="col-md-5 m-4 py-3 d-hover bg-light shadow d-flex justify-content-center" data-aos="fade-up">
@@ -81,10 +84,11 @@
 			{% if not hostel.no_of_rooms == 0 %}
 			<div class="col-md-6 col-lg-3 mb-4" data-aos="fade-up">
 				<a href="{% url 'hostel-detail' hostel.pk %}">
-					<div class="d-flex justify-content-center"><img src="{{hostel.display_image.url}}" alt="{{hostel.hostel_name}}" class="img-fluid round"></div>
+					<div class="d-flex justify-content-center"><img src="{{hostel.display_image.url}}"
+							alt="{{hostel.hostel_name}}" class="img-fluid round"></div>
 					<div class="d-flex justify-content-between">
 						<p class="text-capitalize text-color">{{hostel.hostel_name}}</p>
-                        <span class="p-1 text-color">Gh₵{{hostel.get_cost}}</span>
+						<span class="p-1 text-color">Gh₵{{hostel.get_cost}}</span>
 					</div>
 					<div class="d-flex justify-content-between border-top mb-1">
 						<span class="border-end text-dark"><i class="fa-solid fa-bed text-danger"></i>
@@ -95,7 +99,8 @@
 							{{hostel.get_dist}}</span>
 					</div>
 					<small class="text-muted">{{hostel.details|safe|truncatechars:36}}</small>
-                    <span class="d-block"><small class="text-color pt-2 text-capitalize mb-1">{{hostel.school.name}}| {{hostel.campus}}</small></span>
+					<span class="d-block"><small class="text-color pt-2 text-capitalize mb-1">{{hostel.school.name}}|
+							{{hostel.campus}}</small></span>
 				</a>
 			</div>
 			{% endif %}
@@ -109,7 +114,8 @@
 	{% for hostel in hostels %}
 	{% if forloop.counter > 11 %}
 	<div class="d-lex align-items-center">
-		<p class="text-center"><a href="{% url 'rooms' %}" class="text-dark text-decoration-underline"><i class="fa-solid fa-chevron-right"></i> See All</a></p>
+		<p class="text-center"><a href="{% url 'rooms' %}" class="text-dark text-decoration-underline"><i
+					class="fa-solid fa-chevron-right"></i> See All</a></p>
 	</div>
 	{% endif %}
 	{% endfor %}
@@ -142,7 +148,8 @@
 	{% for apartment in apartments %}
 	{% if forloop.counter > 11 %}
 	<div class="d-lex align-items-center">
-		<p class="text-center"><a href="#" class="text-dark text-decoration-underline"><i class="fa-solid fa-chevron-right"></i> See All</a></p>
+		<p class="text-center"><a href="#" class="text-dark text-decoration-underline"><i
+					class="fa-solid fa-chevron-right"></i> See All</a></p>
 	</div>
 	{% endif %}
 	{% endfor %}
@@ -175,7 +182,8 @@
 	{% for property in general_properties %}
 	{% if forloop.counter > 11 %}
 	<div class="d-lex align-items-center">
-		<p class="text-center"><a href="#" class="text-dark text-decoration-underline"><i class="fa-solid fa-chevron-right"></i> See All</a></p>
+		<p class="text-center"><a href="#" class="text-dark text-decoration-underline"><i
+					class="fa-solid fa-chevron-right"></i> See All</a></p>
 	</div>
 	{% endif %}
 	{% endfor %}

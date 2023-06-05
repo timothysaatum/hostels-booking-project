@@ -1,9 +1,9 @@
 <!--extending the base template of the app-->
-{% extends 'hostels/base.html' %} 
+{% extends 'hostels/base.html' %}
 <!--loading crispy form tags-->
 {% load static %} {% load crispy_forms_tags %}
 <!--title block-->
-{% block title %}Unarcom - Request to book{% endblock %} 
+{% block title %}Unarcom - Request to book{% endblock %}
 
 <!---content block-->
 {% block content %}
@@ -14,43 +14,44 @@
       {% csrf_token %}
       {{ form.non_field_errors }}
       <div class="row g-3">
-      <div class="col-md-4">
-        <label for="{{ form.first_name.id_for_label }}">First Name</label><br>
-        {{ form.first_name }}
+        <div class="col-md-4">
+          <label for="{{ form.first_name.id_for_label }}">First Name</label><br>
+          {{ form.first_name }}
+        </div>
+        <div class="col-md-4">
+          <label for="{{ form.last_name.id_for_label }}">Last Name</label> <br>
+          {{ form.last_name }}
+        </div>
+        <div class="col-md-4">
+          <label for="{{ form.email_address.id_for_label }}">Email Address</label><br>
+          {{ form.email_address }}
+        </div>
+        <div class="col-md-4">
+          <label for="{{ form.phone_number.id_for_label }}">Phone Number</label><br>
+          {{ form.phone_number }}
+        </div>
+        <div class="col-md-4">
+          <label for="{{ form.city_or_town.id_for_label }}">City / Town</label><br>
+          {{ form.city_or_town }}
+        </div>
+        <div class="col-md-4">
+          <label for="{{ form.university_identification_number.id_for_label }}">University Identification Number
+            (UIN)</label><br>
+          {{ form.university_identification_number }}
+        </div>
+        <div class="col-md-4">
+          <label for="{{ form.region_of_residence.id_for_label }}">Region of Residence</label><br>
+          {{ form.region_of_residence }}
+        </div>
+        <div class="col-md-4">
+          <label for="{{ form.digital_address.id_for_label }}">Digital Address</label><br>
+          {{ form.digital_address }}
+        </div>
       </div>
-      <div class="col-md-4">
-        <label for="{{ form.last_name.id_for_label }}">Last Name</label> <br>
-        {{ form.last_name }}
+      <hr>
+      <div class="text-center mt-4">
+        <button type="submit" class="btn btn-md btn-outline-danger">continue</button>
       </div>
-      <div class="col-md-4">
-        <label for="{{ form.email_address.id_for_label }}">Email Address</label><br>
-        {{ form.email_address }}
-      </div>
-      <div class="col-md-4">
-        <label for="{{ form.phone_number.id_for_label }}">Phone Number</label><br>
-        {{ form.phone_number }}
-      </div>
-      <div class="col-md-4">
-        <label for="{{ form.city_or_town.id_for_label }}">City / Town</label><br>
-        {{ form.city_or_town }}
-      </div>
-      <div class="col-md-4">
-        <label for="{{ form.university_identification_number.id_for_label }}">University Identification Number (UIN)</label><br>
-        {{ form.university_identification_number }}
-      </div>
-      <div class="col-md-4">
-        <label for="{{ form.region_of_residence.id_for_label }}">Region of Residence</label><br>
-        {{ form.region_of_residence }}
-      </div>
-      <div class="col-md-4">
-        <label for="{{ form.digital_address.id_for_label }}">Digital Address</label><br>
-        {{ form.digital_address }}
-      </div>
-    </div>
-    <hr>
-    <div class="text-center mt-4">
-      <button type="submit" class="btn btn-md btn-outline-danger">continue</button>
-    </div>
     </form>
   </div>
 </section>

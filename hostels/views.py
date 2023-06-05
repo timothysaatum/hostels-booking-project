@@ -160,7 +160,7 @@ def make_booking(request, pk):
     return render(request, 'hostels/booking_form.html', {'form': form})
 
 def verify_booking(request, ref):
-    booking = Booking.objects.filter(ref=ref)
+    booking = Booking.objects.get(ref=ref)
     verified = booking.verify_payment
 
     if verified:
@@ -168,7 +168,7 @@ def verify_booking(request, ref):
         account.balance += booking.cost
         account.save()
         return render(request, 'hostes/payment_success.html')
-    return render(request, 'hostes/payment_success.html')
+    return render(request, 'hostels/payment_success.html')
 
 class CreateHostel(LoginRequiredMixin, CreateView):
 
