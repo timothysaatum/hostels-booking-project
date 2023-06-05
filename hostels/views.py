@@ -15,7 +15,6 @@ import smtplib
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
-#from atlass.transaction import initiate_payment
 
 
 user = get_user_model()
@@ -66,19 +65,21 @@ class HostelDetailView(DetailView):
         context['image_list'] = HostelImages.objects.filter(hostel_id=pk)            
         return context
 
-def services(request):
-
-    return render(request, 'hostels/services.html')
 
 
-def mission(request):
+class Services(TemplateView):
+    template_name = 'hostels/services.html'
 
-    return render(request, 'hostels/mission.html')
 
 
-def howitworks(request):
+class Mission(TemplateView):
+    template_name = 'hostels/mission.html'
 
-    return render(request, 'hostels/howitworks.html')
+
+
+class HowItWorks(TemplateView):
+    template_name = 'hostels/howitworks.html'
+
 
 
 def about(request):
@@ -114,7 +115,6 @@ def make_booking(request, pk):
             rooms = hostel.no_of_rooms
 
             #booking = Booking.objects.filter()
-            key = settings.PAYSTACK_PUBLIC_KEY
             booking = Booking.objects.create(hostel=hostel, tenant=request.user, phone_number=phone_number, 
                 cost=hostel.get_cost(
             ), room_no=3, first_name=first_name, last_name=last_name, 
@@ -143,7 +143,7 @@ def make_booking(request, pk):
             #    msg = f'Subject: {subj}\n\n{body}'
             #
             #    smtp.sendmail(settings.EMAIL_HOST_USER, 'saatumtimothy@gmail.com', msg)
-
+            key = settings.PAYSTACK_PUBLIC_KEY
             context = {
                 'booking':booking,
                 'field_values':request.POST,
@@ -167,7 +167,7 @@ def verify_booking(request, ref):
         account = Account.objects.get(user=request.user)
         account.balance += booking.cost
         account.save()
-        return render(request, 'hostes/payment_success.html')
+        return render(request, 'hostels/payment_success.html')
     return render(request, 'hostels/payment_success.html')
 
 class CreateHostel(LoginRequiredMixin, CreateView):

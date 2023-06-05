@@ -3,15 +3,13 @@ from django.db import models
 from django.utils import timezone
 from datetime import date
 from ckeditor_uploader.fields import RichTextUploadingField
-from phonenumber_field.modelfields import PhoneNumberField
 from django.contrib.auth import get_user_model
 from PIL import Image
 from .distance import calc_distance
 from .tasks import add_after_expiry_task
-from multiselectfield import MultiSelectField
 import secrets
 from atlass.transaction import Paystack
-#from django.utils.text import slugify
+
 
 user = get_user_model()
 
@@ -32,22 +30,16 @@ class School(models.Model):
 
 
 
-#class HostelImages(models.Model):
-#    files = models.ImageField(blank=True,
-#                              upload_to='static/images',
-#                              default=None)
 
-
+#model class for creating a hostel
 class Hostel(models.Model):
-    '''    
-    defining the database fields of the databases
-    '''
+
     user_name = models.ForeignKey(user, on_delete=models.CASCADE)
     owner_name = models.CharField(max_length=100, default='unarcom', help_text='Enter name of hostel owner')
     school = models.ForeignKey(School, on_delete=models.CASCADE)
     campus = models.CharField(max_length=100, default='Main Campus', help_text='Enter campus the hostel is located')
     hostel_name = models.CharField(max_length=50, default='unnamed hostel')
-    contact = PhoneNumberField(help_text='+233 589 693 6595')
+    contact = models.CharField(help_text='0589 693 6595', max_length=10)
     display_image = models.ImageField(blank=True, upload_to='unarcom/hostel/images', default=None)
     date_added = models.DateTimeField(default=timezone.now)
     no_of_rooms = models.PositiveIntegerField(help_text='E.g 20')
@@ -77,11 +69,13 @@ class Hostel(models.Model):
 
     def get_absolute_url(self):
         return reverse('hostel-detail', kwargs={'pk': self.pk})
+
     '''
     a method to get the cost of a romm
     '''
     def get_cost(self):
         return self.cost_per_room
+
     '''
     calculating the distance of the hostel to the campus
     '''
@@ -100,14 +94,11 @@ class Hostel(models.Model):
     def get_decline_choice_url(self):
         return reverse('decline-choice', kwargs={'pk': self.pk})
 
+
+#model for bulk upload of hostel images
 class HostelImages(models.Model):
     hostel = models.ForeignKey(Hostel, on_delete=models.CASCADE)
     images = models.ImageField(blank=True, upload_to='unarcom/hostel/images', default=None)
 
     class Meta:
         verbose_name_plural = 'Hostel Images'
-
-'''
-The booking model will contain the data base for all the transactions 
-made on the site
-'''

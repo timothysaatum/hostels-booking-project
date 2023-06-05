@@ -41,8 +41,6 @@ INSTALLED_APPS = [
     'properties',
     'crispy_bootstrap5',
     'users',
-    "phonenumber_field",
-    'multiselectfield',
     #default apps
     'django.contrib.admin',
     'django.contrib.auth',

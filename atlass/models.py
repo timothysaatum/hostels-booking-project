@@ -11,7 +11,7 @@ from hostels.models import Hostel
 user = get_user_model()
 
 
-
+#an account for each user to store their payments
 class Account(models.Model):
     user = models.OneToOneField(user, on_delete=models.CASCADE)
     currency = models.CharField(max_length=50, default='GHS')
@@ -22,7 +22,10 @@ class Account(models.Model):
     def __str__(self):
         return self.user.__str__()
 
+
+#model for storing a user bookings
 class Booking(models.Model):
+
     tenant = models.ForeignKey(user, on_delete=models.CASCADE, blank=True, null=True)
     hostel = models.ForeignKey(Hostel, on_delete=models.CASCADE)
     check_in = models.DateTimeField(default=timezone.now)
@@ -61,6 +64,7 @@ class Booking(models.Model):
         	return True
     	return False
 
+
     def save(self, *args, **kwargs):
         while not self.ref:
             ref = secrets.token_urlsafe(50)
@@ -70,34 +74,44 @@ class Booking(models.Model):
 
         super().save(*args, **kwargs)
 
+
     def get_absolute_url(self):
         return reverse('booking-details', kwargs={'pk': self.pk})
+
+
     '''
     getting the price of the hostel
     '''
     def price(self):
         return self.hostel.get_cost()
 
+
     '''assigning a room number to the tenant'''
     def get_rooms(self):
         number_of_rooms = self.hostel.no_of_rooms
+
 
     '''
     getting the hostel name
     '''
     def hostel_booked(self):
         return self.hostel.hostel_name
+
+
     '''
     auto calculating the expiry date of the rent
     '''
     def expiration_date(self):
         delta = self.check_in + timezone.timedelta(days=366)
         return delta
+
+
     '''
     a method that checks when user rent expires and increase the number of hostels by 1
     '''
     def increase_number_of_rooms(self):
        add_after_expiry_task.apply_async(args=(self.pk, self.hostel), countdown=5)
+
 
     def days_remaining(self):
         full_dur = self.check_in + timezone.timedelta(days=366)

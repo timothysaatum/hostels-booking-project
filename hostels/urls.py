@@ -1,8 +1,8 @@
 from django.urls import path
 from .views import (HostelDetailView, about, home,
-                    services,
-                    dashboard, howitworks,
-                    mission, RoomsListView,
+                    Services,
+                    dashboard, HowItWorks,
+                    Mission, RoomsListView,
                     make_booking, CreateHostel, hostel_manager, tenants, verify_booking)
 
 
@@ -11,9 +11,9 @@ urlpatterns = [
     path('rooms/', RoomsListView.as_view(), name='rooms'),
     path('hostel/create/', CreateHostel.as_view(), name='create'),
     path('hostel/<int:pk>/', HostelDetailView.as_view(), name='hostel-detail'),
-    path('services/', services, name='services'),
-    path('how-it-works/', howitworks, name="howitworks"),
-    path('mission/', mission, name='mission'),
+    path('services/', Services.as_view(), name='services'),
+    path('how-it-works/', HowItWorks.as_view(), name="howitworks"),
+    path('mission/', Mission.as_view(), name='mission'),
     path('about/', about, name='about'),
     path('booking/summary', dashboard, name='booking-details'),
     path('rooms/request-to-book/<int:pk>/', make_booking, name='pay'),

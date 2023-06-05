@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser
-from phonenumber_field.modelfields import PhoneNumberField
 from django.utils import timezone
 from .managers import CustomManager
 from django.contrib.auth.models import AbstractBaseUser
@@ -13,7 +12,7 @@ class RoomUser(AbstractBaseUser):
 	first_name = models.CharField(max_length=100)
 	last_name = models.CharField(max_length=100)
 	ghana_card_number = models.CharField(max_length=50)
-	telephone = PhoneNumberField()
+	telephone = models.CharField(help_text='0597856551', max_length=10)
 	gender = models.CharField(max_length=10)
 	is_staff = models.BooleanField(default=False)
 	is_active = models.BooleanField(default=True)
@@ -45,7 +44,7 @@ class RoomUser(AbstractBaseUser):
 
 class Complain(models.Model):
 	email = models.EmailField()
-	phone = PhoneNumberField()
+	phone = models.CharField(help_text='0597856551', max_length=10)
 	address = models.CharField(max_length=300)
 	full_name = models.CharField(max_length=300)
 	message = models.TextField()
@@ -61,7 +60,7 @@ class Complain(models.Model):
 
 class Contact(models.Model):
 	email = models.EmailField()
-	phone = PhoneNumberField()
+	phone = models.CharField(help_text='0597856551', max_length=10)
 	address = models.CharField(max_length=300)
 	full_name = models.CharField(max_length=300)
 	message = models.TextField()

@@ -3,6 +3,7 @@ from .models import Hostel, HostelImages
 from atlass.models import Booking
 
 
+#defining the parameters a user is requiredto input to reserver a room
 class PayForm(forms.Form):
 
 	phone_number = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'0806916500'}))
@@ -15,6 +16,7 @@ class PayForm(forms.Form):
 	digital_address = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'BL-0587-3675'}))
 
 
+#form for creating a hostel
 class CreateHostelForm(forms.ModelForm):
 
 	allow_multiple_selected = True
@@ -31,6 +33,10 @@ class CreateHostelForm(forms.ModelForm):
 			'hostel_coordinates', 'cost_per_room', 'duration_of_rent', 'wifi', 'amenities', 'details',
 		]
 
+
+	#since all the related images cannot be stored in a sinle field
+	#we need to loop through them and create each as
+	#a separate object
 	def _save_m2m(self):
 		super()._save_m2m()
 		images = [HostelImages(hostel=self.instance, images=file) for file in self.files.getlist('files')]
