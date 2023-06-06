@@ -9,6 +9,6 @@ class BookingAdmin(admin.ModelAdmin):
         'expiration_date', 'days_remaining', 'ref')
 
 class AccountAdmin(admin.ModelAdmin):
-    list_display = ('user', 'currency', 'balance', 'booking_for', 'created_at')
+    list_display = ('user', 'currency', 'balance', 'created_at')
 admin.site.register(Booking, BookingAdmin)
 admin.site.register(Account, AccountAdmin)

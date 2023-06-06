@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth import get_user_model
 from django.utils import timezone
 import secrets
+from django.urls import reverse
 from .transaction  import  Paystack
 from datetime import date
 from hostels.tasks import add_after_expiry_task
@@ -16,7 +17,6 @@ class Account(models.Model):
     user = models.OneToOneField(user, on_delete=models.CASCADE)
     currency = models.CharField(max_length=50, default='GHS')
     balance = models.DecimalField(max_digits=1000000000, decimal_places=2, default=0.00)
-    booking_for = models.ForeignKey(Hostel, on_delete=models.CASCADE)
     created_at = models.DateTimeField(default=timezone.now, null=True)
 
     def __str__(self):
@@ -87,8 +87,16 @@ class Booking(models.Model):
 
 
     '''assigning a room number to the tenant'''
+
     def get_rooms(self):
         number_of_rooms = self.hostel.no_of_rooms
+        rn = 0
+        for i in range(1, number_of_rooms):
+
+            room = yield i
+
+            rn = rn + room.next()
+        return rn
 
 
     '''

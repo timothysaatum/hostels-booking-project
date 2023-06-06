@@ -12,7 +12,7 @@ class UserAdmin(UserAdmin):
     add_form = UserCreationForm
 
     list_display = ('email', 'first_name', 'last_name', 
-					'ghana_card_number', 'gender', 'telephone', 'date_joined')
+					'ghana_card_number', 'gender', 'your_emmergency_contact', 'name','telephone', 'date_joined')
     list_filter = ('email', 'telephone')
     fieldsets = (
         (None, {'fields': ('email', 'password')}),

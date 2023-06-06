@@ -11,9 +11,10 @@ class UserRegisterForm(UserCreationForm):
 	telephone = forms.CharField(
         widget=forms.TextInput(attrs={'placeholder': 'E.g 0245867859'}),
         required=True)
-	ghana_card_number = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'GHA-xxxxxxxxx-x'}))
+	ghana_card_number = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'GHA-XXXXXXXXX-X'}))
+	your_emmergency_contact = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'Emmergency Contact'}))
 
 	class Meta:
 		model = RoomUser
-		fields = ['email','first_name', 'last_name', 'telephone', 'ghana_card_number', 'gender', 'password1', 'password2']
+		fields = ['email','first_name', 'last_name', 'telephone', 'ghana_card_number', 'gender', 'your_emmergency_contact', 'name', 'password1', 'password2']
 

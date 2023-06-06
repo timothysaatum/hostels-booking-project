@@ -14,6 +14,8 @@ class RoomUser(AbstractBaseUser):
 	ghana_card_number = models.CharField(max_length=50)
 	telephone = models.CharField(help_text='0597856551', max_length=10)
 	gender = models.CharField(max_length=10)
+	your_emmergency_contact = models.CharField(help_text='0597856551', max_length=10)
+	name = models.CharField('His/Her Name', max_length=50)
 	is_staff = models.BooleanField(default=False)
 	is_active = models.BooleanField(default=True)
 	is_admin = models.BooleanField(default=False)

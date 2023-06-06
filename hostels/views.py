@@ -151,7 +151,9 @@ def make_booking(request, pk):
                 'amount_value':booking.amount_value(),
             }
 
-            return render(request, 'hostels/make_payment.html', context)
+            #return render(request, 'hostels/make_payment.html', context)
+
+            return redirect('booking-details')
 
         #return redirect('booking-details')
 
