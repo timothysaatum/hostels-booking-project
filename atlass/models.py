@@ -6,7 +6,7 @@ from django.urls import reverse
 from .transaction  import  Paystack
 from datetime import date
 from hostels.tasks import add_after_expiry_task
-from hostels.models import Hostel
+from hostels.models import Room
 
 
 user = get_user_model()
@@ -16,7 +16,7 @@ user = get_user_model()
 class Account(models.Model):
     user = models.OneToOneField(user, on_delete=models.CASCADE)
     currency = models.CharField(max_length=50, default='GHS')
-    balance = models.DecimalField(max_digits=1000000000, decimal_places=2, default=0.00)
+    balance = models.DecimalField(max_digits=65, decimal_places=2, default=0.00)
     created_at = models.DateTimeField(default=timezone.now, null=True)
 
     def __str__(self):
@@ -27,11 +27,12 @@ class Account(models.Model):
 class Booking(models.Model):
 
     tenant = models.ForeignKey(user, on_delete=models.CASCADE, blank=True, null=True)
-    hostel = models.ForeignKey(Hostel, on_delete=models.CASCADE)
+    room = models.ForeignKey(Room, on_delete=models.CASCADE)
     check_in = models.DateTimeField(default=timezone.now)
     phone_number = models.CharField(max_length=10, null=True, blank=True)
     cost = models.DecimalField(max_digits=8, decimal_places=2)
     room_no = models.PositiveIntegerField()
+    room_type = models.CharField(max_length=30)
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     email_address = models.EmailField()
@@ -83,27 +84,15 @@ class Booking(models.Model):
     getting the price of the hostel
     '''
     def price(self):
-        return self.hostel.get_cost()
+        return self.room.rate_per_head
 
-
-    '''assigning a room number to the tenant'''
-
-    def get_rooms(self):
-        number_of_rooms = self.hostel.no_of_rooms
-        rn = 0
-        for i in range(1, number_of_rooms):
-
-            room = yield i
-
-            rn = rn + room.next()
-        return rn
 
 
     '''
-    getting the hostel name
+    getting the room type
     '''
-    def hostel_booked(self):
-        return self.hostel.hostel_name
+    def room_booked(self):
+        return self.room.room_type
 
 
     '''
