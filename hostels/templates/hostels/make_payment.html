@@ -5,8 +5,9 @@
 {% block title %}Make Payment{% endblock %}
 {% block content %}
 <section class="user">
-	<div class="d-flex justify-content-center mb-3">
-		<h1>You are about to make payment for {{booking.hostel.hostel_name}}</h1>
+	<div class="text-center mb-3">
+		<h1>You are about to make payment for a </h1>
+		<p class="fw-bolder">({{booking.room.room_type}}) in {{booking.room.hostel.hostel_name}}</p>
 	</div>
 	<div  class="d-flex justify-content-center mb-3"><small>Ensure the information provided is accurated. A copy of this will be mailed to <b>{{booking.email_address}}</b>.</small></div>
 	<div class="container">

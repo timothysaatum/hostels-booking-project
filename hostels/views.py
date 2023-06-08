@@ -124,8 +124,6 @@ class MakeBooking(LoginRequiredMixin, CreateView):
 @login_required
 def make_booking(request, pk):
 
-    ROOM_NO = 1
-
     if request.method == 'POST':
 
         form = PayForm(request.POST)
@@ -136,23 +134,24 @@ def make_booking(request, pk):
             first_name = form.cleaned_data['first_name']
             last_name = form.cleaned_data['last_name']
             email_address = form.cleaned_data['email_address']
-            room_type_list = form.cleaned_data['room_type']
+            #room_type_list = form.cleaned_data['room_type']
             city_or_town = form.cleaned_data['city_or_town']
             university_identification_number = form.cleaned_data['university_identification_number']
             region_of_residence = form.cleaned_data['region_of_residence']
             digital_address = form.cleaned_data['digital_address']
-            room_type = room_type_list[0]
+            #room_type = room_type_list[0]
             room = Room.objects.get(pk=pk)
             #rooms = hostel.no_of_rooms
 
             booking = Booking.objects.create(room=room, tenant=request.user, 
-                phone_number=phone_number, room_type=room_type, cost=room.rate_per_head, 
+                phone_number=phone_number, room_type=room.room_type, cost=room.rate_per_head, 
                 room_no=3, first_name=first_name, last_name=last_name, 
                 email_address=email_address, city_or_town=city_or_town, 
             university_identification_number=university_identification_number, 
             region_of_residence=region_of_residence, 
             digital_address=digital_address)
 
+            booking.room.occupants += request.user.last_name
             #create an account for the user when they make a booking
             acc = Account.objects.filter(user_id=request.user.id)
             

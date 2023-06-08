@@ -38,7 +38,7 @@ def reduce_hostel_number(sender, instance, **kwargs):
 
 	if instance.room_type == '4 in a room':
 		if room.room_capacity > 1:
-			room.capacity -= 1
+			room.room_capacity -= 1
 		if room.room_capacity == 1:
 			room.room_capacity += 3
 			room.room_type_number -= 1

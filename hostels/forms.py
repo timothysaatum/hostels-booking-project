@@ -3,19 +3,13 @@ from .models import Hostel, HostelImages, Room, RoomImages
 from atlass.models import Booking
 
 
-ROOM_TYPE = [
-    	('1 in a room', '1 in a room'),
-    	('2 in a room', '2 in a room'),
-    	('3 in a room', '3 in a room'),
-    	('4 in a room', '4 in a room')
-    ]
 
 #defining the parameters a user is requiredto input to reserver a room
 class PayForm(forms.Form):
 	phone_number = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'0806916500'}))
 	first_name = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'Sheldon'}))
 	last_name = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'Cooper'}))
-	room_type = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple(attrs={'placeholder':'Select the room type'}), choices=ROOM_TYPE)
+	#room_type = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple(attrs={'placeholder':'Select the room type'}), choices=ROOM_TYPE)
 	email_address = forms.EmailField(widget=forms.EmailInput(attrs={'placeholder':'Tam@gmail.com'}))
 	city_or_town = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'Las Vegas'}))
 	university_identification_number = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'UIN'}))
@@ -23,12 +17,12 @@ class PayForm(forms.Form):
 	digital_address = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'BL-0587-3675'}))
 
 class BookingForm(forms.ModelForm):
+	#room_type = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple(
+	#			attrs={'placeholder':'Select the room type'}), 
+	#			choices=ROOM_TYPE
+	#		)
 
-	class Meta:
-		room_type = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple(
-				attrs={'placeholder':'Select the room type'}), 
-				choices=ROOM_TYPE
-			) 
+	class Meta: 
 		model = Booking
 		exclude = ('tenant', 'cost', 'is_verified', 'date_created', 'check_in', 'ref')
 

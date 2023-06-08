@@ -111,7 +111,7 @@ ROOM_TYPE = [
     ]
 
 class Room(models.Model):
-    occupants = models.CharField(max_length=50)
+    occupants = models.CharField(max_length=300, blank=True, null=True)
     hostel = models.ForeignKey(Hostel, on_delete=models.CASCADE)
     room_type = models.CharField(max_length=20, choices=ROOM_TYPE)
     room_display_image = models.ImageField(upload_to='unarcom/room_type/images', default=None, null=True, blank=True)
