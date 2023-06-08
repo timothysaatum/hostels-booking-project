@@ -14,8 +14,8 @@ def reduce_hostel_number(sender, instance, **kwargs):
 	'''
 	reducing the number of room-type number by one whenever a booking is made
 	'''
-	room_num = 0
-	room_types = ['1 in a room', '2 in a room', '3 in a room', '4 in a room']
+	#room_num = 0
+	#room_types = ['1 in a room', '2 in a room', '3 in a room', '4 in a room']
 
 	if instance.room_type == '1 in a room':
 		room.room_type_number -= 1
