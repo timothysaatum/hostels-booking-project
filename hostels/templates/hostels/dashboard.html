@@ -17,24 +17,28 @@
             {% for booking in dash %}
             <!--for smaller screens-->
             <div class="col-12 border-bottom d-block d-lg-none">
-            	 <div class="d-flex justify-content-between align-items-center">
-                    <div><p class="lead text-dark fw-bold">{{booking.hostel|truncatechars:7}}</p></div>
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <p class="lead text-dark fw-bold">{{booking.hostel|truncatechars:7}}</p>
+                    </div>
                     <div><small>{{booking.expiration_date|date:'M d, Y'}}</small></div>
                     <div><small>{{booking.get_rooms}}</small></div>
-                    <div><button title="{{booking.hostel}}" class="btn btn-sm btn-outline-danger text-decoration-underline">View</button></div>
-                 </div>
+                    <div><button title="{{booking.hostel}}"
+                            class="btn btn-sm btn-outline-danger text-decoration-underline">View</button></div>
+                </div>
             </div>
             <!---for larger screens-->
             <div class="col-12 border-bottom d-none d-sm-block d-lg-block">
-                 <div class="d-flex justify-content-between align-items-center">
+                <div class="d-flex justify-content-between align-items-center">
                     <p class="lead text-dark">{{booking.hostel|truncatechars:12}}</p>
                     <div><small>{{booking.get_rooms}}</small></div>
                     <small>{{booking.expiration_date|date:'M d, Y'}}</small>
-                    <button title="{{booking.hostel}}" class="btn btn-sm btn-outline-danger text-decoration-underline">View</button>
-                 </div>
+                    <button title="{{booking.hostel}}"
+                        class="btn btn-sm btn-outline-danger text-decoration-underline">View</button>
+                </div>
             </div>
-             {% empty %}
-                You have got no booking yet
+            {% empty %}
+            You have got no booking yet
             {% endfor %}
         </div>
     </div>

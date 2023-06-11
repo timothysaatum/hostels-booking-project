@@ -4,13 +4,13 @@
 
 {% block title %}Update Hostel{% endblock %}
 {% block content %}
- <section class="user pb-5">
+<section class="user pb-5">
     <div class="container">
         <div class="row d-flex justify-content-center">
             <div class="col-sm-12 col-md-12 col-lg-10 bg-light">
                 <p class="lead text-center p-3 text-dark fw-bold">
-                Update {{hostel.hostel_name}}
-            </p>
+                    Update {{hostel.hostel_name}}
+                </p>
                 <form method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="form-group">

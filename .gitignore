@@ -1,4 +1,8 @@
 ./grem
 db.sqlite
 .env
-./__pycache__
+./hostels/__pycache__
+./vscode
+./atlass/__pycache__
+./users/__pycache__
+./properties/__pycache__

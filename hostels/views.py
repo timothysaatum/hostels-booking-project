@@ -1,11 +1,11 @@
 from django.shortcuts import render, redirect, reverse
 from django.views.generic import ListView, DetailView, CreateView, TemplateView, DeleteView, UpdateView
-from .models import Hostel, HostelImages, Room, RoomImages
+from .models import Hostel, RoomType, RoomTypeImages, Room
 from atlass.models import Booking, Account
 from properties.models import Apartment, Property
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
-from .forms import PayForm, CreateHostelForm, CreateRoomForm, BookingForm
+from .forms import BookingCreationForm, HostelCreationForm, RoomTypeCreationForm, BookingForm
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.urls import reverse_lazy
@@ -15,6 +15,7 @@ import smtplib
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
+import random
 
 
 user = get_user_model()
@@ -54,23 +55,28 @@ class HostelsListView(ListView):
 
 
 class RoomsListView(ListView):
-    model = Room
+    model = RoomType
     context_object_name = 'rooms'
     template_name = 'hostels/room_list.html'
     slug_url_kwarg = 'pk'
 
-    def get_queryset(self):
-        rooms = Room.objects.filter(hostel_id=self.kwargs.get('pk'))
-        return rooms
+    def get_context_data(self, **kwargs):
+        context = super(RoomsListView, self).get_context_data(**kwargs)
+        context['room_type_list'] = RoomType.objects.filter(hostel_id=self.kwargs.get('pk'))
+        return context
 
 class RoomDetailView(DetailView):
 
-    model = Room
+    model = RoomType
+    slug_url_kwarg = 'pk'
+    context_object_name = 'room'
 
+    template_name = 'hostels/room_detail.html'
     def get_context_data(self, **kwargs):
-        pk = self.kwargs.get('pk')
+
         context = super(RoomDetailView, self).get_context_data(**kwargs)
-        context['image_list'] = RoomImages.objects.filter(room_id=pk)            
+        context['image_list'] = RoomTypeImages.objects.filter(room_id=self.kwargs.get('pk'))
+        context['spec_room'] = Room.objects.filter(room_type=self.kwargs.get('pk'))     
         return context
 
 
@@ -122,11 +128,11 @@ class MakeBooking(LoginRequiredMixin, CreateView):
         }
 
 @login_required
-def make_booking(request, pk):
+def make_booking(request, pk, room_pk):
 
     if request.method == 'POST':
 
-        form = PayForm(request.POST)
+        form = BookingCreationForm(request.POST)
 
         if form.is_valid():
 
@@ -134,24 +140,23 @@ def make_booking(request, pk):
             first_name = form.cleaned_data['first_name']
             last_name = form.cleaned_data['last_name']
             email_address = form.cleaned_data['email_address']
-            #room_type_list = form.cleaned_data['room_type']
             city_or_town = form.cleaned_data['city_or_town']
             university_identification_number = form.cleaned_data['university_identification_number']
             region_of_residence = form.cleaned_data['region_of_residence']
             digital_address = form.cleaned_data['digital_address']
-            #room_type = room_type_list[0]
-            room = Room.objects.get(pk=pk)
-            #rooms = hostel.no_of_rooms
-
+            gender = form.cleaned_data['gender']
+            receipt = str(random.randrange(0, 100)) + university_identification_number
+            room = Room.objects.get(pk=room_pk)
+            #room_cat = RoomType.objects.get(pk=pk)
             booking = Booking.objects.create(room=room, tenant=request.user, 
-                phone_number=phone_number, room_type=room.room_type, cost=room.rate_per_head, 
-                room_no=3, first_name=first_name, last_name=last_name, 
-                email_address=email_address, city_or_town=city_or_town, 
+                phone_number=phone_number, room_type=room.room_type, cost=room.room_type.cost_per_head, 
+                room_no=room.room_number, first_name=first_name, last_name=last_name, 
+                email_address=email_address,gender=gender, city_or_town=city_or_town, 
             university_identification_number=university_identification_number, 
             region_of_residence=region_of_residence, 
-            digital_address=digital_address)
+            digital_address=digital_address, receipt_number=receipt)
 
-            booking.room.occupants += request.user.last_name
+            
             #create an account for the user when they make a booking
             acc = Account.objects.filter(user_id=request.user.id)
             
@@ -171,6 +176,7 @@ def make_booking(request, pk):
             #    msg = f'Subject: {subj}\n\n{body}'
             #
             #    smtp.sendmail(settings.EMAIL_HOST_USER, 'saatumtimothy@gmail.com', msg)
+
             key = settings.PAYSTACK_PUBLIC_KEY
             context = {
                 'booking':booking,
@@ -181,11 +187,9 @@ def make_booking(request, pk):
 
             return render(request, 'hostels/make_payment.html', context)
 
-            #return redirect('booking-details')
 
-        #return redirect('booking-details')
 
-    form = PayForm()
+    form = BookingCreationForm()
 
     return render(request, 'hostels/booking_form.html', {'form': form})
 
@@ -200,10 +204,11 @@ def verify_booking(request, ref):
         return render(request, 'hostels/payment_success.html')
     return render(request, 'hostels/payment_success.html')
 
+
 class CreateHostel(LoginRequiredMixin, CreateView):
 
     model = Hostel
-    form_class = CreateHostelForm
+    form_class = HostelCreationForm
     success_url = '/hostel/create/'
     template_name = 'hostels/create.html'
 
@@ -212,15 +217,28 @@ class CreateHostel(LoginRequiredMixin, CreateView):
         form.instance.created_by = self.request.user
         return super().form_valid(form)
 
-class RoomCreateView(LoginRequiredMixin, CreateView):
-    model = Room
 
-    form_class = CreateRoomForm
-    success_url = '/'
+
+class RoomTypeCreateView(LoginRequiredMixin, CreateView):
+    model = RoomType
+
+    form_class = RoomTypeCreationForm
+    success_url = '/hostel/room-type/create/'
 
     def form_valid(self, form):
+        list_room_numbers = form.cleaned_data['room_numbers'].split(',')
+        room_dict = {}
+
+        for val in range(len(list_room_numbers)):
+
+            room_dict_key = 'room' + str(val)
+            room_dict.update({room_dict_key:list_room_numbers[val]})
+
         form.instance.db_use_only = form.cleaned_data['room_type_number']
+        form.instance.room_numbers = room_dict
+
         return super().form_valid(form)
+
 
 
 class HostelDelete(LoginRequiredMixin, DeleteView):
@@ -236,8 +254,7 @@ class HostelUpdate(LoginRequiredMixin, DeleteView):
     model = Hostel
     template_name = 'hostels/update.html'
     fields = ['owner_name', 'school', 'campus', 'hostel_name', 'contact', 'display_image', 'no_of_rooms'
-                'hostel_coordinates', 'cost_per_room', 'duration_of_rent', 'wifi', 'hostel_amenities', 'details'
-        ]
+                'hostel_coordinates', 'cost_range', 'duration_of_rent', 'wifi', 'hostel_amenities']
     success_url = reverse_lazy('hostel-detail')
 
     def get_queryset(self):
@@ -252,9 +269,11 @@ def dashboard(request):
 
     return render(request, 'hostels/dashboard.html', {'dash':dash})
 
+
 @login_required
 def hostel_manager(request):
     return render(request, 'hostels/management.html')
+
 
 @login_required
 def tenants(request):

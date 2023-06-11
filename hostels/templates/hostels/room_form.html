@@ -4,19 +4,18 @@
 
 {% block title %}Add Room{% endblock %}
 {% block content %}
- <section class="user pb-5">
+<section class="user pb-5">
     <div class="container">
         <div class="row d-flex justify-content-center">
             <div class="col-sm-12 col-md-12 col-lg-10 bg-light">
                 <p class="lead text-center p-3 text-dark fw-bold">
-                Enter valid information to create a room
-            </p>
+                    Enter valid information to create a room
+                </p>
                 <form method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="form-group">
                         <div class="text-danger">
                             {{ form|crispy }}
-                            {{ form.media }}
                             <div class="form-group text-center my-3">
                                 <button class="btn btn-outline-danger" type="submit">Create</button>
                             </div>

@@ -43,7 +43,7 @@ class Hostel(models.Model):
     date_added = models.DateTimeField(default=timezone.now)
     no_of_rooms = models.PositiveIntegerField(help_text='E.g 20')
     hostel_coordinates = models.CharField(max_length=100, help_text='latitude, longitude')
-    rate = models.CharField(max_length=200, help_text='4500')
+    cost_range = models.CharField(max_length=200, help_text='4500')
     duration_of_rent = models.PositiveIntegerField(help_text='2')
     wifi = models.CharField(max_length=50)
     hostel_amenities = models.JSONField(null=True, default=dict, blank=True)
@@ -72,7 +72,7 @@ class Hostel(models.Model):
     a method to get the cost of a romm
     '''
     def get_cost(self):
-        return self.rate
+        return self.cost_range
 
     '''
     calculating the distance of the hostel to the campus
@@ -93,44 +93,61 @@ class Hostel(models.Model):
         return reverse('decline-choice', kwargs={'pk': self.pk})
 
 
-#model for bulk upload of hostel images
-class HostelImages(models.Model):
-    hostel = models.ForeignKey(Hostel, on_delete=models.CASCADE)
-    images = models.ImageField(blank=True, upload_to='unarcom/hostel/images', default=None)
-
-    class Meta:
-        verbose_name_plural = 'Hostel Images'
 
 
-
-ROOM_TYPE = [
+CATEGORY = [
         ('1 in a room', '1 in a room'),
         ('2 in a room', '2 in a room'),
         ('3 in a room', '3 in a room'),
         ('4 in a room', '4 in a room')
     ]
 
-class Room(models.Model):
-    occupants = models.CharField(max_length=300, blank=True, null=True)
+class RoomType(models.Model):
     hostel = models.ForeignKey(Hostel, on_delete=models.CASCADE)
-    room_type = models.CharField(max_length=20, choices=ROOM_TYPE)
+    room_type = models.CharField(max_length=20, choices=CATEGORY)
     room_display_image = models.ImageField(upload_to='unarcom/room_type/images', default=None, null=True, blank=True)
-    room_capacity = models.PositiveIntegerField()
-    rate_per_head = models.DecimalField(max_digits=65, decimal_places=2)
-    price = models.DecimalField(max_digits=65, decimal_places=2)
     room_type_number = models.PositiveIntegerField()
+    room_numbers = models.JSONField(default=dict)
+    room_capacity = models.PositiveIntegerField()
+    cost_per_head = models.DecimalField(max_digits=65, decimal_places=2)
     db_use_only = models.PositiveIntegerField()
-    has_a_user = models.BooleanField(default=False)
-    details = RichTextUploadingField(help_text='Enter details about the room. e.g pictures.')
+    details = RichTextUploadingField()
+    
+
+    def __str__(self):
+        return self.room_type
+
+
+class RoomTypeImages(models.Model):
+    room = models.ForeignKey(RoomType, on_delete=models.CASCADE)
+    room_type_images = models.ImageField(blank=True, upload_to='unarcom/room_type/images', default=None)
 
 
     def __str__(self):
-        return f'{self.hostel}'
-
-
-class RoomImages(models.Model):
-    room = models.ForeignKey(Room, on_delete=models.CASCADE)
-    room_type_images = models.ImageField(blank=True, upload_to='unarcom/room_type/images', default=None)
+        return f'Room type: {self.room}'
 
     class Meta:
         verbose_name_plural = 'Room Images'
+
+
+class Room(models.Model):
+    room_type = models.ForeignKey(RoomType, on_delete=models.CASCADE)
+    room_number = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.room_number
+
+
+    def get_absolute_url(self):
+        return reverse('room-detail', kwargs={'pk': self.pk})
+
+    def hostel(self):
+        return self.room_type.hostel
+
+
+    def capacity(self):
+        return self.room_type.room_capacity
+
+
+    def cost_per_head(self):
+        return self.room_type.cost_per_head

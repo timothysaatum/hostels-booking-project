@@ -11,7 +11,8 @@
                     {% csrf_token %}
                     <div class="form-group">
                         <div class="text-danger">
-                               <p class="lead text-center p-3 text-dark fw-bold">Are you sure you want to delete {{hostel.hostel_name}}</p>
+                            <p class="lead text-center p-3 text-dark fw-bold">Are you sure you want to delete
+                                {{hostel.hostel_name}}</p>
                             <div class="form-group text-center my-3 d-flex justify-content-between">
                                 <a href="{% url 'rooms' %}" type="button" class="btn btn-outline-info">Take me Back</a>
                                 <button class="btn btn-outline-danger" type="submit">Confirm Delete</button>

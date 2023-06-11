@@ -27,6 +27,10 @@
           {{ form.email_address }}
         </div>
         <div class="col-md-4">
+          <label for="{{ form.gender.id_for_label }}">Gender</label><br>
+          {{ form.gender }}
+        </div>
+        <div class="col-md-4">
           <label for="{{ form.phone_number.id_for_label }}">Phone Number</label><br>
           {{ form.phone_number }}
         </div>

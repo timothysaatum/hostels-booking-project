@@ -17,7 +17,7 @@
 				<h2>Receipt Details</h2>
 				<div class="d-flex justify-content-between">
 					<p>Unarcom LLC</p>
-					<p>Receipt No: 001</p>
+					<p>Receipt No: {{booking.receipt_number}}</p>
 				</div>
 				<hr>
 				<h2>Your Info</h2>
@@ -40,8 +40,8 @@
 					<p>Rent Expires: {{booking.expiration_date|date:'M d, Y'}}</p>
 				</div>
 				<div class="d-flex justify-content-between">
-					<p>Room No: .......</p>
-					<p>Landlord: {{booking.room.hostel.created_by}}</p>
+					<p>Room No: {{booking.room_no}}</p>
+					<p>Landlord: {{booking.room.hostel.owner_name}}</p>
 				</div>
 				<div class="d-flex justify-content-between">
 					<p>Campus: {{booking.room.hostel.campus}}</p>

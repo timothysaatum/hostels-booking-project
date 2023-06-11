@@ -6,7 +6,7 @@ from django.urls import reverse
 from .transaction  import  Paystack
 from datetime import date
 from hostels.tasks import add_after_expiry_task
-from hostels.models import Room
+from hostels.models import Room, RoomType
 
 
 user = get_user_model()
@@ -28,20 +28,21 @@ class Booking(models.Model):
 
     tenant = models.ForeignKey(user, on_delete=models.CASCADE, blank=True, null=True)
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
+    room_type = models.ForeignKey(RoomType, on_delete=models.CASCADE)
     check_in = models.DateTimeField(default=timezone.now)
     phone_number = models.CharField(max_length=10, null=True, blank=True)
     cost = models.DecimalField(max_digits=8, decimal_places=2)
-    room_no = models.PositiveIntegerField()
-    room_type = models.CharField(max_length=30)
+    room_no = models.CharField(max_length=20)
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
+    gender = models.CharField(help_text='Male/Female', max_length=10)
     email_address = models.EmailField()
     city_or_town = models.CharField(max_length=100)
     university_identification_number = models.PositiveIntegerField()
     region_of_residence = models.CharField(max_length=100)
     digital_address = models.CharField(max_length=100)
+    receipt_number = models.CharField(max_length=10)
     ref = models.CharField(max_length=200)
-    email = models.EmailField()
     is_verified = models.BooleanField(default=False)
     date_created = models.DateTimeField(auto_now_add=True)
 
@@ -81,18 +82,10 @@ class Booking(models.Model):
 
 
     '''
-    getting the price of the hostel
-    '''
-    def price(self):
-        return self.room.rate_per_head
-
-
-
-    '''
     getting the room type
     '''
-    def room_booked(self):
-        return self.room.room_type
+    def hostel(self):
+        return self.room_type.hostel
 
 
     '''

@@ -94,10 +94,10 @@ DATABASES = {
 #DATABASES = {
 #    'default': {
 #        'ENGINE': 'django.db.backends.mysql',
-#        'NAME': 'honourgh$honour',
-#        'USER': 'honourgh',
+#        'NAME': 'rooms$Hostels',
+#        'USER': 'rooms',
 #        'PASSWORD': '4DH2V!xbpjL!9H2',
-#        'HOST': 'honourgh.mysql.pythonanywhere-services.com',
+#        'HOST': 'rooms.mysql.pythonanywhere-services.com',
 #        'OPTIONS': {
 #            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
 #        },
