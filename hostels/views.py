@@ -21,14 +21,16 @@ import random
 user = get_user_model()
 
 
-def home(request):
+class HomeView(TemplateView):
+    template_name = 'hostels/index.html'
 
-    students_hostels = Hostel.objects.all().order_by('-date_added')[0:12]
-    apartments = Apartment.objects.all().order_by('-created_at')[0:12]
-    general_properties = Property.objects.all().order_by('-date_added')[0:12]
+    def get_context_data(self, **kwargs):
+        context = super(HomeView, self).get_context_data(**kwargs)
+        context['hostels'] = Hostel.objects.all()[0:12]
+        context['apartments'] = Apartment.objects.all()[0:12]
+        context['general_properties'] = Property.objects.all()[0:12]
+        return context
 
-    return render(request, 'hostels/index.html', {'hostels':students_hostels, 'apartments':apartments, 
-        'general_properties':general_properties})
 
 
 @method_decorator(csrf_exempt, name='dispatch')
@@ -96,12 +98,8 @@ class HowItWorks(TemplateView):
 
 
 
-def about(request):
-
-    count = Hostel.objects.all().count()
-    all_users = get_user_model().objects.all().count()
-
-    return render(request, 'hostels/about.html', {'count': count, 'all_users': all_users})
+class AboutView(TemplateView):
+    template_name = 'hostels/about.html'
 
 
 
@@ -147,7 +145,6 @@ def make_booking(request, pk, room_pk):
             gender = form.cleaned_data['gender']
             receipt = str(random.randrange(0, 100)) + university_identification_number
             room = Room.objects.get(pk=room_pk)
-            #room_cat = RoomType.objects.get(pk=pk)
             booking = Booking.objects.create(room=room, tenant=request.user, 
                 phone_number=phone_number, room_type=room.room_type, cost=room.room_type.cost_per_head, 
                 room_no=room.room_number, first_name=first_name, last_name=last_name, 

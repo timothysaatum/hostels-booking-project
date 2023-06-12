@@ -10,7 +10,7 @@ class BookingCreationForm(forms.Form):
 	last_name = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'Cooper'}))
 	email_address = forms.EmailField(widget=forms.EmailInput(attrs={'placeholder':'Tam@gmail.com'}))
 	city_or_town = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'Las Vegas'}))
-	gender = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'Male/Female'}))
+	gender = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'M or F'}))
 	university_identification_number = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'UIN'}))
 	region_of_residence = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'Texas'}))
 	digital_address = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'BL-0587-3675'}))

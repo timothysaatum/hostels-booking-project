@@ -47,6 +47,7 @@ class Hostel(models.Model):
     duration_of_rent = models.PositiveIntegerField(help_text='2')
     wifi = models.CharField(max_length=50)
     hostel_amenities = models.JSONField(null=True, default=dict, blank=True)
+    account_number = models.CharField(max_length=100, null=True, blank=True)
 
 
     '''
@@ -133,6 +134,8 @@ class RoomTypeImages(models.Model):
 class Room(models.Model):
     room_type = models.ForeignKey(RoomType, on_delete=models.CASCADE)
     room_number = models.CharField(max_length=100)
+    room_occupant_gender = models.CharField(max_length=10, default='M')
+    is_booked = models.BooleanField(default=False)
 
     def __str__(self):
         return self.room_number

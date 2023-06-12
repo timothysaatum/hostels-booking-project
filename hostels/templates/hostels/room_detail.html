@@ -91,7 +91,7 @@
     <div class="mx-5 d-none d-sm-block d-lg-block"><label for="guest" class="fw-bold">Select Room to Book</label>
         <div class="side-bar">
             {% for room_num in spec_room %}
-            <div class="text-center m-2"><a href="{% url 'pay' object.pk room_num.pk %}" role="button" class="btn btn-sm btn-outline-danger">Room {{room_num.room_number}}--{{room_num.room_type.room_capacity}}</a></div>
+            <div class="text-center m-2"><a href="{% url 'pay' object.pk room_num.pk %}" role="button" class="btn btn-sm btn-outline-danger">R{{room_num.room_number}}{% if room_num.is_booked %} {{room_num.room_type.room_capacity}} bed(s) left:{{room_num.room_occupant_gender}} {% else %}:empty {% endif %}</a></div>
             {% endfor %}
         </div>
     </div>

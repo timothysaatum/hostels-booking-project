@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import (RoomDetailView, about, home, Services, 
+from .views import (RoomDetailView, AboutView, HomeView, Services, 
                     dashboard, HowItWorks,
                     Mission, HostelsListView, make_booking, 
                     CreateHostel, hostel_manager, 
@@ -8,7 +8,7 @@ from .views import (RoomDetailView, about, home, Services,
 
 
 urlpatterns = [
-    path('', home, name='home'),
+    path('', HomeView.as_view(), name='home'),
     path('hostel/list/', HostelsListView.as_view(), name='rooms'),
     path('rooms/list/<int:pk>/<str:hostel>/', RoomsListView.as_view(), name='room-list'),
     path('hostel/<int:pk>/<str:room_type>/', RoomDetailView.as_view(), name='room-detail'),
@@ -19,7 +19,7 @@ urlpatterns = [
     path('services/', Services.as_view(), name='services'),
     path('how-it-works/', HowItWorks.as_view(), name="howitworks"),
     path('mission/', Mission.as_view(), name='mission'),
-    path('about/', about, name='about'),
+    path('about/', AboutView.as_view(), name='about'),
     path('booking/summary/', dashboard, name='booking-details'),
     path('rooms/request-to-book/<int:pk>/<int:room_pk>', make_booking, name='pay'),
     path('property/management/', hostel_manager, name='management'),
