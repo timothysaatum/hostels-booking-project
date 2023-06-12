@@ -2,7 +2,7 @@ from .models import Booking
 from hostels.models import RoomType
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-
+from django.db.models import F
 
 @receiver(post_save, sender=Booking)
 def update_room(sender, instance, created, **kwargs):
@@ -12,8 +12,6 @@ def update_room(sender, instance, created, **kwargs):
 	#room_type = instance.room
 	if created:
 		room = instance.room
-		room.is_booked = True
-		#room = room.is_booked = True
 		room_instance = instance.room_type
 		hostel = instance.room_type.hostel
 
@@ -47,6 +45,9 @@ def update_room(sender, instance, created, **kwargs):
 
 		if room_instance.room_type_number == 0:
 			hostel.no_of_rooms -= db_use_only
+			
+	room.is_booked = True
+	room.room_occupant_gender = instance.gender
 	room.save()
 	room_instance.save()
 	hostel.save()
