@@ -134,6 +134,7 @@ class RoomTypeImages(models.Model):
 class Room(models.Model):
     room_type = models.ForeignKey(RoomType, on_delete=models.CASCADE)
     room_number = models.CharField(max_length=100)
+    capacity = models.PositiveIntegerField()
     room_occupant_gender = models.CharField(max_length=10, default='M')
     is_booked = models.BooleanField(default=False)
 
@@ -147,9 +148,6 @@ class Room(models.Model):
     def hostel(self):
         return self.room_type.hostel
 
-
-    def capacity(self):
-        return self.room_type.room_capacity
 
 
     def cost_per_head(self):

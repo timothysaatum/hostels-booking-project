@@ -6,9 +6,11 @@ from django.dispatch import receiver
 
 
 @receiver(post_save, sender=RoomType)
-def create_room(sender, instance, **kwargs):
+def create_room(sender, instance, created, **kwargs):
 
-	room_nos = instance.room_numbers
-
-	for val in room_nos.values():
-		Room.objects.create(room_type=instance, room_number=val)
+	if created:
+		room_nos = instance.room_numbers
+		for val in room_nos.values():
+			Room.objects.create(room_type=instance, room_number=val, capacity=instance.room_capacity)
+	else:
+		pass

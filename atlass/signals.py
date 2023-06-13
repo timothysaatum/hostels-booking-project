@@ -19,35 +19,51 @@ def update_room(sender, instance, created, **kwargs):
 			room_instance.room_type_number -= 1
 
 		if room_instance.room_type == '2 in a room':
-			if room_instance.room_capacity > 1:
-				room_instance.room_capacity -= 1
+			if room.capacity <= 2 and room.capacity != 0:
+				room.capacity -= 1
 
-			else:
-				room_instance.room_capacity += 1
-				room_instance.room_type_number -= 1
+				if room.capacity == 0:
+					room_instance.room_type_number -= 1
 
 
 		if room_instance.room_type == '3 in a room':
-			if room_instance.room_capacity > 1:
-				room_instance.room_capacity -= 1
 
-			else:
-				room_instance.room_capacity += 2
-				room_instance.room_type_number -= 1
-			
+			if room.capacity <= 3 and room.capacity != 0:
+				room.capacity -= 1
+
+				if room.capacity == 0:
+					room_instance.room_type_number -= 1
+
 		if room_instance.room_type == '4 in a room':
-			if room_instance.room_capacity > 1:
-				room_instance.room_capacity -= 1
 
-			else:
-				room_instance.room_capacity += 3
-				room_instance.room_type_number -= 1
+			if room.capacity <= 4 and room.capacity != 0:
+				room.capacity -= 1
+
+				if room.capacity == 0:
+					room_instance.room_type_number -= 1
+					print('I have been executed!!')
+
+
 
 		if room_instance.room_type_number == 0:
 			hostel.no_of_rooms -= db_use_only
+
+
+		room.is_booked = True
+
+		if instance.gender == 'Female' or instance.gender == 'female' or instance.gender == 'F' or instance.gender == 'f':
+			room.room_occupant_gender = 'F'
+
+
+		if instance.gender == 'Male' or instance.gender == 'male' or instance.gender == 'M' or instance.gender == 'm':
+			room.room_occupant_gender = 'M'
+
+		room.save()
+		room_instance.save()
+		hostel.save()
+
+	else:
+		room = Room.objects.filter(id=instance).first()
+		room_type_instance = RoomType.objects.filter(room_type=instance).first()
+		print(room, room_type)
 			
-	room.is_booked = True
-	room.room_occupant_gender = instance.gender
-	room.save()
-	room_instance.save()
-	hostel.save()
