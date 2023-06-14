@@ -2,9 +2,9 @@ from django.urls import path
 from .views import (RoomDetailView, AboutView, HomeView, Services, 
                     dashboard, HowItWorks,
                     Mission, HostelsListView, make_booking, 
-                    CreateHostel, hostel_manager, 
+                    CreateHostel, Management, 
                     tenants, verify_booking, HostelDelete, 
-                    HostelUpdate, RoomsListView, RoomTypeCreateView)
+                    HostelUpdate, RoomsListView, RoomTypeCreateView, TenantListView)
 
 
 urlpatterns = [
@@ -22,7 +22,8 @@ urlpatterns = [
     path('about/', AboutView.as_view(), name='about'),
     path('booking/summary/', dashboard, name='booking-details'),
     path('rooms/request-to-book/<int:pk>/<int:room_pk>', make_booking, name='pay'),
-    path('property/management/', hostel_manager, name='management'),
+    path('property/management/', Management.as_view(), name='management'),
     path('property/tenants/', tenants, name='tenants'),
-    path('verify-payment/<str:ref>/', verify_booking, name='verify')
+    path('verify-payment/<str:ref>/', verify_booking, name='verify'),
+    path('tenants/', TenantListView.as_view(), name='tenants')
 ]

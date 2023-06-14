@@ -22,6 +22,7 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/t-23/unarcom/engines/admin/portal/Management/', admin.site.urls),
+    path('', include('pwa.urls')),
     path('', include('hostels.urls')),
     path('users/', include('users.urls')),
     path('properties/', include('properties.urls')),

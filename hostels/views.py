@@ -18,6 +18,7 @@ from django.core.exceptions import ObjectDoesNotExist
 import random
 
 
+
 user = get_user_model()
 
 
@@ -167,8 +168,15 @@ def make_booking(request, pk, room_pk):
             #    smtp.starttls()
             #    smtp.ehlo()
             #    smtp.login(settings.EMAIL_HOST_USER, settings.EMAIL_HOST_PASSWORD)
-            #    subj = 'hi from gods'
-            #    body = 'it is well'
+            #    subj = f'''
+            #             Hello {request.user},
+            #        '''
+            #    body = f'''
+            #            we glad you choosen our site to make your room reservation while at home.
+            #            We appreciate that you have seen value and trust in us. 
+            #            We are looking forward to welcome you to campus.
+            #            UNARCOM
+            #    '''
             #
             #    msg = f'Subject: {subj}\n\n{body}'
             #
@@ -271,6 +279,16 @@ def dashboard(request):
 def hostel_manager(request):
     return render(request, 'hostels/management.html')
 
+class Management(LoginRequiredMixin, TemplateView):
+    template_name = 'hostels/management.html'
+
+
+class TenantListView(LoginRequiredMixin, ListView):
+    model = Booking
+    slug_url_kwarg = 'pk'
+    context_object_name = 'tenants'
+    template_name = 'hostels/all_tenants.html'
+    
 
 @login_required
 def tenants(request):

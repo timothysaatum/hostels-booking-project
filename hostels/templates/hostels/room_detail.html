@@ -96,16 +96,16 @@
                 {% if room_num.is_booked %}
                     {% if room_num.capacity == 0 %}
 
-                        R{{room_num.room_number}}:Full Booked
+                        {{room_num.room_number}}:Full Booked
 
                     {% else %}
                         {% if room_num.capacity == 1 %}
 
-                         R{{room_num.capacity}} bed left:{{room_num.room_occupant_gender}}
+                         {{room_num.room_number}}:{{room_num.capacity}} bed left:{{room_num.room_occupant_gender}}
 
                          {% else %}
 
-                         R{{room_num.room_number}}:{{room_num.capacity}}beds left:{{room_num.room_occupant_gender}}
+                         {{room_num.room_number}}:{{room_num.capacity}}beds left:{{room_num.room_occupant_gender}}
 
                          {% endif %}
 
@@ -113,7 +113,7 @@
 
                 {% else %}
 
-                    R{{room_num.room_number}}:empty beds
+                    {{room_num.room_number}}:empty beds
 
                 {% endif %}
 
@@ -130,11 +130,37 @@
 </div>
 </div>
 <!--for phones-->
-<div class="d-flex justify-content-between bg-light  shadow d-block d-md-none mx-2 fix-bottom px-2 btn-reserve">
-    <p class="text-dark text-center"><span
-            class="fw-bolder text-danger text-decoration-underline">Gh₵{{room.cost_per_head}}</span></p>
-    <a href="#" role="button"
-        class="text-decoration-none btn btn-danger btn-sm btn-reserve mobile-btn">Book a ({{room.room_type}})</span></a>
+<div class="d-flex justify-content-between bg-light  shadow d-block d-md-none mx-2 fix-bottom px-2 btn-reserve sm-scroll">
+                {% for room_num in spec_room %}
+            <div class="text-center m-2"><a href="{% url 'pay' object.pk room_num.pk %}" role="button" class="btn btn-sm btn-outline-danger">
+
+                {% if room_num.is_booked %}
+                    {% if room_num.capacity == 0 %}
+
+                        {{room_num.room_number}}:Full Booked
+
+                    {% else %}
+                        {% if room_num.capacity == 1 %}
+
+                         {{room_num.room_number}}:{{room_num.capacity}} bed left:{{room_num.room_occupant_gender}}
+
+                         {% else %}
+
+                         {{room_num.room_number}}:{{room_num.capacity}}beds left:{{room_num.room_occupant_gender}}
+
+                         {% endif %}
+
+                    {% endif %}
+
+                {% else %}
+
+                    {{room_num.room_number}}:empty beds
+
+                {% endif %}
+
+            </a>
+        </div>
+            {% endfor %}
 </div>
 
 <!-- show more -->

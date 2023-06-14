@@ -226,3 +226,9 @@ nav img {
     scroll-behavior: smooth;
     height:7rem;
 }
+
+.sm-scroll{
+    height: 4rem; 
+    width: 100vw; 
+    overflow-x: scroll;
+}
