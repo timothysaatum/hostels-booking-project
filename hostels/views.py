@@ -11,11 +11,12 @@ from django.views.decorators.csrf import csrf_exempt
 from django.urls import reverse_lazy
 from django.http import JsonResponse
 from django.core import serializers
-import smtplib
+from atlass.email_utils import send_email_with_transaction
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 import random
+
 
 
 
@@ -162,25 +163,21 @@ def make_booking(request, pk, room_pk):
             if not acc:
                 Account.objects.create(user_id=request.user.id)
 
-            #sending email to the user
-            #with smtplib.SMTP('smtp.gmail.com', 587) as smtp:
-            #    smtp.ehlo()
-            #    smtp.starttls()
-            #    smtp.ehlo()
-            #    smtp.login(settings.EMAIL_HOST_USER, settings.EMAIL_HOST_PASSWORD)
-            #    subj = f'''
-            #             Hello {request.user},
-            #        '''
-            #    body = f'''
-            #            we glad you choosen our site to make your room reservation while at home.
-            #            We appreciate that you have seen value and trust in us. 
-            #            We are looking forward to welcome you to campus.
-            #            UNARCOM
-            #    '''
-            #
-            #    msg = f'Subject: {subj}\n\n{body}'
-            #
-            #    smtp.sendmail(settings.EMAIL_HOST_USER, 'saatumtimothy@gmail.com', msg)
+            #sending sms to the user
+
+
+            msg = f'''Hello {request.user}, you created a booking and have been assigned room 
+            Room {room.room_number} at GHS{room.room_type.cost_per_head} in {room.room_type.hostel}
+            We can't wait to see you. Let's I forget, congratulation on your millestone, 
+            We stand-by in your entire stay on campus. We are together!
+            Warm regards,
+            The Unarcom Team
+                '''
+            from_cont = '+233594438287'
+
+            to_cont = [phone_number]
+
+            #send_sms(msg, from_cont, to_cont, fail_silently=False)
 
             key = settings.PAYSTACK_PUBLIC_KEY
             context = {

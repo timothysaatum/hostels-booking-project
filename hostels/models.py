@@ -59,7 +59,7 @@ class Hostel(models.Model):
         img = Image.open(self.display_image.path)
 
         #if img.height > 500 or img.width > 500:
-        output_size = (250, 350)
+        output_size = (350, 350)
         img.thumbnail(output_size)
         img.save(self.display_image.path)
     

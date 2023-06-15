@@ -37,13 +37,14 @@
                             <img src="{{obj.room_type_images.url}}" class="img-fluid">
                         </div>
                         {% endfor %}
-
+                        {% for obj in image_list|slice:'4:5' %}
                         <div class="col-md-4 d-none d-sm-block d-lg-block div-place">
-                            <img src="{{object.room_display_image.url}}" class="img-fluid">
+                            <img src="{{obj.room_type_images.url}}" class="img-fluid">
                             <button class="btn btn-light btn-md show-all" data-bs-toggle="modal"
                                 data-bs-target="#exampleModal"><i class="fa-solid fa-ellipsis-vertical"></i> <i
                                     class="fa-solid fa-ellipsis-vertical"></i> Show all</button>
                         </div>
+                        {% endfor %}
                     </div>
                 </div>
             </div>
@@ -91,12 +92,13 @@
     <div class="mx-5 d-none d-sm-block d-lg-block"><label for="guest" class="fw-bold">Select Room to Book</label>
         <div class="side-bar">
             {% for room_num in spec_room %}
-            <div class="text-center m-2"><a href="{% url 'pay' object.pk room_num.pk %}" role="button" class="btn btn-sm btn-outline-danger">
+            <div class="text-center m-2">
+                <a href="{% url 'pay' object.pk room_num.pk %}" role="button" class="btn btn-sm btn-outline-danger">
 
                 {% if room_num.is_booked %}
                     {% if room_num.capacity == 0 %}
 
-                        {{room_num.room_number}}:Full Booked
+                        {{room_num.room_number}}:Fully Booked
 
                     {% else %}
                         {% if room_num.capacity == 1 %}
@@ -137,7 +139,7 @@
                 {% if room_num.is_booked %}
                     {% if room_num.capacity == 0 %}
 
-                        {{room_num.room_number}}:Full Booked
+                        {{room_num.room_number}}:Fully Booked
 
                     {% else %}
                         {% if room_num.capacity == 1 %}

@@ -79,28 +79,16 @@
 <section class="mt-5 mb-3 bg-light shadow">
 	<div class="container">
 		<h2 class="text-capitalize text-decoration-underline text-center mb-4 pb-4">students Accommodation.</h2>
-		<div class="row d-flex justify-content-between sm-margin">
+		<div class="row d-flex justify-content-between">
 			{% for hostel in hostels %}
 			{% if not hostel.no_of_rooms == 0 %}
-			<div class="col-md-6 col-lg-3 mb-4" data-aos="fade-up">
+			<div class="col-md-6 col-lg-3 mb-4 g-font d-flex justify-content-center" data-aos="fade-up">
 				<a href="{% url 'room-list' hostel.pk hostel.hostel_name %}">
-					<div class="d-flex justify-content-center"><img src="{{hostel.display_image.url}}"
-							alt="{{hostel.hostel_name}}" class="img-fluid round"></div>
-					<div class="d-flex justify-content-between">
-						<p class="text-capitalize text-color">{{hostel.hostel_name|truncatechars:'11'}}</p>
-						<p class="text-capitalize text-color">rate: Gh₵{{hostel.get_cost}}</p>
-					</div>
-					<div class="d-flex justify-content-between border-top mb-1">
-						<span class="border-end text-dark"><i class="fa-solid fa-bed text-danger"></i>
-							{{hostel.no_of_rooms}}</span>
-						<span class="border-end text-dark"><i class="fa-solid fa-wifi text-danger"></i>
-							{{hostel.wifi}}</span>
-						<span class="text-dark"><i class="fa-solid fa-person-walking text-danger"></i>
-							{{hostel.get_dist}}</span>
-					</div>
-					<small class="text-muted text-capitalize">Host: {{hostel.owner_name}}</small>
-					<span class="d-block"><small class="text-color pt-2 text-capitalize mb-1">{{hostel.school.name}}|
-							{{hostel.campus}}</small></span>
+					<img src="{{hostel.display_image.url}}" class="round img-fluid">
+					<p class="text-start fw-bold text-capitalize text-dark">{{hostel.school.name}}, {{hostel.hostel_name}}</p>
+					<small class="d-block text-start text-muted mt-2"><i class="fa-solid fa-person-walking text-danger"></i> {{hostel.get_dist}} walk to campus</small>
+					<small class="d-block text-start text-muted mt-2"><i class="fa-regular fa-heart text-danger"></i> {{hostel.owner_name}} - Manager</small>
+					<small class="d-block text-start text-muted mt-2"><i class="fa-solid fa-coins text-danger"></i> GHS{{hostel.cost_range}}/year</small>
 				</a>
 			</div>
 			{% else %}

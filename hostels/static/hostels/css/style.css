@@ -119,8 +119,12 @@ nav img {
 
 .round {
     border: solid transparent;
-    border-radius: 10%;
+    border-radius: 8%;
     object-fit: scale-down;
+}
+
+.g-font{
+    font-family: 'PT Sans', sans-serif;
 }
 
 /*navbar*/
@@ -161,7 +165,7 @@ nav img {
 /*login*/
 
 .user{
-    margin: 10em 1em 0em 1em;
+    margin: 8em 1em 0em 1em;
 }
 
 /*details page*/

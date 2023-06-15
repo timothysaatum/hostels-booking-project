@@ -1,50 +1,80 @@
-{% extends 'hostels/base.html' %}
-{% load static %}
-
-{% block title %}Property Management{% endblock %}
-{% block content %}
-<section class="user pb-5">
-    <div class="container">
-        <h1>Welcome {{user.first_name}} {{user.last_name}}...</h1>
-        <p class="text-dark">Manage every part of your property on the fly.</p>
-        <div class="row d-flex justify-content-center">
-            <div class="col col-md-3 border bg-light shadow m-2">
-                <a href="{% url 'create' %}" title="add hostel.">
-                    <div class="p-5 fw-bolder text-center">+ Add Hostel
-                    </div>
-                </a>
-            </div>
-            <div class="col col-md-3 border bg-light shadow m-2">
-                <a href="{% url 'room-create' %}" title="add Booking.">
-                    <div class="p-5 fw-bolder text-center">+ Add Roomtype
-                    </div>
-                </a>
-            </div>
-            <div class="col col-md-3 border bg-light shadow m-2">
-                <a href="{% url 'rooms' %}" title="Payments.">
-                    <div class="p-5 fw-bolder text-center">Payments
-                    </div>
-                </a>
-            </div>
-            <div class="col col-md-3 border bg-light shadow m-2">
-                <a href="{% url 'tenants' %}" title="Manage your tenants here.">
-                    <div class="p-5 fw-bolder text-center">Manage Tenants
-                    </div>
-                </a>
-            </div>
-            <div class="col col-md-3 border bg-light shadow m-2">
-                <a href="{% url 'rooms' %}" title="Contact your tenants.">
-                    <div class="p-5 fw-bolder text-center">Message Tenants
-                    </div>
-                </a>
-            </div>
-            <div class="col col-md-3 border bg-light shadow m-2">
-                <a href="#" title="Update your property.">
-                    <div class="p-5 fw-bolder text-center">Update Property
-                    </div>
-                </a>
-            </div>
+{% extends 'hostels/base.html' %} {% load static %} {% block title %}Property
+Management{% endblock %} {% block content %}
+<section class="mt-5 pt-3">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-2 bg-dark p-3">
+        <a href="#" class="text-light d-block mt-3">Transactions</a>
+        <a href="#" class="text-light d-block mt-3">Notifications</a>
+        <a href="#" class="text-light d-block mt-3">announcement</a>
+        <a href="#" class="text-light d-block mt-3">Property</a>
+        <a href="#" class="text-light d-block mt-3">Print</a>
+      </div>
+      <div class="col-md-8 m-3">
+        <div class="row">
+          <table class="table table-hover table-bordered">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">First</th>
+                <th scope="col">Last</th>
+                <th scope="col">Handle</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">1</th>
+                <td>Mark</td>
+                <td>Otto</td>
+                <td>@mdo</td>
+              </tr>
+              <tr>
+                <th scope="row">2</th>
+                <td>Jacob</td>
+                <td>Thornton</td>
+                <td>@fat</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
+      </div>
     </div>
+  </div>
+</section>
+<section class="pb-5 pt-5">
+  <div class="container">
+    <div class="row d-flex justify-content-center">
+      <div class="col col-md-3 border bg-light shadow m-2">
+        <a href="{% url 'create' %}" title="add hostel.">
+          <div class="p-5 fw-bolder text-center">+ Add Hostel</div>
+        </a>
+      </div>
+      <div class="col col-md-3 border bg-light shadow m-2">
+        <a href="{% url 'room-create' %}" title="add Booking.">
+          <div class="p-5 fw-bolder text-center">+ Add Roomtype</div>
+        </a>
+      </div>
+      <div class="col col-md-3 border bg-light shadow m-2">
+        <a href="{% url 'rooms' %}" title="Payments.">
+          <div class="p-5 fw-bolder text-center">Payments</div>
+        </a>
+      </div>
+      <div class="col col-md-3 border bg-light shadow m-2">
+        <a href="{% url 'tenants' %}" title="Manage your tenants here.">
+          <div class="p-5 fw-bolder text-center">Manage Tenants</div>
+        </a>
+      </div>
+      <div class="col col-md-3 border bg-light shadow m-2">
+        <a href="{% url 'rooms' %}" title="Contact your tenants.">
+          <div class="p-5 fw-bolder text-center">Message Tenants</div>
+        </a>
+      </div>
+      <div class="col col-md-3 border bg-light shadow m-2">
+        <a href="#" title="Update your property.">
+          <div class="p-5 fw-bolder text-center">Update Property</div>
+        </a>
+      </div>
+    </div>
+  </div>
 </section>
 {% endblock %}

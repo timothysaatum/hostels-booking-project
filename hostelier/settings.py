@@ -206,3 +206,8 @@ PWA_APP_SPLASH_SCREEN = [
 ]
 PWA_APP_DIR = 'ltr'
 PWA_APP_LANG = 'en-US'
+
+#sms backends
+SMS_BACKEND = 'sms.backends.twilio.SmsBackend'
+TWILIO_ACCOUNT_SID = 'live-redacted-twilio-account-sid'
+TWILIO_AUTH_TOKEN = 'live-redacted-twilio-auth-token'
