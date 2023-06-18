@@ -1,6 +1,6 @@
 from .models import Booking
 from hostels.models import RoomType
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from django.db.models import F
 
@@ -16,6 +16,7 @@ def update_room(sender, instance, created, **kwargs):
 		hostel = instance.room_type.hostel
 
 		if room_instance.room_type == '1 in a room':
+			room.capacity -= 1
 			room_instance.room_type_number -= 1
 
 		if room_instance.room_type == '2 in a room':
@@ -41,7 +42,6 @@ def update_room(sender, instance, created, **kwargs):
 
 				if room.capacity == 0:
 					room_instance.room_type_number -= 1
-					print('I have been executed!!')
 
 
 
@@ -67,3 +67,46 @@ def update_room(sender, instance, created, **kwargs):
 		room_type_instance = RoomType.objects.filter(room_type=instance).first()
 		print(room, room_type)
 			
+
+
+@receiver(post_delete, sender=Booking)
+def update_room_numbers(sender, instance, **kwargs):
+	room = instance.room
+	room_type = instance.room_type
+
+
+	if room_type.room_type == '1 in a room':
+		room.capacity += 1
+		room_type.room_type_number += 1
+		room.is_booked = False
+		
+
+	if room_type.room_type == '2 in a room':
+
+		if room.capacity >= 0 and room.capacity <= 1:
+			room.capacity += 1
+			print('Here 2')
+			if room.capacity == 2:
+				room.is_booked = False
+				room_type.room_type_number += 1
+
+	if room_type.room_type == '3 in a room':
+		print('Here 3')
+		if room.capacity >= 0 and room.capacity <= 2:
+			room.capacity += 1
+
+			if room.capacity == 2:
+				room.is_booked = False
+				room_type.room_type_number += 1
+
+	if room_type.room_type == '4 in a room':
+		print('Here 4')
+		if room.capacity >= 0 and room.capacity <= 3:
+			room.capacity += 1
+
+			if room.capacity == 4:
+				room.is_booked = False
+				room_type.room_type_number += 1
+
+	room.save()
+	room_type.save()

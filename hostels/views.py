@@ -16,7 +16,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 import random
-
+from django.contrib import messages
 
 
 
@@ -127,6 +127,7 @@ class MakeBooking(LoginRequiredMixin, CreateView):
             'amount_value':booking.amount_value(),
         }
 
+
 @login_required
 def make_booking(request, pk, room_pk):
 
@@ -147,62 +148,94 @@ def make_booking(request, pk, room_pk):
             gender = form.cleaned_data['gender']
             receipt = str(random.randrange(0, 100)) + university_identification_number
             room = Room.objects.get(pk=room_pk)
-            booking = Booking.objects.create(room=room, tenant=request.user, 
-                phone_number=phone_number, room_type=room.room_type, cost=room.room_type.cost_per_head, 
-                room_no=room.room_number, first_name=first_name, last_name=last_name, 
-                email_address=email_address,gender=gender, city_or_town=city_or_town, 
-            university_identification_number=university_identification_number, 
-            region_of_residence=region_of_residence, 
-            digital_address=digital_address, receipt_number=receipt)
+
+
+            bk = Booking.objects.filter(room_no=room.room_number).first()
+            if bk:
+
+                if bk.gender != gender:
+
+                    messages.error(request, f'A {gender} cannot book this room because it has a {bk.gender} occupant')
+                    
+                    return redirect('room-detail', pk, room.room_type)
+
+                elif (Booking.objects.filter(room_no=room.room_number).count() + 1) > room.capacity:
+                    messages.error(request, f'({room.room_type}) cannot accept extra booking')
+
+                    return redirect('room-detail', pk, room.room_type)
+
+                else:
+                    booking = Booking.objects.create(room=room, tenant=request.user,
+                        phone_number=phone_number, room_type=room.room_type,
+                        cost=room.room_type.cost_per_head, 
+                        room_no=room.room_number, first_name=first_name, last_name=last_name, 
+                        email_address=email_address,gender=gender, city_or_town=city_or_town, 
+                        university_identification_number=university_identification_number, 
+                        region_of_residence=region_of_residence, digital_address=digital_address,
+                        receipt_number=receipt
+                    )
 
             
-            #create an account for the user when they make a booking
-            acc = Account.objects.filter(user_id=request.user.id)
+                    #create an account for the user when they make a booking
+                    acc = Account.objects.filter(user_id=request.user.id)
             
-            #checking to see if user already have an account
-            if not acc:
-                Account.objects.create(user_id=request.user.id)
+                    #checking to see if user already have an account
+                    if not acc:
+                        Account.objects.create(user_id=request.user.id)
 
-            #sending sms to the user
+                    key = settings.PAYSTACK_PUBLIC_KEY
+                    context = {
+                        'booking':booking,
+                        'field_values':request.POST,
+                        'paystack_pub_key':key,
+                        'amount_value':booking.amount_value(),
+                    }
 
+                    return render(request, 'hostels/make_payment.html', context)
+            else:
+                booking = Booking.objects.create(room=room, tenant=request.user,
+                    phone_number=phone_number, room_type=room.room_type,
+                    cost=room.room_type.cost_per_head, 
+                    room_no=room.room_number, first_name=first_name, last_name=last_name, 
+                    email_address=email_address,gender=gender, city_or_town=city_or_town, 
+                    university_identification_number=university_identification_number, 
+                    region_of_residence=region_of_residence, digital_address=digital_address,
+                    receipt_number=receipt
+                    )
 
-            msg = f'''Hello {request.user}, you created a booking and have been assigned room 
-            Room {room.room_number} at GHS{room.room_type.cost_per_head} in {room.room_type.hostel}
-            We can't wait to see you. Let's I forget, congratulation on your millestone, 
-            We stand-by in your entire stay on campus. We are together!
-            Warm regards,
-            The Unarcom Team
-                '''
-            from_cont = '+233594438287'
+            
+                #create an account for the user when they make a booking
+                acc = Account.objects.filter(user_id=request.user.id)
+            
+                #checking to see if user already have an account
+                if not acc:
+                    Account.objects.create(user_id=request.user.id)
 
-            to_cont = [phone_number]
+                key = settings.PAYSTACK_PUBLIC_KEY
+                context = {
+                        'booking':booking,
+                        'field_values':request.POST,
+                        'paystack_pub_key':key,
+                        'amount_value':booking.amount_value(),
+                    }
 
-            #send_sms(msg, from_cont, to_cont, fail_silently=False)
-
-            key = settings.PAYSTACK_PUBLIC_KEY
-            context = {
-                'booking':booking,
-                'field_values':request.POST,
-                'paystack_pub_key':key,
-                'amount_value':booking.amount_value(),
-            }
-
-            return render(request, 'hostels/make_payment.html', context)
-
-
+                return render(request, 'hostels/make_payment.html', context)
 
     form = BookingCreationForm()
 
     return render(request, 'hostels/booking_form.html', {'form': form})
 
 def verify_booking(request, ref):
+
     booking = Booking.objects.get(ref=ref)
     verified = booking.verify_payment
 
     if verified:
+
         account = Account.objects.get(user=request.user)
         account.balance += booking.cost
         account.save()
+
         return render(request, 'hostels/payment_success.html')
     return render(request, 'hostels/payment_success.html')
 
@@ -211,12 +244,14 @@ class CreateHostel(LoginRequiredMixin, CreateView):
 
     model = Hostel
     form_class = HostelCreationForm
-    success_url = '/hostel/create/'
+    success_url = reverse_lazy('room-create')
     template_name = 'hostels/create.html'
 
     def form_valid(self, form):
+        
         form.instance.hostel_amenities = dict(item.split('=') for item in form.cleaned_data['amenities'].split(','))
         form.instance.created_by = self.request.user
+
         return super().form_valid(form)
 
 
@@ -225,7 +260,7 @@ class RoomTypeCreateView(LoginRequiredMixin, CreateView):
     model = RoomType
 
     form_class = RoomTypeCreationForm
-    success_url = '/hostel/room-type/create/'
+    success_url = reverse_lazy('create')
 
     def form_valid(self, form):
         list_room_numbers = form.cleaned_data['room_numbers'].split(',')

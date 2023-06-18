@@ -12,8 +12,8 @@
   <div class="container border p-x-4 py-3 my-4 d-flex justify-content-center">
     <form method="POST" class="mt-3 mb-3">
       {% csrf_token %}
-      {{ form.non_field_errors }}
       <div class="row g-3">
+        {{form.errors}}
         <div class="col-md-4">
           <label for="{{ form.first_name.id_for_label }}">First Name</label><br>
           {{ form.first_name }}

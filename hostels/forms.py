@@ -16,6 +16,7 @@ class BookingCreationForm(forms.Form):
 	digital_address = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'BL-0587-3675'}))
 
 
+
 class BookingForm(forms.ModelForm):
 	#room_type = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple(
 	#			attrs={'placeholder':'Select the room type'}), 
@@ -40,7 +41,7 @@ class HostelCreationForm(forms.ModelForm):
 	class Meta:
 
 		model = Hostel
-		fields = ['owner_name', 'school', 'campus', 'hostel_name', 'contact', 'display_image', 'no_of_rooms',
+		fields = ['owner_name', 'school', 'campus', 'hostel_name', 'rating', 'contact', 'display_image', 'no_of_rooms',
 			'hostel_coordinates', 'cost_range', 'duration_of_rent', 'wifi', 'amenities']
 
 

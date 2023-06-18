@@ -5,7 +5,6 @@ import secrets
 from django.urls import reverse
 from .transaction  import  Paystack
 from datetime import date
-from hostels.tasks import add_after_expiry_task
 from hostels.models import Room, RoomType
 
 
@@ -94,13 +93,6 @@ class Booking(models.Model):
     def expiration_date(self):
         delta = self.check_in + timezone.timedelta(days=366)
         return delta
-
-
-    '''
-    a method that checks when user rent expires and increase the number of hostels by 1
-    '''
-    def increase_number_of_rooms(self):
-       add_after_expiry_task.apply_async(args=(self.pk, self.hostel), countdown=5)
 
 
     def days_remaining(self):

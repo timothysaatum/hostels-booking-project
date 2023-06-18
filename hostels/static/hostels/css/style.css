@@ -233,6 +233,14 @@ nav img {
 
 .sm-scroll{
     height: 4rem; 
-    width: 100vw; 
+    width: 96vw; 
     overflow-x: scroll;
+}
+
+.img-hover:hover{
+    
+}
+
+.side-bar::-webkit--scrollbar{
+    display: none;
 }

@@ -85,7 +85,10 @@
 			<div class="col-md-6 col-lg-3 mb-4 g-font d-flex justify-content-center" data-aos="fade-up">
 				<a href="{% url 'room-list' hostel.pk hostel.hostel_name %}">
 					<img src="{{hostel.display_image.url}}" class="round img-fluid">
-					<p class="text-start fw-bold text-capitalize text-dark">{{hostel.school.name}}, {{hostel.hostel_name}}</p>
+					<div class="d-flex justify-content-between pb-0 mb-0">
+						<p class="text-start fw-bold text-capitalize text-dark">{{hostel.school.name}}, {{hostel.hostel_name}}</p>
+						<span><i class="fa-regular fa-star text-danger"></i>{{hostel.rating}}</span>
+					</div>
 					<small class="d-block text-start text-muted mt-2"><i class="fa-solid fa-person-walking text-danger"></i> {{hostel.get_dist}} walk to campus</small>
 					<small class="d-block text-start text-muted mt-2"><i class="fa-regular fa-heart text-danger"></i> {{hostel.owner_name}} - Manager</small>
 					<small class="d-block text-start text-muted mt-2"><i class="fa-solid fa-coins text-danger"></i> GHS{{hostel.cost_range}}/year</small>

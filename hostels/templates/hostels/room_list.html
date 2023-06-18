@@ -7,26 +7,10 @@
   {% endfor %}
   <div class="container">
     <div class="row sm-margin">
-      <div class="col-md-4">
-        <p class="h7 fw-bolder">Similar Hostels Within the Area.</p>
-        <div class="row border shadow">
-            {% for hostel in similar_hostels %}
-            {% if hostel %}
-                <div class="col-md-12 py-1">
-                    <span class="text-capitalize">
-                        <a href="#"><i
-              class="fa-solid fa-chevron-right"></i> {{hostel.hostel_name}} - {{hostel.get_dist}} walk to campus
-                    </span></a>
-                </div>
-                {% endif %}
-            {% endfor %}
-        </div>
-      </div>
-      <div class="col-md-6">
-        <div class="row">
+        <div class="row d-flex justify-content-center">
           {% for room_type in room_type_list %} 
           {% if not room_type.room_type_number == 0 %}
-          <div class="col-md-6 mb-3" data-aos="fade-up">
+          <div class="col-md-3 mb-3" data-aos="fade-up">
             <a href="{% url 'room-detail' room_type.pk room_type.room_type %}">
               <div class="d-flex justify-content-center">
                 <img
@@ -35,22 +19,14 @@
                   class="img-fluid round"
                 />
               </div>
-              <div class="d-flex justify-content-between mb-2">
-                <small class="text-capitalize text-color mx-2"
-                  ><b><code>{{room_type.room_type}}</code></b></small
+              <div class="d-flex justify-content-between">
+                <small class="text-capitalize fw-bold text-dark"
+                  >{{room_type.room_type}}</small
                 >
-                <small class="text-capitalize text-color ml-1"
-                  ><b>No Available:</b>
-                  <code>{{room_type.room_type_number}}</code></small
-                >
+                <small class="text-capitalize text-muted">No Available: {{room_type.room_type_number}}</small>
               </div>
-              <small class="text-color text-capitalize mb-1 d-block mx-2"
-                >{{room_type.details|safe|truncatechars:'30'}}</small
-              >
-              <small class="text-color text-capitalize mb-1 d-block mx-2"
-                ><b>Cost:</b>
-                <code>Gh₵ {{room_type.cost_per_head}}</code></small
-              >
+              <small class="text-capitalize text-muted d-block mb-1">{{room_type.details|safe|truncatechars:'25'}}</small>
+              <small class="text-muted d-block mb-1"><b>Cost:</b> Gh₵{{room_type.cost_per_head}}/head</small>
             </a>
           </div>
           {% else %}
@@ -70,7 +46,6 @@
           </section>
           {% endfor %}
         </div>
-      </div>
     </div>
   </div>
   <div class="d-flex justify-content-center"><a href="#">Go back</a></div>

@@ -6,7 +6,6 @@ from ckeditor_uploader.fields import RichTextUploadingField
 from django.contrib.auth import get_user_model
 from PIL import Image
 from .distance import calc_distance
-from .tasks import add_after_expiry_task
 import secrets
 from atlass.transaction import Paystack
 
@@ -48,7 +47,7 @@ class Hostel(models.Model):
     wifi = models.CharField(max_length=50)
     hostel_amenities = models.JSONField(null=True, default=dict, blank=True)
     account_number = models.CharField(max_length=100, null=True, blank=True)
-
+    rating = models.DecimalField(max_digits=10, decimal_places=1)
 
     '''
     trimming images to an appropriate size before saving to the database

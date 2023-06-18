@@ -7,7 +7,6 @@ async-timeout==4.0.2
 attrs==23.1.0
 billiard==3.6.4.0
 CacheControl==0.12.11
-celery==5.2.7
 certifi==2022.12.7
 charset-normalizer==3.1.0
 click==8.1.3

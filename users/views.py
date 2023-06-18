@@ -19,7 +19,8 @@ def register(request):
         if form.is_valid():
             form.save()
             last_name = form.cleaned_data.get('last_name')
-            messages.success(request, f'Accounted created for {last_name}')
+            first_name = form.cleaned_data.get['first_name']
+            messages.success(request, f'Accounted created for {first_name} {last_name}')
             return redirect('home')
     else:
         form = UserRegisterForm()

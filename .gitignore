@@ -1,8 +1,0 @@
-./grem
-db.sqlite
-.env
-./hostels/__pycache__
-./vscode
-./atlass/__pycache__
-./users/__pycache__
-./properties/__pycache__

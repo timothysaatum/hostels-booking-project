@@ -25,6 +25,7 @@ urlpatterns = [
     path('', include('pwa.urls')),
     path('', include('hostels.urls')),
     path('users/', include('users.urls')),
+    path('booking/', include('atlass.urls')),
     path('properties/', include('properties.urls')),
     path('ckeditor/', include('ckeditor_uploader.urls')),
 ]
