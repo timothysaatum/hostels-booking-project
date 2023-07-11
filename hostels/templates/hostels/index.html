@@ -1,7 +1,7 @@
 {% extends 'hostels/base.html' %}
 {% load static %}
 
-{% block title %}Hostels and Accommodation rental and sales company company{% endblock %}
+{% block title %}Hostels, Accommodation rentals and sales company company{% endblock %}
 {% block content %}
 <section class="sec-bg margin-bottom">
 	<div class="p-5 dark">
@@ -115,6 +115,7 @@
 	{% endif %}
 	{% endfor %}
 </section>
+<!--
 <section class="mt-5 mb-3 bg-light shadow">
 	<div class="container">
 		<h2 class="text-capitalize text-decoration-underline text-center">appartment rentals & purchasing.</h2>
@@ -140,6 +141,7 @@
 			{% endfor %}
 		</div>
 	</div>
+	
 	{% for apartment in apartments %}
 	{% if forloop.counter > 11 %}
 	<div class="d-lex align-items-center">
@@ -183,4 +185,5 @@
 	{% endif %}
 	{% endfor %}
 </section>
+-->
 {% endblock %}

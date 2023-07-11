@@ -5,7 +5,7 @@ from .models import Hostel, School, RoomType, RoomTypeImages, Room
 
 
 class HostelAdmin(admin.ModelAdmin):
-    list_display = ('school', 'campus', 'hostel_name', 'contact', 'no_of_rooms', 
+    list_display = ('school', 'campus', 'hostel_name', 'account_number', 'contact', 'no_of_rooms', 
         'cost_range', 'date_added', 'hostel_amenities')
     list_filter = ('school',)
     search_fields = ['hostel_name', 'date_added', 'hostel_coordinates']

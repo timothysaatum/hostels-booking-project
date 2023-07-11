@@ -4,8 +4,13 @@ from ckeditor_uploader.fields import RichTextUploadingField
 from django.utils import timezone
 owner = get_user_model()
 
+class City(models.Model):
+    name = models.CharField(max_length=100)
+    region = models.CharField(max_length=100)
+
 class Apartment(models.Model):
     name = models.CharField(max_length=100)
+    city = models.ForeignKey(City, on_delete=models.CASCADE)
     contact = models.CharField(max_length=10)
     description = RichTextUploadingField()
     city = models.CharField(max_length=100)
@@ -28,6 +33,8 @@ class Apartment(models.Model):
         output_size = (500, 500)
         img.thumbnail(output_size)
         img.save(self.image.path)
+
+
 
 class Property(models.Model):
     owner = models.ForeignKey(owner, on_delete=models.CASCADE)

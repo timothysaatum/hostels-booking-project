@@ -7,54 +7,23 @@
 
 <!---content block-->
 {% block content %}
-<section class="user">
+<section class="user bg-light py-2">
   <h3 class="mb-3 text-center">Please provide the following details.</h3>
-  <div class="container border p-x-4 py-3 my-4 d-flex justify-content-center">
+  <div class="container">
     <form method="POST" class="mt-3 mb-3">
       {% csrf_token %}
-      <div class="row g-3">
-        {{form.errors}}
-        <div class="col-md-4">
-          <label for="{{ form.first_name.id_for_label }}">First Name</label><br>
-          {{ form.first_name }}
-        </div>
-        <div class="col-md-4">
-          <label for="{{ form.last_name.id_for_label }}">Last Name</label> <br>
-          {{ form.last_name }}
-        </div>
-        <div class="col-md-4">
-          <label for="{{ form.email_address.id_for_label }}">Email Address</label><br>
-          {{ form.email_address }}
-        </div>
-        <div class="col-md-4">
-          <label for="{{ form.gender.id_for_label }}">Gender</label><br>
-          {{ form.gender }}
-        </div>
-        <div class="col-md-4">
-          <label for="{{ form.phone_number.id_for_label }}">Phone Number</label><br>
-          {{ form.phone_number }}
-        </div>
-        <div class="col-md-4">
-          <label for="{{ form.city_or_town.id_for_label }}">City / Town</label><br>
-          {{ form.city_or_town }}
-        </div>
-        <div class="col-md-4">
-          <label for="{{ form.university_identification_number.id_for_label }}">University Identification Number
-            (UIN)</label><br>
-          {{ form.university_identification_number }}
-        </div>
-        <div class="col-md-4">
-          <label for="{{ form.region_of_residence.id_for_label }}">Region of Residence</label><br>
-          {{ form.region_of_residence }}
-        </div>
-        <div class="col-md-4">
-          <label for="{{ form.digital_address.id_for_label }}">Digital Address</label><br>
-          {{ form.digital_address }}
+      <div class="row g-3 d-flex justify-content-center text-danger">
+        <div class="col-md-6">
+          {{ form|crispy }}
         </div>
       </div>
       <hr>
       <div class="text-center mt-4">
-        <button type="submit" class="btn btn-md btn-outline-danger">continue</button>
+        <smal class="show-btn bg-danger rounded-pill p-4 text-light">
+          <span>This action cannot be reversed</span>
+          <button type="submit" class="btn btn-md btn-outline-warning text-light">Continue?</button>
+        </smal>
+        <button type="button" class="btn btn-md btn-outline-danger" id="confirmation">Reserve</button>
       </div>
     </form>
   </div>

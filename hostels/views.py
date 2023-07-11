@@ -1,22 +1,26 @@
 from django.shortcuts import render, redirect, reverse
-from django.views.generic import ListView, DetailView, CreateView, TemplateView, DeleteView, UpdateView
+from django.views.generic import ListView, DetailView, CreateView, TemplateView, DeleteView, UpdateView, View
 from .models import Hostel, RoomType, RoomTypeImages, Room
-from atlass.models import Booking, Account
+from atlass.models import Booking, Account, LeaveRequests
 from properties.models import Apartment, Property
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
-from .forms import BookingCreationForm, HostelCreationForm, RoomTypeCreationForm, BookingForm
+from .forms import BookingCreationForm, HostelCreationForm, RoomTypeCreationForm
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.urls import reverse_lazy
 from django.http import JsonResponse
 from django.core import serializers
-from atlass.email_utils import send_email_with_transaction
+from atlass.utils import send_email_with_transaction, create_pdf
+from atlass.transaction import transfer_cash, charge_money
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 import random
 from django.contrib import messages
+from django.http import HttpResponse
+
+
 
 
 
@@ -49,13 +53,13 @@ class HostelsListView(ListView):
 
             school = self.request.GET.get('query')
             print(school)
-            hosts = Hostel.objects.filter(school__name__icontains=school).order_by('-date_added')
-            print(hosts)
-            return hosts
+            hostels = Hostel.objects.filter(school__name__icontains=school).order_by('-date_added')
+            print(hostels)
 
         else:
             hostels = Hostel.objects.all().order_by('-date_added')
-            return hostels
+        
+        return hostels
 
 
 class RoomsListView(ListView):
@@ -69,6 +73,8 @@ class RoomsListView(ListView):
         context['room_type_list'] = RoomType.objects.filter(hostel_id=self.kwargs.get('pk'))
         return context
 
+
+
 class RoomDetailView(DetailView):
 
     model = RoomType
@@ -80,7 +86,8 @@ class RoomDetailView(DetailView):
 
         context = super(RoomDetailView, self).get_context_data(**kwargs)
         context['image_list'] = RoomTypeImages.objects.filter(room_id=self.kwargs.get('pk'))
-        context['spec_room'] = Room.objects.filter(room_type=self.kwargs.get('pk'))     
+        context['front_display'] = RoomTypeImages.objects.filter(room_id=self.kwargs.get('pk'))[0:4]
+        context['spec_room'] = Room.objects.select_related('room_type').filter(room_type=self.kwargs.get('pk'))     
         return context
 
 
@@ -105,28 +112,6 @@ class AboutView(TemplateView):
 
 
 
-class MakeBooking(LoginRequiredMixin, CreateView):
-    model = Booking
-    template_name = 'hostels/booking_form.html'
-    #success_url = '/rooms/request-to-book/<int:pk>/'
-    form_class = BookingForm
-
-    def form_valid(self):
-        form.instance.tenant = self.request.user
-        form.instance.room_type = form.cleaned_data['room_type'][0]
-        return super().form_valid(form)
-
-
-    def get_success_url(self):
-
-        key = settings.PAYSTACK_PUBLIC_KEY
-        context = {
-            'booking':self.booking,
-            'field_values':self.request.POST,
-            'paystack_pub_key':self.key,
-            'amount_value':booking.amount_value(),
-        }
-
 
 @login_required
 def make_booking(request, pk, room_pk):
@@ -146,20 +131,23 @@ def make_booking(request, pk, room_pk):
             region_of_residence = form.cleaned_data['region_of_residence']
             digital_address = form.cleaned_data['digital_address']
             gender = form.cleaned_data['gender']
+            #check_in = form.cleaned_data['check_in']
             receipt = str(random.randrange(0, 100)) + university_identification_number
             room = Room.objects.get(pk=room_pk)
 
 
+            #charge_money(room.room_type.cost_per_head, email_address)
             bk = Booking.objects.filter(room_no=room.room_number).first()
             if bk:
 
-                if bk.gender != gender:
+                if (room.room_type == bk.room_type) and (bk.gender != gender):
 
                     messages.error(request, f'A {gender} cannot book this room because it has a {bk.gender} occupant')
                     
                     return redirect('room-detail', pk, room.room_type)
 
-                elif (Booking.objects.filter(room_no=room.room_number).count() + 1) > room.capacity:
+                elif Booking.objects.filter(room_no=room.room_number).count() > room.capacity:
+
                     messages.error(request, f'({room.room_type}) cannot accept extra booking')
 
                     return redirect('room-detail', pk, room.room_type)
@@ -183,15 +171,7 @@ def make_booking(request, pk, room_pk):
                     if not acc:
                         Account.objects.create(user_id=request.user.id)
 
-                    key = settings.PAYSTACK_PUBLIC_KEY
-                    context = {
-                        'booking':booking,
-                        'field_values':request.POST,
-                        'paystack_pub_key':key,
-                        'amount_value':booking.amount_value(),
-                    }
-
-                    return render(request, 'hostels/make_payment.html', context)
+                    return redirect('book', booking.pk)
             else:
                 booking = Booking.objects.create(room=room, tenant=request.user,
                     phone_number=phone_number, room_type=room.room_type,
@@ -211,20 +191,23 @@ def make_booking(request, pk, room_pk):
                 if not acc:
                     Account.objects.create(user_id=request.user.id)
 
-                key = settings.PAYSTACK_PUBLIC_KEY
-                context = {
-                        'booking':booking,
-                        'field_values':request.POST,
-                        'paystack_pub_key':key,
-                        'amount_value':booking.amount_value(),
-                    }
-
-                return render(request, 'hostels/make_payment.html', context)
+                return redirect('book', booking.pk)
 
     form = BookingCreationForm()
 
     return render(request, 'hostels/booking_form.html', {'form': form})
 
+
+@login_required
+def make_payment(request, pk):
+
+    booking = Booking.objects.get(pk=pk)
+    key = settings.PAYSTACK_PUBLIC_KEY
+    
+    return render(request, 'hostels/make_payment.html', {'booking':booking, 'paystack_pub_key':key})
+
+
+@login_required
 def verify_booking(request, ref):
 
     booking = Booking.objects.get(ref=ref)
@@ -234,8 +217,48 @@ def verify_booking(request, ref):
 
         account = Account.objects.get(user=request.user)
         account.balance += booking.cost
+        booking.is_verified = True
+        booking.save()
         account.save()
+        #account_number = booking.get_account_number()
 
+        #transfering landlord's money after verifying payment
+        amount = booking.cost
+        account_number = '7011010080887'
+        #transfer_libiri(amount, account_number)
+
+        #notify the user of the successful booking
+        #recipient_list = [booking.email_address]
+        recipient_list = ['saatumtimothy@gmail']
+        #email subject
+        subject = 'Thank you for booking with us.'
+
+        #email body
+        body = f'''\n
+        Thank you for booking with us.
+        \n
+        Hostel:{booking.get_hostel()}
+        Room Type:{booking.room_type} 
+        Room No:{booking.room_no}
+        Receipt No:{booking.receipt_number}
+        \n
+        We are dedicated to giving you the best treatment on campus.
+        We are excited to know you believe and trust in us to manage your accomodation proceedings
+        on campus.
+        Your hostel fee has been successfully transfered to your landlord. Your room is now secured.
+        Find attach you receipt www.trustunarcom.com/booking/receipts/download/
+        \n
+        Contact us when you are reporting.
+        Tel: 0594438287
+        Mail: unarcom@company.com
+        WhatsApp: 0594438287
+        '''
+
+        #send email function call
+        #try:
+        #    send_email_with_transaction(subject, body, recipient_list)
+        #except Exception as e:
+        #    raise e        
         return render(request, 'hostels/payment_success.html')
     return render(request, 'hostels/payment_success.html')
 
@@ -260,7 +283,7 @@ class RoomTypeCreateView(LoginRequiredMixin, CreateView):
     model = RoomType
 
     form_class = RoomTypeCreationForm
-    success_url = reverse_lazy('create')
+    success_url = reverse_lazy('room-create')
 
     def form_valid(self, form):
         list_room_numbers = form.cleaned_data['room_numbers'].split(',')
@@ -270,9 +293,11 @@ class RoomTypeCreateView(LoginRequiredMixin, CreateView):
 
             room_dict_key = 'room' + str(val)
             room_dict.update({room_dict_key:list_room_numbers[val]})
-
+        rel_host = Hostel.objects.get(created_by=self.request.user)
         form.instance.db_use_only = form.cleaned_data['room_type_number']
         form.instance.room_numbers = room_dict
+        form.instance.hostel = rel_host
+        form.instance.cost_per_head = float(form.cleaned_data['cost_per_head']) + (float(form.cleaned_data['cost_per_head']) * 0.02)
 
         return super().form_valid(form)
 
@@ -280,7 +305,7 @@ class RoomTypeCreateView(LoginRequiredMixin, CreateView):
 
 class HostelDelete(LoginRequiredMixin, DeleteView):
     model = Hostel
-    success_url = reverse_lazy('rooms')
+    success_url = reverse_lazy('management')
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -300,30 +325,35 @@ class HostelUpdate(LoginRequiredMixin, DeleteView):
 
 
 @login_required
-def dashboard(request):
+def user_dashboard(request):
 
     dash = Booking.objects.filter(tenant=request.user)
 
-    return render(request, 'hostels/dashboard.html', {'dash':dash})
+    return render(request, 'hostels/user_dashboard.html', {'dash':dash})
 
 
-@login_required
-def hostel_manager(request):
-    return render(request, 'hostels/management.html')
+class Management(LoginRequiredMixin, ListView):
 
-class Management(LoginRequiredMixin, TemplateView):
-    template_name = 'hostels/management.html'
-
-
-class TenantListView(LoginRequiredMixin, ListView):
     model = Booking
     slug_url_kwarg = 'pk'
-    context_object_name = 'tenants'
-    template_name = 'hostels/all_tenants.html'
-    
+    context_object_name = 'bookings'
+    template_name = 'hostels/management.html'
 
-@login_required
-def tenants(request):
-    tenants = Booking.objects.filter(id=request.user.id)
-    print(tenants)
-    return render(request, 'hostels/tenants.html', {'tenants':tenants})
+    def get_context_data(self, **kwargs):
+        context = super(Management, self).get_context_data(**kwargs)
+        context['bookings'] = Booking.objects.filter(room_type__hostel__created_by=self.request.user)
+        context['vacancies'] = Room.objects.filter(room_type__hostel__created_by=self.request.user).filter(is_full=False)
+        context['approved_leaves'] = LeaveRequests.objects.filter(room__room_type__hostel__created_by=self.request.user).filter(is_approved=True)
+        context['pending_approvals'] = LeaveRequests.objects.filter(room__room_type__hostel__created_by=self.request.user).filter(is_approved=False)
+        return context
+
+
+class GeneratePdf(LoginRequiredMixin, DetailView):
+    model = Booking
+    def get_context_data(self, *args, **kwargs):
+        booking = Booking.objects.filter(tenant=self.request.user).first()
+        #context_dict = {'booking':booking}
+        print(f'{booking} here!')
+        pdf = create_pdf('hostels/receipt.html')
+
+        return HttpResponse(pdf, content_type='application/pdf')

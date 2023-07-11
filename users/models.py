@@ -6,16 +6,19 @@ from django.contrib.auth.models import AbstractBaseUser
 from django.urls import reverse
 #from PIL import Image
 
-
+SEX = [
+    ('Male', 'Male'),
+    ('Female', 'Female')
+    ]
 class RoomUser(AbstractBaseUser):
 	email = models.EmailField(unique=True)
 	first_name = models.CharField(max_length=100)
 	last_name = models.CharField(max_length=100)
 	ghana_card_number = models.CharField(max_length=50)
-	telephone = models.CharField(help_text='0597856551', max_length=10)
-	gender = models.CharField(max_length=10)
-	your_emmergency_contact = models.CharField(help_text='0597856551', max_length=10)
-	name = models.CharField('His/Her Name', max_length=50)
+	telephone = models.CharField(help_text='0597856551', max_length=20)
+	gender = models.CharField(max_length=10, choices=SEX)
+	your_emmergency_contact = models.CharField(help_text='0597856551', max_length=20)
+	name_of_emmergency_contact = models.CharField('His/Her Name', max_length=50)
 	is_staff = models.BooleanField(default=False)
 	is_active = models.BooleanField(default=True)
 	is_admin = models.BooleanField(default=False)

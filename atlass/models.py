@@ -4,8 +4,8 @@ from django.utils import timezone
 import secrets
 from django.urls import reverse
 from .transaction  import  Paystack
-from datetime import date
-from hostels.models import Room, RoomType
+import datetime
+from hostels.models import Room, RoomType, Hostel
 
 
 user = get_user_model()
@@ -23,24 +23,30 @@ class Account(models.Model):
 
 
 #model for storing a user bookings
+SEX = [
+    ('Male', 'Male'),
+    ('Female', 'Female')
+    ]
+
 class Booking(models.Model):
 
     tenant = models.ForeignKey(user, on_delete=models.CASCADE, blank=True, null=True, editable=False)
     room = models.ForeignKey(Room, on_delete=models.CASCADE, editable=False)
     room_type = models.ForeignKey(RoomType, on_delete=models.CASCADE, editable=False)
-    check_in = models.DateTimeField(default=timezone.now, editable=False)
-    phone_number = models.CharField(max_length=10, null=True, blank=True, editable=False)
+    check_in = models.DateField(help_text='YYYY-MM-DD', default=datetime.datetime.now)
+    number_of_guests = models.PositiveIntegerField(default=1)
+    phone_number = models.CharField(max_length=17, null=True, blank=True, editable=False)
     cost = models.DecimalField(max_digits=8, decimal_places=2, editable=False)
     room_no = models.CharField(max_length=20, editable=False)
     first_name = models.CharField(max_length=50, editable=False)
     last_name = models.CharField(max_length=50, editable=False)
-    gender = models.CharField(help_text='Male/Female', max_length=10, editable=False)
+    gender = models.CharField(help_text='Male/Female', max_length=10, choices=SEX)
     email_address = models.EmailField(editable=False)
     city_or_town = models.CharField(max_length=100, editable=False)
     university_identification_number = models.PositiveIntegerField(editable=False)
     region_of_residence = models.CharField(max_length=100, editable=False)
     digital_address = models.CharField(max_length=100, editable=False)
-    receipt_number = models.CharField(max_length=10, editable=False)
+    receipt_number = models.CharField(max_length=100, editable=False)
     ref = models.CharField(max_length=200, editable=False)
     is_verified = models.BooleanField(default=False, editable=False)
     date_created = models.DateTimeField(auto_now_add=True, editable=False)
@@ -91,14 +97,14 @@ class Booking(models.Model):
     auto calculating the expiry date of the rent
     '''
     def expiration_date(self):
-        delta = self.check_in + timezone.timedelta(days=366)
+        delta = self.check_in + datetime.timedelta(days=366)
         return delta
 
 
     def days_remaining(self):
-        full_dur = self.check_in + timezone.timedelta(days=366)
+        full_dur = self.check_in + datetime.timedelta(days=366)
 
-        days_rem = full_dur - timezone.now()
+        days_rem = datetime.datetime.combine(full_dur, datetime.datetime.min.time()) - datetime.datetime.now()
 
         days_left =days_rem.days
 
@@ -108,3 +114,26 @@ class Booking(models.Model):
             return 'Your rent has expired'
         else:
             return f'{days_left} days left'
+
+    def get_account_number(self):
+        return self.room_type.hostel.account_number
+
+    def get_hostel(self):
+        return self.room_type.hostel
+  
+
+
+class LeaveRequests(models.Model):
+    hostel = models.CharField(max_length=100)
+    room = models.ForeignKey(Room, on_delete=models.CASCADE)
+    your_course = models.CharField(max_length=100)
+    level = models.CharField(max_length=100)
+    phone_number = models.CharField(max_length=14)
+    purpose = models.TextField()
+    i_affirm_everything_in_my_room_is_intact = models.BooleanField(default=False)
+    date_created = models.DateTimeField(default=timezone.now, editable=False)
+    appoval_id = models.CharField(max_length=10, null=True, blank=True)
+    is_approved = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.room.room_number

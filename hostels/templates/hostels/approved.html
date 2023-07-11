@@ -1,0 +1,29 @@
+<p class="text-center fw-bolder text-secondary text-decoration-underline">Approvals.</p>
+<table class="table table-success table-striped table-hover table-bordered vacant" id="pending">
+  <thead>
+    <tr>
+      <th scope="col">#Room</th>
+      <th scope="col">Course</th>
+      <th scope="col">Level</th>
+      <th scope="col">Phone</th>
+      <th scope="col">Purpose</th>
+      <th scope="col">Date</th>
+      <th scope="col">#ID</th>
+      <th scope="col">Is approved</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for app_leave in approved_leaves %}
+    <tr>
+      <th scope="row">{{leave_req.room}}</th>
+      <td>{{app_leave.your_course}}</td>
+      <td>{{app_leave.level}}</td>
+      <td>{{app_leave.phone_number}}</td>
+      <td>{{app_leave.purpose}}</td>
+      <td>{{app_leave.date_created}}</td>
+      <td>{{app_leave.appoval_id}}</td>
+      <td>{{app_leave.is_approved}}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>

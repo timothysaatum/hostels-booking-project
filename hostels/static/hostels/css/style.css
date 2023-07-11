@@ -244,3 +244,28 @@ nav img {
 .side-bar::-webkit--scrollbar{
     display: none;
 }
+
+.manage{
+    height: 35rem; 
+    overflow-y: scroll;
+}
+
+.manage::-webkit--scrollbar{
+    display: none;
+}
+
+
+.bg-admin{
+    background-color: #181801;
+}
+
+.admin-header-font{
+    font-family: 'Source Code Pro', monospace;
+    text-shadow: 2px 2px 8px #FF0000;
+}
+
+.admin-side-bar{
+    height: 35rem; 
+    overflow-y: scroll;
+    /*background-color: #b8a693;*/
+}

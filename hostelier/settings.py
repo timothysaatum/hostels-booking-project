@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'hostels',
     'atlass',
+    'paystack',
     'properties',
     'crispy_bootstrap5',
     'users',
@@ -164,7 +165,7 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = config('EMAIL_USER')
-EMAIL_HOST_PASSWORD = config('EMAIL_PASS')
+EMAIL_HOST_PASSWORD = 'kscnzqcdtpmewpxz'
 AUTH_USER_MODEL = 'users.RoomUser'
 
 PAYSTACK_PUBLIC_KEY = config('PAYSTACK_PUBLIC_KEY')
@@ -174,3 +175,7 @@ PAYSTACK_SECRET_KEY = config('PAYSTACK_SECRET_KEY')
 SMS_BACKEND = 'sms.backends.twilio.SmsBackend'
 TWILIO_ACCOUNT_SID = 'live-redacted-twilio-account-sid'
 TWILIO_AUTH_TOKEN = 'live-redacted-twilio-auth-token'
+
+
+#SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARD_PROTO', 'https')
+#SECURE_SSL_REDIRECT = True

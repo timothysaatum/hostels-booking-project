@@ -6,21 +6,19 @@
 {% block content %}
 <section class="user">
 	<div class="text-center mb-3">
-		<h1>You are about to make payment for a </h1>
-		<p class="fw-bolder">({{booking.room.room_type}}) in {{booking.room.hostel.hostel_name}}</p>
+		<p class="fw-bolder">Your reservation has been created,<button onclick="payWithPaystack()" class="btn btn-sm fw-bolder text-decoration-underline text-success">pay & confirm.</button></p>
+		<p class="fw-bolder">Be sure to <a href="{% url 'delete-booking' booking.pk %}" class="text-danger text-decoration-underline">delete reservation</a> if you change your mind.</p>
 	</div>
 	<div class="d-flex justify-content-center mb-3"><small>Ensure the information provided is accurated. A copy of this
 			will be mailed to <b>{{booking.email_address}}</b>.</small></div>
 	<div class="container">
 		<div class="row d-flex justify-content-center">
 			<div class="col-md-7 bg-light shadow border">
-				<h2>Receipt Details</h2>
-				<div class="d-flex justify-content-between">
-					<p>Unarcom LLC</p>
+				<div>
 					<p>Receipt No: {{booking.receipt_number}}</p>
 				</div>
 				<hr>
-				<h2>Your Info</h2>
+				<p class="h7 fw-bolder">Your Info</p>
 				<div class="d-flex justify-content-between">
 					<p>Tenant: {{booking.first_name}} {{booking.last_name}}</p>
 					<p>Phone: {{booking.phone_number}}</p>
@@ -34,7 +32,7 @@
 					<p>Room Type:{{booking.room_type}}</p>
 				</div>
 				<hr>
-				<h2>Hostel Info</h2>
+				<p class="h7 fw-bolder">Hostel Info</p>
 				<div class="d-flex justify-content-between">
 					<p>Hostel: {{booking.room.hostel.hostel_name}}</p>
 					<p>Rent Expires: {{booking.expiration_date|date:'M d, Y'}}</p>
@@ -48,22 +46,19 @@
 					<p>School Name: {{booking.room.hostel.school}}</p>
 				</div>
 				<hr>
-				<h2>Our Ref</h2>
+				<p class="h7 fw-bolder">Our Ref</p>
 				<div class="d-flex justify-content-between">
 					<p>Address: UDS, Block 59 <br> GPS: BL-0080-0001</p>
-					<p>Contacts: 024578665 <br>0265488666 <br>022489635 </p>
-				</div>
-				<div class="d-flex justify-content-between">
-					<p><b>Timothy Saatum:</b> <br> CTO & Technical advisor <br> 024578665.</p>
-					<p><b>Salifu Zakaria:</b> <br> Marketting Director <br> 025578665.</p>
-					<p><b>Deborah Fevlo:</b> <br> UX Designer & Secretary <br> 024578665.</p>
+					<p>Contacts: 024578665</p>
 				</div>
 				<div class="text-center font-monspace"><code>Ref: {{booking.ref}}</code></div>
 			</div>
 		</div>
 	</div>
-	<div class="d-flex justify-content-center mt-3"><button onclick="payWithPaystack()"
-			class="btn btn-outline-danger btn-lg">Continue</button></div>
+	<div class="d-flex justify-content-center mt-3">
+		<a href="{% url 'delete-booking' booking.pk %}" role="button" class="btn btn-outline-danger btn-md mx-2">Delete reservation</a>
+		<button onclick="payWithPaystack()"
+			class="btn btn-outline-success btn-md mx-2">Pay & confirm.</button></div>
 	<script type="text/javascript" src="https://js.paystack.co/v1/inline.js"></script>
 	<script type="text/javascript">
 		function payWithPaystack() {
@@ -75,7 +70,7 @@
 			let obj = {
 				key: "{{paystack_pub_key}}",
 				email: "{{booking.email_address}}",
-				amount: "{{amount_value}}",
+				amount: "{{booking.amount_value}}",
 				ref: ref,
 				callback: function (response) {
 					window.location.href = "{% url 'verify' booking.ref %}";

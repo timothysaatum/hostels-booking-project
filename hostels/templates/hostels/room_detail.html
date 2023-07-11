@@ -30,12 +30,12 @@
                                 data-bs-target="#exampleModal"><i class="fa-solid fa-ellipsis-vertical"></i> <i
                                     class="fa-solid fa-ellipsis-vertical"></i> Show all</button>
                         </div>
-                        {% for obj in image_list|slice:'0:4' %}
+                        {% for obj in front_display %}
                         <div class="col-md-4 d-none d-sm-block d-lg-block">
                             <img src="{{obj.room_type_images.url}}" class="img-fluid img-hover">
                         </div>
                         {% endfor %}
-                        {% for obj in image_list|slice:'4:5' %}
+                        {% for obj in image_list|slice:'5:6' %}
                         <div class="col-md-4 d-none d-sm-block d-lg-block div-place">
                             <img src="{{obj.room_type_images.url}}" class="img-fluid img-hover">
                             <button class="btn btn-light btn-md show-all" data-bs-toggle="modal"
@@ -134,7 +134,7 @@
 <!--for phones-->
 <div class="d-flex justify-content-between bg-light  shadow d-block d-md-none mx-2 fix-bottom px-2 btn-reserve sm-scroll">
                 {% for room_num in spec_room %}
-            <div class="text-center m-2"><a href="{% url 'pay' object.pk room_num.pk %}" role="button" class="btn btn-sm btn-outline-danger">
+            <div class="text-center m-2"><a href="{% url 'pay' object.pk room_num.pk %}" role="button" class="btn btn-sm btn-outline-danger {% if room_num.capacity == 0 %}disabled{% endif %}" {% if room_num.capacity %}aria-disabled="true"{% endif %}>
 
                 {% if room_num.is_booked %}
                     {% if room_num.capacity == 0 %}

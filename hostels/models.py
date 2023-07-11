@@ -60,7 +60,7 @@ class Hostel(models.Model):
         #if img.height > 500 or img.width > 500:
         output_size = (350, 350)
         img.thumbnail(output_size)
-        img.save(self.display_image.path)
+        img.save(self.display_image.path, optimize=True, quality=95)
     
     def __str__(self):
         return self.hostel_name
@@ -117,6 +117,16 @@ class RoomType(models.Model):
     def __str__(self):
         return self.room_type
 
+    def save(self, *args, **kwargs):
+        super(RoomType, self).save(*args, **kwargs)
+
+        img = Image.open(self.room_display_image.path)
+
+        #if img.height > 500 or img.width > 500:
+        output_size = (350, 350)
+        img.thumbnail(output_size)
+        img.save(self.room_display_image.path, optimize=True, quality=95)
+
 
 class RoomTypeImages(models.Model):
     room = models.ForeignKey(RoomType, on_delete=models.CASCADE)
@@ -130,12 +140,25 @@ class RoomTypeImages(models.Model):
         verbose_name_plural = 'Room Images'
 
 
+    def save(self, *args, **kwargs):
+        super(RoomTypeImages, self).save(*args, **kwargs)
+
+        img = Image.open(self.room_type_images.path)
+
+        #if img.height > 500 or img.width > 500:
+        output_size = (500, 500)
+        img.thumbnail(output_size)
+        img.save(self.room_type_images.path, optimize=True, quality=95)
+
+
+
 class Room(models.Model):
     room_type = models.ForeignKey(RoomType, on_delete=models.CASCADE)
     room_number = models.CharField(max_length=100)
     capacity = models.PositiveIntegerField()
-    room_occupant_gender = models.CharField(max_length=10, default='M')
+    room_occupant_gender = models.CharField(max_length=7)
     is_booked = models.BooleanField(default=False)
+    is_full = models.BooleanField(default=False)
 
     def __str__(self):
         return self.room_number

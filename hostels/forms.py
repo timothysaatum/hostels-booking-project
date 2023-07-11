@@ -1,31 +1,23 @@
 from django import forms
 from .models import Hostel, RoomType, RoomTypeImages
 from atlass.models import Booking
+from PIL import Image
 
 
 
-class BookingCreationForm(forms.Form):
-	phone_number = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'0806916500'}))
-	first_name = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'Sheldon'}))
-	last_name = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'Cooper'}))
-	email_address = forms.EmailField(widget=forms.EmailInput(attrs={'placeholder':'Tam@gmail.com'}))
-	city_or_town = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'Las Vegas'}))
-	gender = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'M or F'}))
+class BookingCreationForm(forms.ModelForm):
+	phone_number = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'0246474321'}))
+	first_name = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'Saatum'}))
+	last_name = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'Timothy'}))
+	email_address = forms.EmailField(widget=forms.EmailInput(attrs={'placeholder':'example@gmail.com'}))
+	city_or_town = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'Tamale'}))
 	university_identification_number = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'UIN'}))
-	region_of_residence = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'Texas'}))
+	region_of_residence = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'Lawra'}))
 	digital_address = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'BL-0587-3675'}))
-
-
-
-class BookingForm(forms.ModelForm):
-	#room_type = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple(
-	#			attrs={'placeholder':'Select the room type'}), 
-	#			choices=ROOM_TYPE
-	#		)
 
 	class Meta: 
 		model = Booking
-		exclude = ('tenant', 'cost', 'is_verified', 'date_created', 'check_in', 'ref')
+		exclude = ('tenant', 'cost', 'is_verified', 'date_created', 'ref', 'number_of_guests')
 
 
 
@@ -53,7 +45,7 @@ class RoomTypeCreationForm(forms.ModelForm):
 	room_numbers = forms.CharField(label='Enter the room numbers', widget=forms.TextInput(attrs={'placeholder':'Please enter the room numbers'}))
 	class Meta:
 		model = RoomType
-		fields = ['hostel', 'room_type', 'room_type_number','room_numbers', 'room_capacity', 'cost_per_head',
+		fields = ['room_type', 'room_type_number','room_numbers', 'room_capacity', 'cost_per_head',
 		 'room_display_image', 'details', 'files']
 
 	def _save_m2m(self):

@@ -1,10 +1,9 @@
 from django.urls import path
 from .views import (RoomDetailView, AboutView, HomeView, Services, 
-                    dashboard, HowItWorks,
+                    user_dashboard, HowItWorks,
                     Mission, HostelsListView, make_booking, 
-                    CreateHostel, Management, 
-                    tenants, verify_booking, HostelDelete, 
-                    HostelUpdate, RoomsListView, RoomTypeCreateView, TenantListView)
+                    CreateHostel, Management, verify_booking, HostelDelete, 
+                    HostelUpdate, RoomsListView, RoomTypeCreateView, make_payment, GeneratePdf)
 
 
 urlpatterns = [
@@ -20,10 +19,10 @@ urlpatterns = [
     path('how-it-works/', HowItWorks.as_view(), name="howitworks"),
     path('mission/', Mission.as_view(), name='mission'),
     path('about/', AboutView.as_view(), name='about'),
-    path('booking/summary/', dashboard, name='booking-details'),
+    path('user/dashboard/', user_dashboard, name='booking-details'),
     path('rooms/request-to-book/<int:pk>/<int:room_pk>', make_booking, name='pay'),
-    path('property/management/', Management.as_view(), name='management'),
-    path('property/tenants/', tenants, name='tenants'),
+    path('room/pay/<int:pk>/', make_payment, name="book"),
+    path('admin/dashboard/', Management.as_view(), name='management'),
     path('verify-payment/<str:ref>/', verify_booking, name='verify'),
-    path('tenants/', TenantListView.as_view(), name='tenants')
+    path('booking/receipts/download/', GeneratePdf.as_view(), name='receipt')
 ]

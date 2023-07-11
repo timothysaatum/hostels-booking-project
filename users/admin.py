@@ -12,7 +12,7 @@ class UserAdmin(UserAdmin):
     add_form = UserCreationForm
 
     list_display = ('email', 'first_name', 'last_name', 
-					'ghana_card_number', 'gender', 'your_emmergency_contact', 'name','telephone', 'date_joined')
+					'ghana_card_number', 'gender', 'your_emmergency_contact', 'name_of_emmergency_contact','telephone', 'date_joined')
     list_filter = ('email', 'telephone')
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
@@ -35,7 +35,7 @@ class ComplainAdmin(admin.ModelAdmin):
     list_display = ('full_name', 'phone', 'address', 'date_added')
 
 class ContactAdmin(admin.ModelAdmin):
-    list_display = ('full_name', 'phone', 'address', 'date_added')
+    list_display = ('full_name', 'phone', 'address', 'message', 'date_added')
 
 
 
