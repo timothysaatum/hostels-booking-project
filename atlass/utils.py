@@ -5,10 +5,12 @@ from io import BytesIO
 from django.http import HttpResponse
 from django.template.loader import get_template
 from xhtml2pdf import pisa
+from textwrap import dedent
 
 
 def send_email_with_transaction(subject, body, recipient_list):
 	email_from = settings.EMAIL_HOST_USER
+	body = dedent(body)
 	send_mail(subject, body, email_from, recipient_list)
 
 

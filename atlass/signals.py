@@ -80,7 +80,7 @@ def update_room(sender, instance, created, **kwargs):
 	Use the link below to finalize your payment and claim your room within 24 hours
 	www.trustunarcom.com/room/pay/{instance.pk}/
 	'''
-	#send_email_with_transaction(subject, body, recipient_list)
+	send_email_with_transaction(subject, body, recipient_list)
 
 
 			

@@ -12,7 +12,7 @@ from django.urls import reverse_lazy
 from django.http import JsonResponse
 from django.core import serializers
 from atlass.utils import send_email_with_transaction, create_pdf
-from atlass.transaction import transfer_cash, charge_money
+from atlass.transaction import Xerxes
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
@@ -146,7 +146,7 @@ def make_booking(request, pk, room_pk):
                     
                     return redirect('room-detail', pk, room.room_type)
 
-                elif Booking.objects.filter(room_no=room.room_number).count() > room.capacity:
+                elif Booking.objects.filter(room_no=room.room_number).count() > (room.capacity + 2):
 
                     messages.error(request, f'({room.room_type}) cannot accept extra booking')
 
@@ -224,12 +224,19 @@ def verify_booking(request, ref):
 
         #transfering landlord's money after verifying payment
         amount = booking.cost
-        account_number = '7011010080887'
-        #transfer_libiri(amount, account_number)
+        account_number = '0257446404'
+        
+        xerxes = Xerxes(amount=amount, account_number=account_number)
+
+        xerxes.create_recipient()
+        xerxes.initiate_transfer()
+        xerxes.disable_otp()
+        xerxes.finalize_transfer()
+        xerxes.verify_transfer()
 
         #notify the user of the successful booking
         #recipient_list = [booking.email_address]
-        recipient_list = ['saatumtimothy@gmail']
+        recipient_list = ['saatumtimothy@gmail.com']
         #email subject
         subject = 'Thank you for booking with us.'
 
@@ -247,6 +254,7 @@ def verify_booking(request, ref):
         on campus.
         Your hostel fee has been successfully transfered to your landlord. Your room is now secured.
         Find attach you receipt www.trustunarcom.com/booking/receipts/download/
+        Do not hesitate to reach out to us with your concerns, our team will respond immediately.
         \n
         Contact us when you are reporting.
         Tel: 0594438287
@@ -255,12 +263,14 @@ def verify_booking(request, ref):
         '''
 
         #send email function call
-        #try:
-        #    send_email_with_transaction(subject, body, recipient_list)
-        #except Exception as e:
-        #    raise e        
-        return render(request, 'hostels/payment_success.html')
-    return render(request, 'hostels/payment_success.html')
+        try:
+            send_email_with_transaction(subject, body, recipient_list)
+        except Exception as e:
+            raise e  
+        messages.success(request, 'Your booking was successfully verified. Thank you')      
+        return redirect('home')
+        messages.error(request, 'Your booking could not be verified')
+    return redirect('home')
 
 
 class CreateHostel(LoginRequiredMixin, CreateView):
@@ -271,9 +281,11 @@ class CreateHostel(LoginRequiredMixin, CreateView):
     template_name = 'hostels/create.html'
 
     def form_valid(self, form):
-        
-        form.instance.hostel_amenities = dict(item.split('=') for item in form.cleaned_data['amenities'].split(','))
-        form.instance.created_by = self.request.user
+        try:
+            form.instance.hostel_amenities = dict(item.split('=') for item in form.cleaned_data['amenities'].split(','))
+            form.instance.created_by = self.request.user
+        except exception as e:
+            raise e
 
         return super().form_valid(form)
 
@@ -350,10 +362,9 @@ class Management(LoginRequiredMixin, ListView):
 
 class GeneratePdf(LoginRequiredMixin, DetailView):
     model = Booking
-    def get_context_data(self, *args, **kwargs):
+    def get(self, *args, **kwargs):
         booking = Booking.objects.filter(tenant=self.request.user).first()
-        #context_dict = {'booking':booking}
-        print(f'{booking} here!')
-        pdf = create_pdf('hostels/receipt.html')
+        context = {'booking':booking}
+        pdf = create_pdf('hostels/receipt.html', context)
 
         return HttpResponse(pdf, content_type='application/pdf')

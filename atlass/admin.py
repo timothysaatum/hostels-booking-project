@@ -6,6 +6,7 @@ class BookingAdmin(admin.ModelAdmin):
     list_display = ('hostel', 'first_name', 'last_name', 'gender', 'room_no', 'phone_number', 'is_verified', 'email_address', 'city_or_town', 
         'university_identification_number', 'region_of_residence', 'digital_address', 'check_in', 'number_of_guests',
         'cost', 'room_type', 'expiration_date', 'days_remaining')
+    search_fields = ['university_identification_number', 'digital_address', 'last_name']
 
 class AccountAdmin(admin.ModelAdmin):
     list_display = ('user', 'currency', 'balance', 'created_at')

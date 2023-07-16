@@ -37,7 +37,6 @@ INSTALLED_APPS = [
     'crispy_forms',
     'hostels',
     'atlass',
-    'paystack',
     'properties',
     'crispy_bootstrap5',
     'users',

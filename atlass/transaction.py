@@ -1,9 +1,5 @@
 from django.conf import settings
 import requests
-from django.http import JsonResponse
-from paystack.resource import TransactionResource
-import random
-import string
 
 
 class Paystack:
@@ -27,65 +23,132 @@ class Paystack:
 
         return response_data['status'], response_data['message']
 
-def transfer_cash(amount, account_number):
-    transfer_url = 'https://api.paystack.co/transfer'
 
+
+class Xerxes:
+
+    SECRET_KEY = settings.PAYSTACK_SECRET_KEY
+    RECIPIENT_CODE = None
+    TRANSFER_CODE = None
+    REFERENCE = None
     headers = {
-        'Authorization': f'Bearer {settings.PAYSTACK_SECRET_KEY}',
-        'Content-Type':'application/json'
-    }
+            'Authorization': f'Bearer {SECRET_KEY}',
+            'Content-Type':'application/json'
+        }
+    def __init__(self, amount=None, account_number=None):
+        self.amount = amount
+        self.account_number = account_number
 
-    payload = {
-        'source': 'balance',
-        'reason': 'Being payment for hostel fee',
-        'amount': amount,
-        'recipient': "RCP_gx2wn530m0i3w3m"
-    }
+    def create_recipient(self):
+        recipient_create_url="https://api.paystack.co/transferrecipient"
 
-    try:
-        response = requests.post(transfer_url, headers=headers, json=payload)
-        data = response.json()
-        s = f'Inside{data}status{response.status_code}'
-        print(s)
+        sup_bk = requests.get('https://api.paystack.co/bank?currency=GHS', headers=self.headers)
+        sup_bk = sup_bk.json()
+        print(sup_bk)
+        
+
+        #verif_acc = requests.post('https://api.paystack.co/bank/resolve?account_number=0594438287&bank_code=MTN', headers=self.headers)
+        #print(f'code: {verif_acc}')
+
+        data = { 
+            "type": "mobile_money",
+            "name": "Timoth Saatum",
+            "account_number": self.account_number,
+            "bank_code": "MTN",
+            "currency": "GHS"
+        }
+
+
+        #creating a recipient
+        try:
+            response = requests.post(recipient_create_url, headers=self.headers, json=data)
+            recipient_data =response.json()
+            print(recipient_data)
+            self.RECIPIENT_CODE = recipient_data['data']['recipient_code']
+        except Exception as e:
+            raise e
+
+
+
+    #initiating the transfer process
+    def initiate_transfer(self):
+
+        transfer_url = "https://api.paystack.co/transfer"
+        recipient = self.RECIPIENT_CODE
+
+        data = { 
+            "source": "balance", 
+            "reason": "Being Payment for hostel fee", 
+            "amount":self.amount, 
+            "recipient": recipient
+        }
+
+
+        start_transfer = requests.post(transfer_url, headers=self.headers, json=data)
+        transfer_data= start_transfer.json()
+        print(transfer_data)
+        self.TRANSFER_CODE = transfer_data['data']['transfer_code']
+
+        if start_transfer.status_code == 200:
+
+            transfer_code = transfer_data['data']['transfer_code']
+            return transfer_code
+
+        else:
+            return 'An error occurred'
+
+
+    def disable_otp(self):
+
+        #request to disable otp
+        otp_url_disable = 'https://api.paystack.co/transfer/disable_otp'
+        r = requests.post(otp_url_disable, headers=self.headers)
+        otp_data = r.json()
+        print(otp_data)
+
+
+        #finalizing the disabling of the otp
+        url='https://api.paystack.co/transfer/disable_otp_finalize'
+
+        data = {
+            'otp': '806514'
+        }
+
+        res = requests.post(url, headers=self.headers, json=data)
+        d = res.json()
+        print(d)
+
+
+    def finalize_transfer(self):
+        transfer_code = self.TRANSFER_CODE
+        finalize_transfer_url = 'https://api.paystack.co/transfer/finalize_transfer'
+
+        data = { 
+            "transfer_code": transfer_code, 
+            "otp": "794144"
+        }
+
+        try:
+            finalize_trans = requests.post(finalize_transfer_url, headers=self.headers, json=data)
+            finalize_trans_data = finalize_trans.json()
+            #self.REFERENCE = finalize_trans_data['data']['reference']
+            print(finalize_trans_data)
+        except Exception as e:
+            raise e
+
+
+    #perform the transfer
+    def verify_transfer(self):
+
+        ref = self.REFERENCE
+        url='https://api.paystack.co/transfer/verify/{ref}'
+
+
+        response = requests.get(url, headers=self.headers)
+        response_data = response.json()
+
         if response.status_code == 200:
-            transfer_code = data['data']['transfer_code']
-            finalize_url = f'https://api.paystack.co/transfer/finalize_transaction/{transfer_code}'
-            response = requests.post(finalize_url, headers=headers)
-            data = response.json()
-            if response.status_code == 200:
-                return JsonResponse({'message':'Transfer complete'})
-        error_message = data['message'] if 'message' in data else 'Transfer could not be completed successfully'
-        return JsonResponse({'error':error_message})
+            return response_data['data']['account_number']
 
-    except requests.exceptions.RequestException as e:
-        return JsonResponse({'error':str(e)})
-
-
-def transfer_libiri(amount, account_number):
-    key = settings.PAYSTACK_SECRET_KEY
-    paystack_api = paystack.Paystack(secret_key=key)
-    payload = {
-        'source': 'balance',
-        'reason': 'Being payment for hostel fee',
-        'amount': amount,
-        'recipient': "RCP_gx2wn530m0i3w3m"
-    }
-
-    trans_response = paystack_api.transfer.create(**payload)
-    if trans_response['status']:
-        print(success)
-    else:
-        print('Running post moterm')
-
-def charge_money(amount, email):
-        ref = ''.join([random.choice(string.ascii_letters + string.digits) for n in range(16)])
-        key = settings.PAYSTACK_SECRET_KEY
-        plan = 'Basic'
-
-        client = TransactionResource(key, ref)
-        response = client.initialize(amount, email, plan)
-        print(response)
-        client.authorize()
-        verify = client.verify()
-        print(verify)
-        print(client.charge())
+        else:
+            return 'No such transaction'

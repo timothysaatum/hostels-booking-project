@@ -97,7 +97,7 @@ nav img {
 }
 
 .margin-bottom{
-    margin-top: 5em;
+    margin-top: 4em;
 }
 
 .nav-border,
@@ -268,4 +268,17 @@ nav img {
     height: 35rem; 
     overflow-y: scroll;
     /*background-color: #b8a693;*/
+}
+
+.text-danger{
+
+    color: #a83264;
+}
+
+.bg-danger{
+    background-color: #a83264;
+}
+
+.btn-danger{
+    background-color: #a83264;
 }

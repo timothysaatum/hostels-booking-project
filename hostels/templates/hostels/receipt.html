@@ -1,10 +1,17 @@
-{% extends 'hostels/base.html' %}
 {% load static %}
-
-
-{% block title %}Print receipt{% endblock %}
-{% block navbar %}{% endblock navbar %}
-{% block content %}
+<!doctype html>
+<html lang="eng">
+<head>
+  <meta charset="utf-8" />
+  <title>Print receipt</title>
+  <style type="text/css">
+  	.user{
+  		display: flex;
+  		flex-direction: row;
+  	}
+  </style>
+ </head>
+<body>
 <section class="user">
 	<div class="container">
 		<div class="row d-flex justify-content-center">
@@ -51,5 +58,5 @@
 		</div>
 	</div>
 </section>
-{% endblock %}
-{% block footer %}{% endblock footer %}
+</body>
+</html>

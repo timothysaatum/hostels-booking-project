@@ -16,6 +16,7 @@ from atlass.utils import send_email_with_transaction
 
 
 
+
 user = get_user_model()
 
 def register(request):
