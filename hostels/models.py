@@ -47,6 +47,7 @@ class Hostel(models.Model):
     wifi = models.CharField(max_length=50)
     hostel_amenities = models.JSONField(null=True, default=dict, blank=True)
     account_number = models.CharField(max_length=100, null=True, blank=True)
+    account_name = models.CharField(max_length=100)
     rating = models.DecimalField(max_digits=10, decimal_places=1)
 
     '''

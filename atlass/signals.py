@@ -79,6 +79,14 @@ def update_room(sender, instance, created, **kwargs):
 	In case you couldn't finish payment due to network issues, 
 	Use the link below to finalize your payment and claim your room within 24 hours
 	www.trustunarcom.com/room/pay/{instance.pk}/
+
+	Address:
+	BL-0576-0842, Tamale
+	www.trustunarcom.com
+	Email: trustunarcom@company.com
+	Tel: 0542358723
+
+	Life can be simple!
 	'''
 	send_email_with_transaction(subject, body, recipient_list)
 
@@ -99,6 +107,7 @@ def update_room_numbers(sender, instance, **kwargs):
 		hostel.no_of_rooms += 1
 		room.is_booked = False
 		room.is_full = False
+		print(f'Added room to {room_type}')
 		
 
 	if room_type.room_type == '2 in a room':
@@ -108,8 +117,9 @@ def update_room_numbers(sender, instance, **kwargs):
 			if room.capacity == 2:
 				room.is_booked = False
 				room.is_full = False
-				room_type.room_type_number += 1
+				#room_type.room_type_number += 1
 				hostel.no_of_rooms += 1
+				print(f'Added room to {room_type}')
 
 	if room_type.room_type == '3 in a room':
 		if room.capacity >= 0 and room.capacity <= 2:
@@ -118,8 +128,9 @@ def update_room_numbers(sender, instance, **kwargs):
 			if room.capacity == 3:
 				room.is_booked = False
 				room.is_full = False
-				room_type.room_type_number += 1
+				#room_type.room_type_number += 1
 				hostel.no_of_rooms += 1
+				print(f'Added room to {room_type}')
 
 	if room_type.room_type == '4 in a room':
 
@@ -129,10 +140,10 @@ def update_room_numbers(sender, instance, **kwargs):
 			if room.capacity == 4:
 				room.is_booked = False
 				room.is_full = False
-				room_type.room_type_number += 1
+				#room_type.room_type_number += 1
 				hostel.no_of_rooms += 1
+				print(f'Added room to {room_type}')
 
 	room.save()
 	room_type.save()
 	hostel.save()
-	print('Adding room... ok')

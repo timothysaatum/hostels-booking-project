@@ -152,28 +152,9 @@ def make_booking(request, pk, room_pk):
 
                     return redirect('room-detail', pk, room.room_type)
 
-                else:
-                    booking = Booking.objects.create(room=room, tenant=request.user,
-                        phone_number=phone_number, room_type=room.room_type,
-                        cost=room.room_type.cost_per_head, 
-                        room_no=room.room_number, first_name=first_name, last_name=last_name, 
-                        email_address=email_address,gender=gender, city_or_town=city_or_town, 
-                        university_identification_number=university_identification_number, 
-                        region_of_residence=region_of_residence, digital_address=digital_address,
-                        receipt_number=receipt
-                    )
 
             
-                    #create an account for the user when they make a booking
-                    acc = Account.objects.filter(user_id=request.user.id)
-            
-                    #checking to see if user already have an account
-                    if not acc:
-                        Account.objects.create(user_id=request.user.id)
-
-                    return redirect('book', booking.pk)
-            else:
-                booking = Booking.objects.create(room=room, tenant=request.user,
+            booking = Booking.objects.create(room=room, tenant=request.user,
                     phone_number=phone_number, room_type=room.room_type,
                     cost=room.room_type.cost_per_head, 
                     room_no=room.room_number, first_name=first_name, last_name=last_name, 
@@ -181,17 +162,17 @@ def make_booking(request, pk, room_pk):
                     university_identification_number=university_identification_number, 
                     region_of_residence=region_of_residence, digital_address=digital_address,
                     receipt_number=receipt
-                    )
+                )
 
             
-                #create an account for the user when they make a booking
-                acc = Account.objects.filter(user_id=request.user.id)
+            #create an account for the user when they make a booking
+            acc = Account.objects.filter(user_id=request.user.id)
             
                 #checking to see if user already have an account
-                if not acc:
-                    Account.objects.create(user_id=request.user.id)
+            if not acc:
+                Account.objects.create(user_id=request.user.id)
 
-                return redirect('book', booking.pk)
+            return redirect('book', booking.pk)
 
     form = BookingCreationForm()
 
@@ -220,23 +201,25 @@ def verify_booking(request, ref):
         booking.is_verified = True
         booking.save()
         account.save()
-        #account_number = booking.get_account_number()
+        account_number = booking.get_account_number()
 
         #transfering landlord's money after verifying payment
         amount = booking.cost
         account_number = '0257446404'
         
+        #call transfer to take place
         xerxes = Xerxes(amount=amount, account_number=account_number)
 
+
+        #create transfer recipient
         xerxes.create_recipient()
         xerxes.initiate_transfer()
-        xerxes.disable_otp()
         xerxes.finalize_transfer()
         xerxes.verify_transfer()
 
         #notify the user of the successful booking
-        #recipient_list = [booking.email_address]
-        recipient_list = ['saatumtimothy@gmail.com']
+        recipient_list = [booking.email_address]
+        #recipient_list = ['saatumtimothy@gmail.com']
         #email subject
         subject = 'Thank you for booking with us.'
 
@@ -269,7 +252,7 @@ def verify_booking(request, ref):
             raise e  
         messages.success(request, 'Your booking was successfully verified. Thank you')      
         return redirect('home')
-        messages.error(request, 'Your booking could not be verified')
+    messages.error(request, 'Your booking could not be verified')
     return redirect('home')
 
 
@@ -305,6 +288,9 @@ class RoomTypeCreateView(LoginRequiredMixin, CreateView):
 
             room_dict_key = 'room' + str(val)
             room_dict.update({room_dict_key:list_room_numbers[val]})
+        
+
+        #instantiating room values before saving
         rel_host = Hostel.objects.get(created_by=self.request.user)
         form.instance.db_use_only = form.cleaned_data['room_type_number']
         form.instance.room_numbers = room_dict
