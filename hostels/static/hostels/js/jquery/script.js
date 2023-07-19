@@ -55,7 +55,11 @@ $(document).ready(function () {
     alert("clicked")
   });
 
-
+  //load html file on button click
+  $("#update-content").click(function(){
+    $("#update").load("vacant_rooms.html");
+    alert('Done loading content');
+  });
   //ajax delet action
   $('.delete').on('click', function(e){
     e.preventDefault()

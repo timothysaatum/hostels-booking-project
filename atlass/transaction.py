@@ -35,9 +35,10 @@ class Xerxes:
         }
 
         
-    def __init__(self, amount=None, account_number=None, RECIPIENT_CODE=None, TRANSFER_CODE=None, REFERENCE=None):
+    def __init__(self, amount=None, account_number=None, RECIPIENT_CODE=None, TRANSFER_CODE=None, REFERENCE=None, hostel=None):
         self.amount = amount
         self.account_number = account_number
+        self.hostel = hostel
         self.TRANSFER_CODE = RECIPIENT_CODE
         self.TRANSFER_CODE = TRANSFER_CODE
         self.REFERENCE = REFERENCE
@@ -72,10 +73,9 @@ class Xerxes:
 
         transfer_url = "https://api.paystack.co/transfer"
         recipient = self.RECIPIENT_CODE
-        self.amount = (float(self.amount) - (float(self.amount) * 0.02)) * 100
         data = { 
             "source": "balance", 
-            "reason": "Being Payment for hostel fee", 
+            "reason": f"Being Payment for {self.hostel} hostel fee", 
             "amount": self.amount, 
             "recipient": recipient
         }
@@ -83,7 +83,6 @@ class Xerxes:
 
         start_transfer = requests.post(transfer_url, headers=self.headers, json=data)
         transfer_data= start_transfer.json()
-        #print(transfer_data)
         self.TRANSFER_CODE = transfer_data['data']['transfer_code']
 
         if start_transfer.status_code == 200:
@@ -126,7 +125,6 @@ class Xerxes:
             finalize_trans = requests.post(finalize_transfer_url, headers=self.headers, json=data)
             finalize_trans_data = finalize_trans.json()
             #self.REFERENCE = finalize_trans_data['data']['reference']
-            print(finalize_trans_data)
         except Exception as e:
             raise e
 

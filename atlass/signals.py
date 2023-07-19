@@ -112,16 +112,23 @@ def update_room_numbers(sender, instance, **kwargs):
 
 	if room_type.room_type == '2 in a room':
 
+		if room.capacity == 0:
+			room_type.room_type_number += 1
+
+
 		if room.capacity >= 0 and room.capacity <= 1:
 			room.capacity += 1
 			if room.capacity == 2:
 				room.is_booked = False
 				room.is_full = False
-				#room_type.room_type_number += 1
 				hostel.no_of_rooms += 1
 				print(f'Added room to {room_type}')
 
 	if room_type.room_type == '3 in a room':
+
+		if room.capacity == 0:
+			room_type.room_type_number += 1
+
 		if room.capacity >= 0 and room.capacity <= 2:
 			room.capacity += 1
 
@@ -133,6 +140,9 @@ def update_room_numbers(sender, instance, **kwargs):
 				print(f'Added room to {room_type}')
 
 	if room_type.room_type == '4 in a room':
+
+		if room.capacity == 0:
+			room_type.room_type_number += 1
 
 		if room.capacity >= 0 and room.capacity <= 3:
 			room.capacity += 1

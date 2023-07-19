@@ -19,18 +19,13 @@
           {% endif %} {% endfor %}
         </p>
         <small class="d-block text-center fw-bold p-2"
-          ><a
-            href="#bookings"
-            title="Bookings"
-            role="button"
-            class="btn btn-md btn-outline-secondary text-light"
-          >
+          ><button class="btn btn-md btn-outline-secondary text-light" id="update-content">
             <i class="fa-solid fa-calendar-days"></i> Bookings
             <span class="badge bg-secondary rounded-pill"
               >{{bookings.count}}</span
             >
             <span class="visually-hidden">{{bookings.count}} booking</span>
-          </a></small
+          </button></small
         >
         <small class="d-block text-center fw-bold p-2"
           ><a

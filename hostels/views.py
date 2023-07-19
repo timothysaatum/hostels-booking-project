@@ -146,7 +146,7 @@ def make_booking(request, pk, room_pk):
                     
                     return redirect('room-detail', pk, room.room_type)
 
-                elif Booking.objects.filter(room_no=room.room_number).count() > (room.capacity + 2):
+                if room.capacity == 0:
 
                     messages.error(request, f'({room.room_type}) cannot accept extra booking')
 
@@ -204,14 +204,20 @@ def verify_booking(request, ref):
         account_number = booking.get_account_number()
 
         #transfering landlord's money after verifying payment
-        amount = booking.cost
+        hostel_fee = booking.cost
         account_number = '0257446404'
+
+        hostel_fee = float(hostel_fee)
+
+        amount = (hostel_fee / 1.02) * 100
+
+        hostel = booking.room_type.hostel
         
         #call transfer to take place
-        xerxes = Xerxes(amount=amount, account_number=account_number)
+        xerxes = Xerxes(amount=amount, account_number=account_number, hostel=hostel)
 
 
-        #create transfer recipient
+        #transferring landlords money
         xerxes.create_recipient()
         xerxes.initiate_transfer()
         xerxes.finalize_transfer()
