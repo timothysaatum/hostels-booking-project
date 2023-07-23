@@ -2,7 +2,6 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser
 from django.utils import timezone
 from .managers import CustomManager
-from django.contrib.auth.models import AbstractBaseUser
 from django.urls import reverse
 #from PIL import Image
 
@@ -22,7 +21,7 @@ class RoomUser(AbstractBaseUser):
 	is_staff = models.BooleanField(default=False)
 	is_active = models.BooleanField(default=True)
 	is_admin = models.BooleanField(default=False)
-	date_joined = models.DateTimeField(default=timezone.now) 
+	date_joined = models.DateTimeField(default=timezone.now)
 
 	USERNAME_FIELD = 'email'
 	REQUIRED_FIELDS = 	['telephone']
@@ -32,7 +31,7 @@ class RoomUser(AbstractBaseUser):
 
 	def __str__(self):
 		return f'{self.first_name} {self.last_name}'
-	
+
 	def has_perm(self, perm, obj=None):
 		"Does the user have a specific permission?"
 		# Simplest possible answer: Yes, always

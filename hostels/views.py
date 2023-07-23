@@ -1,5 +1,5 @@
-from django.shortcuts import render, redirect, reverse
-from django.views.generic import ListView, DetailView, CreateView, TemplateView, DeleteView, UpdateView, View
+from django.shortcuts import render, redirect
+from django.views.generic import ListView, DetailView, CreateView, TemplateView, DeleteView
 from .models import Hostel, RoomType, RoomTypeImages, Room
 from atlass.models import Booking, Account, LeaveRequests
 from properties.models import Apartment, Property
@@ -9,13 +9,13 @@ from .forms import BookingCreationForm, HostelCreationForm, RoomTypeCreationForm
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.urls import reverse_lazy
-from django.http import JsonResponse
-from django.core import serializers
+#from django.http import JsonResponse
+#from django.core import serializers
 from atlass.utils import send_email_with_transaction, create_pdf
 from atlass.transaction import Xerxes
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.conf import settings
-from django.core.exceptions import ObjectDoesNotExist
+#from django.core.exceptions import ObjectDoesNotExist
 import random
 from django.contrib import messages
 from django.http import HttpResponse
@@ -58,7 +58,7 @@ class HostelsListView(ListView):
 
         else:
             hostels = Hostel.objects.all().order_by('-date_added')
-        
+
         return hostels
 
 
@@ -87,7 +87,7 @@ class RoomDetailView(DetailView):
         context = super(RoomDetailView, self).get_context_data(**kwargs)
         context['image_list'] = RoomTypeImages.objects.filter(room_id=self.kwargs.get('pk'))
         context['front_display'] = RoomTypeImages.objects.filter(room_id=self.kwargs.get('pk'))[0:4]
-        context['spec_room'] = Room.objects.select_related('room_type').filter(room_type=self.kwargs.get('pk'))     
+        context['spec_room'] = Room.objects.select_related('room_type').filter(room_type=self.kwargs.get('pk'))
         return context
 
 
@@ -143,7 +143,7 @@ def make_booking(request, pk, room_pk):
                 if (room.room_type == bk.room_type) and (bk.gender != gender):
 
                     messages.error(request, f'A {gender} cannot book this room because it has a {bk.gender} occupant')
-                    
+
                     return redirect('room-detail', pk, room.room_type)
 
                 if room.capacity == 0:
@@ -153,24 +153,25 @@ def make_booking(request, pk, room_pk):
                     return redirect('room-detail', pk, room.room_type)
 
 
-            
+
             booking = Booking.objects.create(room=room, tenant=request.user,
                     phone_number=phone_number, room_type=room.room_type,
-                    cost=room.room_type.cost_per_head, 
-                    room_no=room.room_number, first_name=first_name, last_name=last_name, 
-                    email_address=email_address,gender=gender, city_or_town=city_or_town, 
-                    university_identification_number=university_identification_number, 
+                    cost=room.room_type.cost_per_head,
+                    room_no=room.room_number, first_name=first_name, last_name=last_name,
+                    email_address=email_address,gender=gender, city_or_town=city_or_town,
+                    university_identification_number=university_identification_number,
                     region_of_residence=region_of_residence, digital_address=digital_address,
                     receipt_number=receipt
                 )
 
-            
+
             #create an account for the user when they make a booking
             acc = Account.objects.filter(user_id=request.user.id)
-            
+
                 #checking to see if user already have an account
             if not acc:
-                Account.objects.create(user_id=request.user.id)
+                hostel = room.room_type.hostel
+                Account.objects.create(user_id=request.user.id, hostel=hostel)
 
             return redirect('book', booking.pk)
 
@@ -184,7 +185,7 @@ def make_payment(request, pk):
 
     booking = Booking.objects.get(pk=pk)
     key = settings.PAYSTACK_PUBLIC_KEY
-    
+
     return render(request, 'hostels/make_payment.html', {'booking':booking, 'paystack_pub_key':key})
 
 
@@ -212,7 +213,7 @@ def verify_booking(request, ref):
         amount = (hostel_fee / 1.02) * 100
 
         hostel = booking.room_type.hostel
-        
+
         #call transfer to take place
         xerxes = Xerxes(amount=amount, account_number=account_number, hostel=hostel)
 
@@ -225,7 +226,7 @@ def verify_booking(request, ref):
 
         #notify the user of the successful booking
         recipient_list = [booking.email_address]
-        
+
         #email subject
         subject = 'Thank you for booking with us.'
 
@@ -234,7 +235,7 @@ def verify_booking(request, ref):
         Thank you for booking with us.
         \n
         Hostel:{booking.get_hostel()}
-        Room Type:{booking.room_type} 
+        Room Type:{booking.room_type}
         Room No:{booking.room_no}
         Receipt No:{booking.receipt_number}
         \n
@@ -255,8 +256,8 @@ def verify_booking(request, ref):
         try:
             send_email_with_transaction(subject, body, recipient_list)
         except Exception as e:
-            raise e  
-        messages.success(request, 'Your booking was successfully verified. Thank you')      
+            raise e
+        messages.success(request, 'Your booking was successfully verified. Thank you')
         return redirect('home')
     messages.error(request, 'Your booking could not be verified')
     return redirect('home')
@@ -273,7 +274,7 @@ class CreateHostel(LoginRequiredMixin, CreateView):
         try:
             form.instance.hostel_amenities = dict(item.split('=') for item in form.cleaned_data['amenities'].split(','))
             form.instance.created_by = self.request.user
-        except exception as e:
+        except Exception as e:
             raise e
 
         return super().form_valid(form)
@@ -294,10 +295,10 @@ class RoomTypeCreateView(LoginRequiredMixin, CreateView):
 
             room_dict_key = 'room' + str(val)
             room_dict.update({room_dict_key:list_room_numbers[val]})
-        
+
 
         #instantiating room values before saving
-        rel_host = Hostel.objects.get(created_by=self.request.user)
+        rel_host = Hostel.objects.filter(created_by=self.request.user).first()
         form.instance.db_use_only = form.cleaned_data['room_type_number']
         form.instance.room_numbers = room_dict
         form.instance.hostel = rel_host

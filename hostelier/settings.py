@@ -84,24 +84,24 @@ WSGI_APPLICATION = 'hostelier.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
 #DATABASES = {
 #    'default': {
-#        'ENGINE': 'django.db.backends.mysql',
-#        'NAME': 'rooms$Hostels',
-#        'USER': 'rooms',
-#        'PASSWORD': config('DB_PASS'),
-#        'HOST': 'rooms.mysql.pythonanywhere-services.com',
-#        'OPTIONS': {
-#            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
-#        },
+#        'ENGINE': 'django.db.backends.sqlite3',
+#        'NAME': BASE_DIR / 'db.sqlite3',
 #    }
 #}
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'rooms$Hostels',
+        'USER': 'rooms',
+        'PASSWORD': config('DB_PASS'),
+        'HOST': 'rooms.mysql.pythonanywhere-services.com',
+        'OPTIONS': {
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+        },
+    }
+}
 
 #SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'
 
@@ -176,5 +176,5 @@ TWILIO_ACCOUNT_SID = 'live-redacted-twilio-account-sid'
 TWILIO_AUTH_TOKEN = 'live-redacted-twilio-auth-token'
 
 
-#SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARD_PROTO', 'https')
-#SECURE_SSL_REDIRECT = True
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARD_PROTO', 'https')
+SECURE_SSL_REDIRECT = True
