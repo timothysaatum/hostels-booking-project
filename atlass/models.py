@@ -14,6 +14,7 @@ user = get_user_model()
 #an account for each user to store their payments
 class Account(models.Model):
     user = models.OneToOneField(user, on_delete=models.CASCADE)
+    hostel = models.ForeignKey(Hostel, on_delete=models.CASCADE)
     currency = models.CharField(max_length=50, default='GHS')
     balance = models.DecimalField(max_digits=65, decimal_places=2, default=0.00)
     created_at = models.DateTimeField(default=timezone.now, null=True)

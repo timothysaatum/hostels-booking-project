@@ -33,7 +33,7 @@ class HostelCreationForm(forms.ModelForm):
 	class Meta:
 
 		model = Hostel
-		fields = ['owner_name', 'school', 'campus', 'hostel_name', 'rating', 'contact', 'display_image', 'no_of_rooms',
+		fields = ['owner_name', 'school', 'campus', 'hostel_name', 'account_number', 'account_name', 'rating', 'contact', 'display_image', 'no_of_rooms',
 			'hostel_coordinates', 'cost_range', 'duration_of_rent', 'wifi', 'amenities']
 
 

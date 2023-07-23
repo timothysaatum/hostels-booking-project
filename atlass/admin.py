@@ -9,7 +9,7 @@ class BookingAdmin(admin.ModelAdmin):
     search_fields = ['university_identification_number', 'digital_address', 'last_name']
 
 class AccountAdmin(admin.ModelAdmin):
-    list_display = ('user', 'currency', 'balance', 'created_at')
+    list_display = ('hostel', 'user', 'currency', 'balance', 'created_at')
 
 class LeaveRequestsAdmin(admin.ModelAdmin):
     list_display = ('hostel', 'room', 'your_course', 'level', 'phone_number', 'purpose',

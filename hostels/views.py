@@ -225,7 +225,7 @@ def verify_booking(request, ref):
 
         #notify the user of the successful booking
         recipient_list = [booking.email_address]
-        #recipient_list = ['saatumtimothy@gmail.com']
+        
         #email subject
         subject = 'Thank you for booking with us.'
 

@@ -36,12 +36,15 @@ class Xerxes:
 
         
     def __init__(self, amount=None, account_number=None, RECIPIENT_CODE=None, TRANSFER_CODE=None, REFERENCE=None, hostel=None):
+        
         self.amount = amount
         self.account_number = account_number
         self.hostel = hostel
         self.TRANSFER_CODE = RECIPIENT_CODE
         self.TRANSFER_CODE = TRANSFER_CODE
         self.REFERENCE = REFERENCE
+
+        print(self.amount)
 
     def create_recipient(self):
         recipient_create_url="https://api.paystack.co/transferrecipient"
@@ -80,18 +83,16 @@ class Xerxes:
             "recipient": recipient
         }
 
+        try:
 
-        start_transfer = requests.post(transfer_url, headers=self.headers, json=data)
-        transfer_data= start_transfer.json()
-        self.TRANSFER_CODE = transfer_data['data']['transfer_code']
+            start_transfer = requests.post(transfer_url, headers=self.headers, json=data)
+            transfer_data= start_transfer.json()
+            print(transfer_data)
+            self.TRANSFER_CODE = transfer_data['data']['transfer_code']
 
-        if start_transfer.status_code == 200:
+        except Exception as e:
+            raise e
 
-            transfer_code = transfer_data['data']['transfer_code']
-            return transfer_code
-
-        else:
-            return 'An error occurred'
 
 
     def disable_otp(self):
@@ -113,6 +114,7 @@ class Xerxes:
 
 
     def finalize_transfer(self):
+
         transfer_code = self.TRANSFER_CODE
         finalize_transfer_url = 'https://api.paystack.co/transfer/finalize_transfer'
 
@@ -124,6 +126,7 @@ class Xerxes:
         try:
             finalize_trans = requests.post(finalize_transfer_url, headers=self.headers, json=data)
             finalize_trans_data = finalize_trans.json()
+            print(finalize_trans_data)
             #self.REFERENCE = finalize_trans_data['data']['reference']
         except Exception as e:
             raise e
@@ -135,12 +138,9 @@ class Xerxes:
         ref = self.REFERENCE
         url='https://api.paystack.co/transfer/verify/{ref}'
 
+        try:
+            response = requests.get(url, headers=self.headers)
+            #response_data = response.json()
+        except Exception as e:
 
-        response = requests.get(url, headers=self.headers)
-        #response_data = response.json()
-        #
-        #if response.status_code == 200:
-        #    return response_data['data']['account_number']
-        #
-        #else:
-        #    return 'No such transaction'
+            raise e

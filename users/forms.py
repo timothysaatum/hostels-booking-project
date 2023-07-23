@@ -3,11 +3,13 @@ from .models import RoomUser
 from django.contrib.auth.forms import UserCreationForm
 
 
+
+
 class UserRegisterForm(UserCreationForm):
 	email = forms.EmailField(widget=forms.EmailInput(attrs={'placeholder':'e.g example@gmail.com'}))
 	first_name = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'Zoppie'}))
 	last_name = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'Zigi'}))
-	gender = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'Male'}))
+	#gender = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'Male'}))
 	telephone = forms.CharField(
         widget=forms.TextInput(attrs={'placeholder': 'E.g 0245867859'}),
         required=True)
