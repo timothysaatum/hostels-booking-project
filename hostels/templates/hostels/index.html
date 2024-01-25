@@ -1,7 +1,7 @@
 {% extends 'hostels/base.html' %}
 {% load static %}
 
-{% block title %}Hostels, Accommodation rentals and sales company company{% endblock %}
+{% block title %}Hostels, Apartments & General Utilities Rental{% endblock %}
 {% block content %}
 <section class="sec-bg margin-bottom">
 	<div class="p-5 dark">
@@ -9,9 +9,7 @@
 		<p class="text-capitalize pt-3 pb-4 fw-bolder p-color" data-aos="zoom-in-right">decide where you stay when you
 			travel.
 		</p>
-		<a href="{% url 'rooms' %}" class="btn btn-sm btn-danger text-capitalize" role="button"
-			data-aos="zoom-in-right">explore our
-			rentals</a>
+		<a href="{% url 'rooms' %}" class="btn btn-sm btn-danger text-capitalize fw-bolder" role="button" data-aos="zoom-in-right">Start here!</a>
 	</div>
 </section>
 <section class="mt-5">
@@ -82,16 +80,19 @@
 		<div class="row d-flex justify-content-between">
 			{% for hostel in hostels %}
 			{% if not hostel.no_of_rooms == 0 %}
-			<div class="col-md-6 col-lg-3 mb-4 g-font d-flex justify-content-center" data-aos="fade-up">
+			<div class="col-md-6 col-lg-3 mb-4 g-font d-flex justify-content-center border border-light-subtle rounded p-1" data-aos="fade-up">
 				<a href="{% url 'room-list' hostel.pk hostel.hostel_name %}">
-					<img src="{{hostel.display_image.url}}" class="round img-fluid">
+					<img src="{{hostel.display_image.url}}" class="round img-fluid shade">
 					<div class="d-flex justify-content-between pb-0 mb-0">
-						<p class="text-start fw-bold text-capitalize text-dark">{{hostel.school.name}}, {{hostel.hostel_name}}</p>
+						<p class="text-start fw-bold text-capitalize text-dark">{{hostel.campus|truncatechars:'9'}}, {{hostel.hostel_name|truncatechars:'13'}}</p>
 						<span><i class="fa-regular fa-star text-danger"></i>{{hostel.rating}}</span>
 					</div>
 					<small class="d-block text-start text-muted mt-2"><i class="fa-solid fa-person-walking text-danger"></i> {{hostel.get_dist}} walk to campus</small>
 					<small class="d-block text-start text-muted mt-2"><i class="fa-regular fa-heart text-danger"></i> {{hostel.owner_name}} - Manager</small>
 					<small class="d-block text-start text-muted mt-2"><i class="fa-solid fa-coins text-danger"></i> GHS{{hostel.cost_range}}/year</small>
+					<div class="text-center">
+                        <div class="bg-secondary p-2 rounded bg-opacity-10">View Rooms <i class="fa-solid fa-chevron-right"></i></div>
+                    </div>
 				</a>
 			</div>
 			{% else %}
@@ -141,7 +142,7 @@
 			{% endfor %}
 		</div>
 	</div>
-	
+
 	{% for apartment in apartments %}
 	{% if forloop.counter > 11 %}
 	<div class="d-lex align-items-center">

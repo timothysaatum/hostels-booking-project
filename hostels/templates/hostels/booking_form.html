@@ -8,7 +8,11 @@
 <!---content block-->
 {% block content %}
 <section class="user bg-light py-2">
-  <h3 class="mb-3 text-center">Please provide the following details.</h3>
+
+  <div class="container">
+    <h3 class="mb-3 text-dark">Please provide the following details.</h3>
+  </div>
+  <!--
   <div class="container">
     <form method="POST" class="mt-3 mb-3">
       {% csrf_token %}
@@ -19,13 +23,205 @@
       </div>
       <hr>
       <div class="text-center mt-4">
-        <smal class="show-btn bg-danger rounded-pill p-4 text-light">
-          <span>This action cannot be reversed</span>
-          <button type="submit" class="btn btn-md btn-outline-warning text-light">Continue?</button>
+        <smal class="show-btn bg-danger rounded-pill p-3 text-light">
+          <span>Are you sure of this?</span>
+          <button type="submit" class="btn btn-sm btn-outline-warning text-light">Yes</button>
         </smal>
-        <button type="button" class="btn btn-md btn-outline-danger" id="confirmation">Reserve</button>
+        <button type="button" class="btn btn-md btn-outline-danger" id="confirmation">Continue</button>
       </div>
     </form>
   </div>
+-->
+  <!--bootstrap form-->
+<div class="container">
+    <div class="row g-5">
+      <div class="col-md-8">
+        <form method="POST" class="row g-3 needs-validation" novalidate>
+          {% csrf_token %}
+          {{form.non_field_errors}} {{form.subject.errors}}
+          <div class="col-md-6">
+            <label for="{{form.first_name.id_for_label}}" class="form-label"
+              >First name</label>
+            {{form.first_name}}
+            <div class="invalid-feedback">Please provide a first name.</div>
+            <div class="valid-feedback">Looks good!</div>
+          </div>
+          <div class="col-md-6">
+            <label for="{{form.last_name.id_for_label}}" class="form-label"
+              >Last name</label
+            >
+            {{form.last_name}}
+            <div class="invalid-feedback">Please provide a last name.</div>
+            <div class="valid-feedback">Looks good!</div>
+          </div>
+
+          <div class="col-md-12">
+            <label
+              for="{{form.university_identification_number.id_for_label}}"
+              class="form-label"
+              >UIN </label
+            >
+            {{form.university_identification_number}}
+            <div class="invalid-feedback">Please provide a valid UIN.</div>
+            <div class="valid-feedback">Looks good!</div>
+          </div>
+          <div class="col-md-8">
+            <label
+              for="{{form.region_of_residence.id_for_label}}"
+              class="form-label"
+              >Region of Residence</label
+            >
+            {{form.region_of_residence}}
+            <div class="invalid-feedback">Please provide a valid region.</div>
+            <div class="valid-feedback">Looks good!</div>
+          </div>
+          <div class="col-md-4">
+            <label for="{{form.gender.id_for_label}}" class="form-label"
+              >Sex </label
+            >
+            {{form.gender}}
+            <div class="invalid-feedback">Please select a valid Sex.</div>
+            <div class="valid-feedback">Looks good!</div>
+          </div>
+          <div class="col-md-4">
+            <label for="{{form.city_or_town.id_for_label}}" class="form-label"
+              >Home Town
+              </label
+            >
+            {{form.city_or_town}}
+            <div class="invalid-feedback">
+              Please provide a valid Town/Vilage/City.
+            </div>
+            <div class="valid-feedback">Looks good!</div>
+          </div>
+          <div class="col-md-4">
+            <label for="{{form.phone_number.id_for_label}}" class="form-label"
+              >Phone </label
+            >
+            <div class="input-group has-validation">
+              <span class="input-group-text" id="inputGroupPrepend"
+                ><i class="fa-solid fa-phone"></i
+              ></span>
+              {{form.phone_number}}
+              <div class="invalid-feedback">
+                Please enter a valid phone number.
+              </div>
+              <div class="valid-feedback">Looks good!</div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <label for="{{form.email_address.id_for_label}}" class="form-label"
+              >Email Address
+              </label
+            >
+            {{form.email_address}}
+            <div class="invalid-feedback">
+              Please provide a valid Email Address.
+            </div>
+            <div class="valid-feedback">Looks good!</div>
+          </div>
+          <div class="col-md-8">
+            <label
+              for="{{form.digital_address.id_for_label}}"
+              class="form-label"
+              >Digital Address
+              </label
+            >
+            {{form.digital_address}}
+            <div class="invalid-feedback">
+              Please provide a valid digital Address.
+            </div>
+            <div class="valid-feedback">Looks good!</div>
+          </div>
+          <div class="col-md-6">
+            <label for="{{form.check_in.id_for_label}}" class="form-label"
+              >Checks in on
+              </label
+            >
+            {{form.check_in}}
+            <div class="invalid-feedback">Please pick a date to check in.</div>
+            <div class="valid-feedback">Looks good!</div>
+          </div>
+          <div class="col-md-6">
+            <label
+              for="{{form.number_of_guests.id_for_label}}"
+              class="form-label"
+              >Number of guests
+              </label
+            >
+            {{form.number_of_guests}}
+            <div class="valid-feedback">Looks good!</div>
+          </div>
+          <div class="col-12">
+            <div class="form-check">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                value=""
+                id="invalidCheck"
+                required
+              />
+              <label class="form-check-label" for="invalidCheck">
+                Agree to terms and conditions
+              </label>
+              <div class="invalid-feedback">
+                You must agree before submitting.
+              </div>
+            </div>
+          </div>
+          <div class="col-12 d-flex justify-content-center">
+            <button class="btn btn-outline-danger" type="submit">
+              Continue
+            </button>
+          </div>
+        </form>
+      </div>
+      <div class="col-md-4 d-none d-md-block">
+        <h6 class="d-flex justify-content-between align-items-center mb-3">
+          <span class="text-danger fw-bolder">{{room.hostel}} - {{room.get_campus}}</span>
+        </h6>
+        <ul class="list-group mb-3">
+          <li class="list-group-item d-flex justify-content-between lh-sm">
+            <div>
+              <h6 class="my-0">Approx Walk time to Campus</h6>
+            </div>
+            <span class="text-body-secondary"
+              >{{room.get_hostel_distance}}</span
+            >
+          </li>
+          <li class="list-group-item d-flex justify-content-between lh-sm">
+            <div>
+              <h6 class="my-0">Room Summary</h6>
+              <small class="text-body-secondary">{{room.room_type}}</small>
+            </div>
+            <span class="text-body-secondary">Room No: {{room.room_number}}</span>
+          </li>
+          <li class="list-group-item d-flex justify-content-between lh-sm">
+            <div>
+              <small class="text-body-secondary"
+                >Continuing students can call for moving services if they change
+                hostel.</small
+              >
+            </div>
+          </li>
+          <li
+            class="list-group-item d-flex justify-content-between bg-body-tertiary"
+          >
+            <div class="text-success">
+              <h6 class="my-0">No extra payment will be made after this.</h6>
+              <small>Freshers get free delivery to hostel.</small>
+            </div>
+          </li>
+          <li
+            class="list-group-item d-flex justify-content-between bg-danger text-light fw-bolder"
+          >
+            <span>Total (GHS)</span>
+            <strong>GHS{{room.cost_per_head}}</strong>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <!--End of bootstrap form-->
 </section>
 {% endblock %}

@@ -9,16 +9,28 @@
         <div class="container-fluid d-flex justify-content-between p-3 mx-1">
             <div class="col-md-1 d-flex align-items-center">
                 <a href="{% url 'home' %}" class="nav-brand"><img src="{% static 'hostels/images/unarcom.jpg' %}" alt=""
-                        class="img-fluid"></a>
+                        class="img-fluid icon-radius"></a>
             </div>
             <div class="col-md-5 col-lg-3 py-1 col-sm-12 d-flex justify-content-between bg-light shadow-lg nav-border">
-                <button class="btn btn-sm btn-light border-end fw-bolder btn-border">
-                    Apartments</button>
-                <button class="btn btn-sm btn-light border-end fw-bolder btn-border">
-                    Lands</button>
-                <button class="btn btn-sm btn-pink btn-border"><i
-                        class="fa-solid fa-magnifying-glass text-light"></i></button>
-            </div>
+            <!--On large devices-->
+            {% if user.is_authenticated %}
+          <a href="{% url 'logout' %}" class="btn btn-sm btn-light border-end fw-bolder btn-border" role="button">Log Out</a>
+          {% if user.has_a_hostel %}
+          <a href="{% url 'management' %}" class="btn btn-sm btn-light border-end fw-bolder btn-border" role="button">Dashboard
+          </a>
+          {% else %}
+          <a href="{% url 'booking-details' %}" class="btn btn-sm btn-light border-end fw-bolder btn-border" role="button">Contact Us
+          </a>
+          {% endif %}
+          {% else %}
+          <a href="{% url 'login' %}" class="btn btn-sm btn-light border-end fw-bolder btn-border" role="button">Login</a>
+          <a href="{% url 'register' %}" class="btn btn-sm btn-light border-end fw-bolder btn-border" role="button">Register</a>
+          {% endif %}
+          <!--End of on large devices-->
+          <button class="btn btn-sm btn-pink btn-border" id="search">
+            <i class="fa-solid fa-magnifying-glass text-light"></i>
+          </button>
+        </div>
             <div class="col-3 d-none d-lg-block d-sm-block d-flex justify-content-between">
                 <a href="{% url 'booking-details' %}" class="text-dark mx-2">My Rent <span><i
                             class="fa-solid fa-house"></i></span></a>
@@ -109,16 +121,19 @@
             <!--{% include 'hostels/results.html' %}-->
             {% for hostel in hostels %}
             {% if not hostel.no_of_rooms == 0 %}
-            <div class="col-md-6 col-lg-3 mb-4 g-font d-flex justify-content-center" data-aos="fade-up">
+            <div class="col-md-6 col-lg-3 mb-4 g-font d-flex justify-content-center border border-light-subtle rounded p-1" data-aos="fade-up">
                 <a href="{% url 'room-list' hostel.pk hostel.hostel_name %}">
-                    <img src="{{hostel.display_image.url}}" class="round img-fluid">
+                    <img src="{{hostel.display_image.url}}" class="round img-fluid shade">
                     <div class="d-flex justify-content-between pb-0 mb-0">
-                        <p class="text-start fw-bold text-capitalize text-dark">{{hostel.school.name}}, {{hostel.hostel_name}}</p>
-                        <span><i class="fa-regular fa-star text-danger"></i>4.5</span>
+                        <p class="text-start fw-bold text-capitalize text-dark">{{hostel.campus|truncatechars:'9'}}, {{hostel.hostel_name|truncatechars:'13'}}</p>
+                        <span><i class="fa-regular fa-star text-danger"></i>{{hostel.rating}}</span>
                     </div>
                     <small class="d-block text-start text-muted mt-2"><i class="fa-solid fa-person-walking text-danger"></i> {{hostel.get_dist}} walk to campus</small>
                     <small class="d-block text-start text-muted mt-2"><i class="fa-regular fa-heart text-danger"></i> {{hostel.owner_name}} - Manager</small>
                     <small class="d-block text-start text-muted mt-2"><i class="fa-solid fa-coins text-danger"></i> GHS{{hostel.cost_range}}/year</small>
+                    <div class="text-center">
+                        <div class="bg-secondary p-2 rounded bg-opacity-10">View Rooms <i class="fa-solid fa-chevron-right"></i></div>
+                    </div>
                 </a>
             </div>
             {% else %}

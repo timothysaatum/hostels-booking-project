@@ -17,6 +17,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+#from hostels.distance import IPAddressFinder
 
 
 
@@ -28,8 +29,13 @@ urlpatterns = [
     path('booking/', include('atlass.urls')),
     path('properties/', include('properties.urls')),
     path('ckeditor/', include('ckeditor_uploader.urls')),
+    #path('__debug__/', include('debug_toolbar.urls')),
 ]
+#user = IPAddressFinder()
 
+#ip = user.find_user_ip()
+
+#location_data = user.get_user_location(ip)
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL,

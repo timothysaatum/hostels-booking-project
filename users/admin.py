@@ -32,10 +32,10 @@ class UserAdmin(UserAdmin):
 
 
 class ComplainAdmin(admin.ModelAdmin):
-    list_display = ('full_name', 'phone', 'address', 'date_added')
+    list_display = ('full_name', 'phone', 'email', 'subject', 'message', 'date_added')
 
 class ContactAdmin(admin.ModelAdmin):
-    list_display = ('full_name', 'phone', 'address', 'message', 'date_added')
+    list_display = ('full_name', 'phone', 'email', 'subject', 'message', 'date_added')
 
 
 

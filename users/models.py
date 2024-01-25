@@ -3,12 +3,13 @@ from django.contrib.auth.models import AbstractBaseUser
 from django.utils import timezone
 from .managers import CustomManager
 from django.urls import reverse
-#from PIL import Image
+
 
 SEX = [
     ('Male', 'Male'),
     ('Female', 'Female')
     ]
+
 class RoomUser(AbstractBaseUser):
 	email = models.EmailField(unique=True)
 	first_name = models.CharField(max_length=100)
@@ -18,6 +19,7 @@ class RoomUser(AbstractBaseUser):
 	gender = models.CharField(max_length=10, choices=SEX)
 	your_emmergency_contact = models.CharField(help_text='0597856551', max_length=20)
 	name_of_emmergency_contact = models.CharField('His/Her Name', max_length=50)
+	has_a_hostel = models.BooleanField(verbose_name='Do you own a hostel?', default=False)
 	is_staff = models.BooleanField(default=False)
 	is_active = models.BooleanField(default=True)
 	is_admin = models.BooleanField(default=False)
@@ -27,7 +29,9 @@ class RoomUser(AbstractBaseUser):
 	REQUIRED_FIELDS = 	['telephone']
 
 	objects = CustomManager()
-
+#4445 6940 0253 8283
+#485
+#11/24
 
 	def __str__(self):
 		return f'{self.first_name} {self.last_name}'
@@ -49,7 +53,7 @@ class RoomUser(AbstractBaseUser):
 class Complain(models.Model):
 	email = models.EmailField()
 	phone = models.CharField(help_text='0597856551', max_length=10)
-	address = models.CharField(max_length=300)
+	subject = models.CharField(max_length=300)
 	full_name = models.CharField(max_length=300)
 	message = models.TextField()
 	date_added = models.DateTimeField(default=timezone.now)
@@ -65,7 +69,7 @@ class Complain(models.Model):
 class Contact(models.Model):
 	email = models.EmailField()
 	phone = models.CharField(help_text='0597856551', max_length=10)
-	address = models.CharField(max_length=300)
+	subject = models.CharField(max_length=300)
 	full_name = models.CharField(max_length=300)
 	message = models.TextField()
 	date_added = models.DateTimeField(default=timezone.now)

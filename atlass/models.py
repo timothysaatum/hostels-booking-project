@@ -34,7 +34,7 @@ class Booking(models.Model):
     tenant = models.ForeignKey(user, on_delete=models.CASCADE, blank=True, null=True, editable=False)
     room = models.ForeignKey(Room, on_delete=models.CASCADE, editable=False)
     room_type = models.ForeignKey(RoomType, on_delete=models.CASCADE, editable=False)
-    check_in = models.DateField(help_text='YYYY-MM-DD', default=datetime.datetime.now)
+    check_in = models.DateField(help_text='YYYY-MM-DD')
     number_of_guests = models.PositiveIntegerField(default=1)
     phone_number = models.CharField(max_length=17, null=True, blank=True, editable=False)
     cost = models.DecimalField(max_digits=8, decimal_places=2, editable=False)
@@ -106,6 +106,7 @@ class Booking(models.Model):
         full_dur = self.check_in + datetime.timedelta(days=366)
 
         days_rem = datetime.datetime.combine(full_dur, datetime.datetime.min.time()) - datetime.datetime.now()
+        #days_rem = self.expiration_date() - datetime.date()
 
         days_left =days_rem.days
 
@@ -121,7 +122,14 @@ class Booking(models.Model):
 
     def get_hostel(self):
         return self.room_type.hostel
-  
+
+
+    def get_seed_amount(self):
+        #original_rate = (float(self.cost) / 1.04)
+        original_rate = float(self.cost) - float(50)
+
+        return original_rate
+
 
 
 class LeaveRequests(models.Model):

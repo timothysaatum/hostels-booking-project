@@ -1,24 +1,25 @@
-{% extends 'hostels/base.html' %} 
-{% load static %} 
-{% block title %}Admin Dashboard{% endblock %} 
-{% block navbar %} {% endblock navbar %} 
+{% extends 'hostels/base.html' %}
+{% load static %}
+{% block title %}Admin Dashboard{% endblock %}
+{% block navbar %} {% endblock navbar %}
+{% block user_search_area %}
+{% endblock %}
 {% block content %}
 <section class="pt-5 mx-1 bg-admin shadow">
   <div class="container-fluid">
     <h1 class="text-center admin-header-font fixed-top shadow">
       Welcome {{request.user}}
     </h1>
-    <div class="row border p-2">
+    <div class="row border">
       <div class="col-md-2 rounded-2 text-light admin-side-bar">
         <p
           class="text-center text-uppercase mt-2 mb-3 pb-2 border border-light rounded"
         >
-          {% for booking in bookings %}
-           {% if forloop.counter < 2 %}
-          {{booking.room_type.hostel}} 
-          {% endif %} {% endfor %}
+          {% for hostel in hostels %}
+          {{hostel.hostel_name}}
+          {% endfor %}
         </p>
-        <small class="d-block text-center fw-bold p-2"
+        <small class="d-block text-start fw-bold p-2"
           ><button class="btn btn-md btn-outline-secondary text-light" id="update-content">
             <i class="fa-solid fa-calendar-days"></i> Bookings
             <span class="badge bg-secondary rounded-pill"
@@ -27,55 +28,47 @@
             <span class="visually-hidden">{{bookings.count}} booking</span>
           </button></small
         >
-        <small class="d-block text-center fw-bold p-2"
-          ><a
-            href="#statistics"
-            title="staistics"
-            class="btn btn-md btn-outline-secondary text-light"
+        <small class="d-block text-start fw-bold p-2"
           >
-            <i class="fa-solid fa-stairs"></i> Statistics
-          </a></small
+          <button class="btn btn-md btn-outline-secondary text-light" id="statistics">
+            <i class="fa-solid fa-server"></i> Statistics
+          </button>
+          </small
         >
-        <small class="d-block text-center fw-bold p-2"
-          ><a
-            href="#vacancies"
-            title="vacancies"
-            class="btn btn-md btn-outline-secondary text-light"
+        <small class="d-block text-start fw-bold p-2"
           >
-            <i class="fa-solid fa-person-booth"></i> Vacancies
+          <button class="btn btn-md btn-outline-secondary text-light" id="vacancies">
+            <i class="fa-solid fa-bed"></i> Vacancies
             <span class="badge bg-secondary rounded-pill"
               >{{vacancies.count}}</span
             >
-            <span class="visually-hidden"
-              >{{vacancies.count}} rooms left</span
-            ></a
-          ></small
+            <span class="visually-hidden">{{vacancies.count}} rooms left</span>
+          </button>
+          </small
         >
-        <small class="d-block text-center fw-bold p-2"
-          ><a
-            href="#leaves"
-            title="approved leave requests"
-            class="btn btn-md btn-outline-secondary text-light"
+        <small class="d-block text-start fw-bold p-2"
           >
-            <i class="fa-solid fa-right-from-bracket"></i> Approvals
+          <button class="btn btn-md btn-outline-secondary text-light" id="leaves">
+            <i class="fa-solid fa-calendar-check"></i> Approvals
             <span class="badge bg-secondary rounded-pill"
               >{{approved_leaves.count}}</span
-            ></a
-          ></small
+            >
+            <span class="visually-hidden">{{approved_leaves.count}} approvals</span>
+          </button>
+          </small
         >
-        <small class="d-block text-center fw-bold p-2"
-          ><a
-            href="#pending"
-            title="Pending leave requests"
-            class="btn btn-md btn-outline-secondary text-light"
+        <small class="d-block text-start fw-bold p-2"
           >
-            <i class="fa-solid fa-gift"></i> Pending
+          <button class="btn btn-md btn-outline-secondary text-light" id="pending">
+            <i class="fa-solid fa-gears"></i> Pending
             <span class="badge bg-secondary rounded-pill"
               >{{pending_approvals.count}}</span
-            ></a
-          ></small
+            >
+            <span class="visually-hidden">{{pending_approvals.count}} approvals</span>
+          </button>
+          </small
         >
-        <small class="d-block text-center fw-bold p-2">
+        <small class="d-block text-start fw-bold p-2">
           <button
             title="Send messages"
             type="button"
@@ -155,21 +148,16 @@
                   </form>
                 </div>
                 <div class="modal-footer">
-                  <button
-                    class="submit"
-                    class="btn btn-md btn-outline-primary text-light rounded-pill form-btn"
-                  >
-                    Send message
-                  </button>
+                  <button class="btn btn-outline-secondary">Send</button>
                 </div>
               </div>
             </div>
           </div>
         </small>
         {% for booking in bookings %} {% if forloop.counter < 2 %}
-        <small class="d-block text-center fw-bold p-2"
+        <small class="d-block text-start fw-bold p-2"
           ><a
-            href="{% url 'room-detail' booking.room_type.pk booking.room_type %}"
+            href="{% url 'room-detail' booking.room_type.hostel.pk booking.room_type.hostel.hostel_name %}"
             target="_blank"
             title="My Property"
             class="btn btn-md btn-outline-secondary text-light"
@@ -177,9 +165,9 @@
             <i class="fa-solid fa-pen-to-square"></i> My Hostel
           </a></small
         >
-        {% endif %} 
+        {% endif %}
         {% endfor %}
-        <small class="d-block text-center fw-bold p-2"
+        <small class="d-block text-start fw-bold p-2"
           ><a
             href="{% url 'create' %}"
             title="Create hostel"
@@ -189,7 +177,17 @@
             <i class="fa-solid fa-pen-to-square"></i> Add hostel</a
           ></small
         >
-        <small class="d-block text-center fw-bold p-2"
+        <small class="d-block text-start fw-bold p-2"
+          ><a
+            href="{% url 'room-create' %}"
+            title="Create Room type"
+            target="_blank"
+            class="btn btn-md btn-outline-secondary text-light"
+          >
+            <i class="fa-solid fa-pen-to-square"></i> Add Room</a
+          ></small
+        >
+        <small class="d-block text-start fw-bold p-2"
           ><a
             href="{% url 'contact' %}"
             title="Contact Us"
@@ -199,7 +197,7 @@
             <i class="fa-regular fa-envelope"></i> Contact Us</a
           ></small
         >
-        <small class="d-block text-center fw-bold pt-4 px-2"
+        <small class="d-block text-start fw-bold pt-4 px-2"
           ><a
             href="{% url 'logout' %}"
             title="logout"
@@ -209,142 +207,12 @@
           ></small
         >
       </div>
-      <div class="col-md-9 manage" id="update">
-        <table
-          class="table table-success table-striped table-hover table-bordered"
-          id="bookings"
-          data-aos="fade-up"
-        >
-          <thead>
-            <p
-              class="text-center fw-bolder text-decoration-underline text-secondary"
-            >
-              Transactions(Bookings).
-            </p>
-            <tr>
-              <th scope="col">#Room No</th>
-              <th scope="col">Full Name</th>
-              <th scope="col">contact</th>
-              <th scope="col">Amount</th>
-              <th scope="col">Room</th>
-              <th scope="col">Date</th>
-              <th scope="col">Status</th>
-              {% if not booking.is_verified %}
-              <th scope="col">#</th>
-              {% else %}
-              <th scope="col">Delete</th>
-              {% endif %}
-            </tr>
-          </thead>
-          <tbody>
-            {% for booking in bookings %}
-            <tr>
-              <th scope="row">{{booking.room_no}}</th>
-              <td>{{booking.first_name}} {{booking.last_name}}</td>
-              <td>{{booking.phone_number}}</td>
-              <td>GHS{{booking.cost}}.00</td>
-              <td>{{booking.room_type}}</td>
-              <td>{{booking.date_created|date:'M d, Y'}}</td>
-              <td>
-                {% if booking.is_verified %}Verified 
-                {% else %}Pending
-                {% endif %}
-              </td>
-              {% if booking.is_verified %}
-              <td>
-                <button
-                  class="btn btn-md btn-outline-info"
-                  id="{{booking.ref}}"
-                  data-bs-toggle="modal"
-                  data-bs-target="#{{booking.room_no}}"
-                >
-                  <i class="fa-solid fa-circle-info"></i>
-                </button>
-                <div
-                  class="modal fade z-5"
-                  id="{{booking.room_no}}"
-                  tabindex="-1"
-                  aria-labelledby="Booking"
-                  aria-hidden="true"
-                >
-                  <div class="modal-dialog modal-lg">
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <p class="fw-bolder text-dark">{{booking.hostel}}</p>
-                      </div>
-                      <div class="modal-body">
-                        <table class="table">
-                          <thead>
-                            <tr>
-                              <th scope="col">#</th>
-                              <th scope="col">First</th>
-                              <th scope="col">Last</th>
-                              <th scope="col">Home Town</th>
-                              <th scope="col">Sex</th>
-                              <th scope="col">Tel</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            <tr>
-                              <th scope="row">1</th>
-                              <td>{{booking.first_name}}</td>
-                              <td>{{booking.last_name}}</td>
-                              <td>{{booking.city_or_town}}</td>
-                              <td>{{booking.gender}}</td>
-                              <td>{{booking.phone_number}}</td>
-                            </tr>
-                            <tr>
-                              <th scope="row">2</th>
-                              <td colspan="5" class="text-center fw-bolder">Hostel Info</td>
-                            </tr>
-                            <tr>
-                              <th scope="row">3</th>
-                              <td>Larry the Bird</td>
-                            </tr>
-                          </tbody>
-                        </table>
-                        <p>{{booking.room_type}}</p>
-                        <p>{{booking.room_no}}</p>
-                        <p></p>
-                        <p>{{booking.email_address}}</p>
-                        <p>{{booking.city_or_town}}</p>
-                        <p>{{booking.university_identification_number}}</p>
-                        <p>{{booking.region_of_residence}}</p>
-                      </div>
-                      <div class="modal-footer">
-                        <button
-                          type="button"
-                          class="btn btn-secondary"
-                          data-bs-dismiss="modal"
-                        >
-                          Close
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </td>
-              {% else %}
-              <td>
-                <a
-                  href="{% url 'delete-booking' booking.pk %}"
-                  role="button"
-                  title="{{booking.hostel}}"
-                  class="btn btn-md btn-outline-danger delete"
-                  ><i class="fa-solid fa-trash-can"></i
-                ></a>
-              </td>
-              {% endif %}
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-        {% include 'hostels/vacant_rooms.html' %} 
-        {% include 'hostels/approved.html' %} 
-        {% include 'hostels/pending_approvals.html' %}
+
+      <div class="col-md-10 manage rounded" id="update">
+        <p class="text-light text-center ">Select an item to view</p>
       </div>
     </div>
   </div>
 </section>
-{% endblock %} 
+{% endblock %}
 {% block footer %} {% endblock footer %}

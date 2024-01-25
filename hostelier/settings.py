@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'crispy_bootstrap5',
     'users',
     #default apps
+    #'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -54,6 +55,7 @@ CKEDITOR_UPLOAD_PATH = 'static/images/'
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    #'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -90,10 +92,15 @@ WSGI_APPLICATION = 'hostelier.wsgi.application'
 #        'NAME': BASE_DIR / 'db.sqlite3',
 #    }
 #}
+
+#INTERNAL_IPS = [
+#    '127.0.0.1',
+#]
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'rooms$Hostels',
+        'NAME': 'rooms$unarcom',
         'USER': 'rooms',
         'PASSWORD': config('DB_PASS'),
         'HOST': 'rooms.mysql.pythonanywhere-services.com',
@@ -176,5 +183,5 @@ TWILIO_ACCOUNT_SID = 'live-redacted-twilio-account-sid'
 TWILIO_AUTH_TOKEN = 'live-redacted-twilio-auth-token'
 
 
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARD_PROTO', 'https')
-SECURE_SSL_REDIRECT = True
+#SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARD_PROTO', 'https')
+#SECURE_SSL_REDIRECT = True

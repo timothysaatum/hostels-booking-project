@@ -6,7 +6,7 @@ body,
 html,
 a {
     text-decoration: none;
-    font-family: 'Roboto', sans-serif;
+    font-family: 'Montserrat', sans-serif;;
     list-style-type: none;
 }
 
@@ -17,10 +17,10 @@ h4,
 h5,
 h6,.h7, a {
     color: #191970;
-    font-family: 'Ubuntu', sans-serif;
+    font-family: 'Roboto', sans-serif;
 }
 .title-font{
-    font-family: 'Ubuntu', sans-serif;
+    font-family: 'Roboto', sans-serif;
     color: #0000;
 }
 .nav-border button {
@@ -179,9 +179,9 @@ nav img {
 
 .reserve{
     position: fixed;
-    left: 65%;
-    top: auto;
-    bottom: 30%;
+    left: 66%;
+    top: 30%;
+    bottom: auto;
     right: auto;
 }
 
@@ -198,6 +198,15 @@ nav img {
     right: 5%;
     z-index: 9999;
 }
+
+.notifications{
+    position: fixed;
+    top: 10%;
+    left: 40%;
+    right: 5%;
+    z-index: 9999;
+}
+
 
 .search-form{
     position: fixed;
@@ -232,13 +241,13 @@ nav img {
 }
 
 .sm-scroll{
-    height: 4rem; 
-    width: 96vw; 
+    height: 4rem;
+    width: 96vw;
     overflow-x: scroll;
 }
 
 .img-hover:hover{
-    
+
 }
 
 .side-bar::-webkit--scrollbar{
@@ -246,17 +255,19 @@ nav img {
 }
 
 .manage{
-    height: 35rem; 
+    height: 35rem;
     overflow-y: scroll;
+    background-size: cover;
+    background-repeat: no-repeat;
 }
 
 .manage::-webkit--scrollbar{
     display: none;
 }
 
-
 .bg-admin{
-    background-color: #181801;
+    /*background-color: #181801;*/
+    background-image:linear-gradient(rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.9)), url('../images/unarcom.jpg');
 }
 
 .admin-header-font{
@@ -265,9 +276,8 @@ nav img {
 }
 
 .admin-side-bar{
-    height: 35rem; 
+    height: 35rem;
     overflow-y: scroll;
-    /*background-color: #b8a693;*/
 }
 
 .text-danger{
@@ -275,6 +285,7 @@ nav img {
     color: #a83264;
 }
 
+/*
 .bg-danger{
     background-color: #a83264;
 }
@@ -282,3 +293,25 @@ nav img {
 .btn-danger{
     background-color: #a83264;
 }
+*/
+.icon-radius{
+    border: transparent;
+    border-radius: 12rem;
+}
+
+.hand-pointer{
+    cursor: pointer;
+}
+
+.image-effect{
+    /*opacity: 0.9;*/
+    filter: brightness(70%) grayscale(10%);
+    background-image: linear-gradient(45deg, rgba(100, 150, 50, 0.5));
+}
+
+
+.shade{
+    -webkit-filter: brightness(110%) contrast(110%) saturate(130%);
+    filter: brightness(110%) contrast(110%) saturate(130%);
+}
+

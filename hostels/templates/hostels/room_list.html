@@ -3,14 +3,14 @@
   {% for room_type in room_type_list %} {% if forloop.counter == 1 %}
   <h1 class="text-center text-capitalize">{{room_type.hostel}}</h1>
   <hr />
-  {% endif %} 
+  {% endif %}
   {% endfor %}
   <div class="container">
     <div class="row">
         <div class="row d-flex justify-content-center">
-          {% for room_type in room_type_list %} 
+          {% for room_type in room_type_list %}
           {% if not room_type.room_type_number == 0 %}
-          <div class="col-md-3 mb-3" data-aos="fade-up">
+          <div class="col-md-3 mb-3 border border-light-subtle rounded p-1" data-aos="fade-up">
             <a href="{% url 'room-detail' room_type.pk room_type.room_type %}">
               <div class="d-flex justify-content-center">
                 <img
@@ -23,10 +23,13 @@
                 <small class="text-capitalize fw-bold text-dark"
                   >{{room_type.room_type}}</small
                 >
-                <small class="text-capitalize text-muted">No Available: {{room_type.room_type_number}}</small>
+                <small class="text-capitalize text-muted fw-bold text-dark">№ available: {{room_type.room_type_number}}</small>
               </div>
               <small class="text-capitalize text-muted d-block mb-1">{{room_type.details|safe|truncatechars:'25'}}</small>
               <small class="text-muted d-block mb-1"><b>Cost:</b> Gh₵{{room_type.cost_per_head}}/head</small>
+              <div class="text-center">
+                <div class="bg-secondary p-2 rounded bg-opacity-10">View Details <i class="fa-solid fa-chevron-right"></i></div>
+            </div>
             </a>
           </div>
           {% else %}
@@ -35,7 +38,7 @@
               All rooms are fully booked. Check back in a few days
             </p>
           </div>
-          {% endif %} 
+          {% endif %}
           {% empty %}
           <section>
             <div class="container">
@@ -48,6 +51,6 @@
         </div>
     </div>
   </div>
-  <div class="d-flex justify-content-center"><a href="#">Go back</a></div>
+  <div class="d-flex justify-content-center"><a href="{{request.META.HTTP_REFERER}}">Go back</a></div>
 </section>
 {% endblock %}

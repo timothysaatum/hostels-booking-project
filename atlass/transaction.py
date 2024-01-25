@@ -87,7 +87,7 @@ class Xerxes:
 
             start_transfer = requests.post(transfer_url, headers=self.headers, json=data)
             transfer_data= start_transfer.json()
-            print(transfer_data)
+            #print(transfer_data)
             self.TRANSFER_CODE = transfer_data['data']['transfer_code']
 
         except Exception as e:

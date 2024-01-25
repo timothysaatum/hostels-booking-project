@@ -30,12 +30,16 @@ $(document).ready(function () {
     }
   );
   //sign in and login buttons
-  $(".show-div, .search-form, .show-btn").hide();
+  $(".show-div, .search-form, .show-btn, .empty-rooms").hide();
   $("#account").click(function () {
     $(".show-div").toggle();
   });
   $("#search").click(function () {
     $(".search-form").toggle();
+  });
+
+  $(".booking-button").click(function(){
+    alert(this).attr('id')
   });
   //confirmation button click
   $('#confirmation').click(function(){
@@ -56,9 +60,26 @@ $(document).ready(function () {
   });
 
   //load html file on button click
+  $("#vacancies").click(function(){
+    $("#update").load("/admin/dashboard/vacancies/");
+    //alert('Done loading content');
+  });
   $("#update-content").click(function(){
-    $("#update").load("vacant_rooms.html");
-    alert('Done loading content');
+    $("#update").load("/admin/dashboard/bookings/");
+  });
+
+  $("#pending").click(function(){
+    $("#update").load("/admin/dashboard/pending-leave-request/");
+  });
+  $("#leaves").click(function(){
+    $("#update").load("/admin/dashboard/approved-leaves/");
+  });
+  $("#statistics").click(function(){
+    $("#update").load("/admin/dashboard/sales/statistics/");
+  });
+  //accept request to leave
+  $('#approve').click(function () {
+    alert('I am working.');
   });
   //ajax delet action
   $('.delete').on('click', function(e){
