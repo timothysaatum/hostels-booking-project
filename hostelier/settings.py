@@ -81,6 +81,18 @@ TEMPLATES = [
         },
     },
 ]
+CKEDITOR_UPLOAD_PATH = "uploads/"
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': 'full',
+        'height': 300,
+        'width': '100%',
+        'extraPlugins': ','.join([
+            'uploadimage',  # the upload image feature
+            # your extra plugins
+        ]),
+    },
+}
 
 WSGI_APPLICATION = 'hostelier.wsgi.application'
 
