@@ -4,9 +4,11 @@
 
 {% block title %}Make Payment{% endblock %}
 {% block content %}
-<section class="user">
+<section class="user" onload="payClick()">
 	<div class="text-center mb-3">
-		<p class="fw-bolder">Your reservation has been created,<button onclick="payWithPaystack()" class="btn btn-sm fw-bolder text-decoration-underline text-success">pay & confirm.</button></p>
+
+		<p class="fw-bolder">Your reservation has been created</p>
+		<!--
 		<p class="fw-bolder">Be sure to <a href="{% url 'delete-booking' booking.pk %}" class="text-danger text-decoration-underline">delete reservation</a> if you change your mind.</p>
 	</div>
 	<div class="d-flex justify-content-center mb-3"><small>Ensure the information provided is accurated. A copy of this
@@ -56,11 +58,16 @@
 		</div>
 	</div>
 	<div class="d-flex justify-content-center mt-3">
-		<a href="{% url 'delete-booking' booking.pk %}" role="button" class="btn btn-outline-danger btn-md mx-2">Delete reservation</a>
+		<a href="{% url 'delete-booking' booking.pk %}" role="button" class="btn btn-outline-danger btn-md mx-2">Delete reservation</a>-->
 		<button onclick="payWithPaystack()"
-			class="btn btn-outline-success btn-md mx-2">Pay & confirm.</button></div>
+			class="btn btn-outline-success btn-md mx-2" id="pay">Pay & confirm.</button></div>
 	<script type="text/javascript" src="https://js.paystack.co/v1/inline.js"></script>
 	<script type="text/javascript">
+
+		function payClick(){
+			document.getElementById('#pay').click();
+		}
+
 		function payWithPaystack() {
 			const currency = "GHS";
 			const plan = "";
@@ -84,7 +91,7 @@
 			}
 
 			const handler = PaystackPop.setup(obj);
-			handler.openIframe();
+			handler.openIframe();			
 		}
 	</script>
 </section>

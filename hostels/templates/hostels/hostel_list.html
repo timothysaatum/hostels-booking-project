@@ -1,15 +1,15 @@
 {% extends 'hostels/base.html' %}
 {% load static %}
 
-{% block title %}Students accomodation{% endblock %}
+{% block title %}Students Hostels{% endblock %}
 {% block navbar %}
 <!--navbar for the various available schools-->
 <section class="bg-light bg-onscroll fixed-top">
     <nav>
         <div class="container-fluid d-flex justify-content-between p-3 mx-1">
             <div class="col-md-1 d-flex align-items-center">
-                <a href="{% url 'home' %}" class="nav-brand"><img src="{% static 'hostels/images/unarcom.jpg' %}" alt=""
-                        class="img-fluid"></a>
+                <a href="{% url 'home' %}" class="nav-brand"><img src="{% static 'hostels/images/unarcom.jpg' %}" alt="unarcom logo"
+                        class="img-fluid icon-radius"></a>
             </div>
             <div class="col-md-5 col-lg-3 py-1 col-sm-12 d-flex justify-content-between bg-light shadow-lg nav-border">
                 <button class="btn btn-sm btn-light border-end fw-bolder btn-border">
@@ -30,6 +30,7 @@
         </div>
     </nav>
     <div class="container-fluid mx-1 border-bottom">
+        <!--
         <div class="d-flex align-items-center">
             <div class="flex-shrink-0">
                 <a href="#javascript(void)" class="btn-left btn-link p-2 toggle text-dark"><i
@@ -93,6 +94,74 @@
                         class="fa-solid fa-circle-chevron-right"></i></a>
             </div>
         </div>
+    -->
+    <div class="row">
+    <div class="col-12">
+      <div class="d-md-block d-none mt-5">
+        <nav class="navbar mx-auto bg-light">
+          <div class="container-fluid">
+            <div>
+              <button class="btn btn-primary">link-1</button>
+            </div>
+            <div>
+              <button class="btn btn-primary">link-2</button>
+            </div>
+            <div>
+              <button class="btn btn-primary">link-3</button>
+            </div>
+            <div>
+              <button class="btn btn-primary">link-4</button>
+            </div>
+            <div>
+              <button class="btn btn-primary">link-5</button>
+            </div>
+            <div>
+              <button class="btn btn-primary">link-6</button>
+            </div>
+            <div>
+              <button class="btn btn-primary">link-7</button>
+            </div>
+            <div>
+              <button class="btn btn-primary">link-8</button>
+            </div>
+            <div>
+              <button class="btn btn-primary">link-9</button>
+            </div>
+          </div>
+        </nav>
+      </div>
+      <!-- slider nav is shown at "md" and below resolutions -->
+      <div class="d-md-none mt-5">
+        <div class="swiper mySwiper">
+          <div class="swiper-wrapper">
+
+            <button class="swiper-slide btn btn-primary">link-1</button>
+
+            <button class="swiper-slide btn btn-primary">link-2</button>
+
+            <button class="swiper-slide btn btn-primary">link-3</button>
+
+            <button class="swiper-slide btn btn-primary">link-4</button>
+
+            <button class="swiper-slide btn btn-primary">link-5</button>
+
+            <button class="swiper-slide btn btn-primary">link-6</button>
+
+            <button class="swiper-slide btn btn-primary">link-7</button>
+
+            <button class="swiper-slide btn btn-primary">link-8</button>
+
+            <button class="swiper-slide btn btn-primary">link-9</button>
+
+          </div>
+          <div class="swiper-button-next"></div>
+          <div class="swiper-button-prev"></div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
     </div>
 </section>
 {% endblock navbar %}
@@ -109,16 +178,19 @@
             <!--{% include 'hostels/results.html' %}-->
             {% for hostel in hostels %}
             {% if not hostel.no_of_rooms == 0 %}
-            <div class="col-md-6 col-lg-3 mb-4 g-font d-flex justify-content-center" data-aos="fade-up">
-                <a href="{% url 'room-list' hostel.pk hostel.hostel_name %}">
+            <div class="col-md-6 col-lg-3 mb-4 g-font d-flex justify-content-center border border-light-subtle rounded p-1" data-aos="fade-up">
+                <a href="{% url 'hostel-details' hostel.pk hostel.hostel_name %}">
                     <img src="{{hostel.display_image.url}}" class="round img-fluid">
                     <div class="d-flex justify-content-between pb-0 mb-0">
                         <p class="text-start fw-bold text-capitalize text-dark">{{hostel.school.name}}, {{hostel.hostel_name}}</p>
                         <span><i class="fa-regular fa-star text-danger"></i>4.5</span>
                     </div>
                     <small class="d-block text-start text-muted mt-2"><i class="fa-solid fa-person-walking text-danger"></i> {{hostel.get_dist}} walk to campus</small>
-                    <small class="d-block text-start text-muted mt-2"><i class="fa-regular fa-heart text-danger"></i> {{hostel.owner_name}} - Manager</small>
+                    <small class="d-block text-start text-muted mt-2"><i class="fa-regular fa-heart text-danger"></i> Stay with: {{hostel.owner_name}}</small>
                     <small class="d-block text-start text-muted mt-2"><i class="fa-solid fa-coins text-danger"></i> GHS{{hostel.cost_range}}/year</small>
+                    <div class="text-center">
+                        <div class="bg-danger p-2 rounded bg-opacity-25">View Rooms<i class="fa-solid fa-chevron-right"></i></div>
+                    </div>
                 </a>
             </div>
             {% else %}

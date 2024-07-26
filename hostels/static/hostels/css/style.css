@@ -6,7 +6,7 @@ body,
 html,
 a {
     text-decoration: none;
-    font-family: 'Roboto', sans-serif;
+    font-family: 'Montserrat', sans-serif;;
     list-style-type: none;
 }
 
@@ -15,12 +15,17 @@ h2,
 h3,
 h4,
 h5,
-h6,.h7, a {
+h6,.h7, a, p {
     color: #191970;
-    font-family: 'Ubuntu', sans-serif;
+    font-family: 'Roboto', sans-serif;
+}
+
+p {
+    color: #000;
+    font-family: 'Roboto', sans-serif;
 }
 .title-font{
-    font-family: 'Ubuntu', sans-serif;
+    font-family: 'Roboto', sans-serif;
     color: #0000;
 }
 .nav-border button {
@@ -42,6 +47,10 @@ h6,.h7, a {
         position: sticky;
         bottom: 0.05%;
         top: 5%;
+    }
+    .admin-side-bar{
+        height: 1rem; 
+        overflow-y: scroll;
     }
 }
 
@@ -179,9 +188,9 @@ nav img {
 
 .reserve{
     position: fixed;
-    left: 65%;
-    top: auto;
-    bottom: 30%;
+    left: 71%;
+    top: 30%;
+    bottom: auto;
     right: auto;
 }
 
@@ -199,11 +208,20 @@ nav img {
     z-index: 9999;
 }
 
-.search-form{
+.notifications{
+    position: fixed;
+    top: 10%;
+    left: 40%;
+    right: 5%;
+    z-index: 9999;
+}
+
+.search-form, .adminMenu{
     position: fixed;
     z-index: 9999;
-    top: 15%;
-    left: 30%;
+    top: 10%;
+    left: 20%;
+    right: 10%;
 }
 
 .text-color{
@@ -248,37 +266,110 @@ nav img {
 .manage{
     height: 35rem; 
     overflow-y: scroll;
+    background-size: cover;
+    background-repeat: no-repeat;
 }
 
 .manage::-webkit--scrollbar{
     display: none;
 }
 
-
 .bg-admin{
-    background-color: #181801;
+    /*background-color: #181801;*/
+    background-image:linear-gradient(rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.9)), url('../images/unarcom.jpg');
 }
+
 
 .admin-header-font{
     font-family: 'Source Code Pro', monospace;
     text-shadow: 2px 2px 8px #FF0000;
 }
 
+
 .admin-side-bar{
-    height: 35rem; 
+    height: 38rem; 
     overflow-y: scroll;
-    /*background-color: #b8a693;*/
 }
 
+
 .text-danger{
+
 
     color: #a83264;
 }
 
-.bg-danger{
-    background-color: #a83264;
+
+.icon-radius{
+    border: transparent;
+    border-radius: 12rem;
 }
 
-.btn-danger{
-    background-color: #a83264;
+
+.image-effect{
+    filter: brightness(70%) grayscale(10%);
+    background-image: linear-gradient(45deg, rgba(100, 150, 50, 0.5));
+}
+
+
+/* picture bg on hover*/
+.shade{
+    -webkit-filter: brightness(110%) contrast(110%) saturate(130%);
+    filter: brightness(110%) contrast(110%) saturate(130%);
+}
+
+
+/*search
+input[type="text"]{
+  background:none;
+  border:none;
+  padding:0.2rem 0 0 0;
+}
+
+input[type="text"]:focus{
+  outline:none;
+}
+*/
+.guest, .price, .campus{
+  width:22%;
+}
+
+/*nav slider */
+.swiper, .navbar {
+    width: 90%;
+    height: 80px;
+}
+
+.swiper-slide {
+    text-align: center;
+    font-size: 18px;
+    background: #D35;
+
+    /* Center slide text vertically */
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+    align-items: center;
+}
+
+.swiper-slide img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.swiper-slide {
+    width: 18%;
+}
+
+.swiper-button-next, .swiper-button-prev {
+    color: #055025;
 }

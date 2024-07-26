@@ -1,10 +1,13 @@
 {% extends 'hostels/base.html' %} {% load static %} {% block title %}Booking
 Details{% endblock %} {% block content %}
 <section class="user bg-light">
-    <div>
-        <button class="btn btn-md btn-outline-info"><i class="fa-solid fa-layer-group fa-2x"></i></button>
-    </div>
-  <p class="lead fw-bolder text-dark text-decoration-underline pb-2 text-capitalize text-center"
+  <div>
+    <button class="btn btn-md btn-outline-info">
+      <i class="fa-solid fa-layer-group fa-2x"></i>
+    </button>
+  </div>
+  <p
+    class="lead fw-bolder text-dark text-decoration-underline pb-2 text-capitalize text-center"
   >
     Welcome {{request.user}}
   </p>
@@ -85,7 +88,9 @@ Details{% endblock %} {% block content %}
                             </tr>
                             <tr>
                               <th scope="row">2</th>
-                              <td colspan="5" class="text-center fw-bolder">Hostel Info</td>
+                              <td colspan="5" class="text-center fw-bolder">
+                                Hostel Info
+                              </td>
                             </tr>
                             <tr>
                               <th scope="row">3</th>
@@ -119,7 +124,7 @@ Details{% endblock %} {% block content %}
                   href="{% url 'delete-booking' booking.pk %}"
                   role="button"
                   title="{{booking.hostel}}"
-                  class="btn btn-md btn-outline-danger delete"
+                  class="btn btn-md btn-outline-danger deleted"
                   ><i class="fa-solid fa-trash-can"></i
                 ></a>
               </td>

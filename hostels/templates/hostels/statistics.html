@@ -1,0 +1,21 @@
+<p class="text-center fw-bolder text-secondary text-decoration-underline">Sales Data</p>
+<table class="table table-success table-striped table-hover table-bordered vacant" id="vacancies">
+  <thead>
+    <tr>
+      <th scope="col">Room Type</th>
+      <th scope="col">Room Number</th>
+      <th scope="col">Room Status</th>
+      <th scope="col">Price</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for room in rooms %}
+    <tr>
+      <th scope="row">{{room.room_type}}</th>
+      <td>{{room.room_number}}</td>
+      <td>{% if not room.capacity == 0 %} {{room.capacity}} (bed)s {% else %} Full {% endif %}</td>
+      <td>GHS{{room.cost_per_head}}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>

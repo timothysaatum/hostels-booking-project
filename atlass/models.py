@@ -6,6 +6,8 @@ from django.urls import reverse
 from .transaction  import  Paystack
 import datetime
 from hostels.models import Room, RoomType, Hostel
+from .utils import send_email_with_transaction
+from django.contrib import messages
 
 
 user = get_user_model()
@@ -31,26 +33,26 @@ SEX = [
 
 class Booking(models.Model):
 
-    tenant = models.ForeignKey(user, on_delete=models.CASCADE, blank=True, null=True, editable=False)
-    room = models.ForeignKey(Room, on_delete=models.CASCADE, editable=False)
-    room_type = models.ForeignKey(RoomType, on_delete=models.CASCADE, editable=False)
-    check_in = models.DateField(help_text='YYYY-MM-DD', default=datetime.datetime.now)
+    tenant = models.ForeignKey(user, on_delete=models.CASCADE, blank=True, null=True)
+    room = models.ForeignKey(Room, on_delete=models.CASCADE)
+    room_type = models.ForeignKey(RoomType, on_delete=models.CASCADE)
+    check_in = models.DateField(help_text='YYYY-MM-DD')
     number_of_guests = models.PositiveIntegerField(default=1)
-    phone_number = models.CharField(max_length=17, null=True, blank=True, editable=False)
-    cost = models.DecimalField(max_digits=8, decimal_places=2, editable=False)
-    room_no = models.CharField(max_length=20, editable=False)
-    first_name = models.CharField(max_length=50, editable=False)
-    last_name = models.CharField(max_length=50, editable=False)
+    phone_number = models.CharField(max_length=17, null=True, blank=True)
+    cost = models.DecimalField(max_digits=8, decimal_places=2)
+    room_no = models.CharField(max_length=20)
+    first_name = models.CharField(max_length=50)
+    last_name = models.CharField(max_length=50)
     gender = models.CharField(help_text='Male/Female', max_length=10, choices=SEX)
-    email_address = models.EmailField(editable=False)
-    city_or_town = models.CharField(max_length=100, editable=False)
-    university_identification_number = models.PositiveIntegerField(editable=False)
-    region_of_residence = models.CharField(max_length=100, editable=False)
-    digital_address = models.CharField(max_length=100, editable=False)
-    receipt_number = models.CharField(max_length=100, editable=False)
-    ref = models.CharField(max_length=200, editable=False)
-    is_verified = models.BooleanField(default=False, editable=False)
-    date_created = models.DateTimeField(auto_now_add=True, editable=False)
+    email_address = models.EmailField()
+    city_or_town = models.CharField(max_length=100)
+    university_identification_number = models.PositiveIntegerField()
+    region_of_residence = models.CharField(max_length=100)
+    digital_address = models.CharField(max_length=100)
+    receipt_number = models.CharField(max_length=100)
+    ref = models.CharField(max_length=200)
+    is_verified = models.BooleanField(default=False)
+    date_created = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         ordering = ('-date_created',)
@@ -106,6 +108,7 @@ class Booking(models.Model):
         full_dur = self.check_in + datetime.timedelta(days=366)
 
         days_rem = datetime.datetime.combine(full_dur, datetime.datetime.min.time()) - datetime.datetime.now()
+        #days_rem = self.expiration_date() - datetime.date()
 
         days_left =days_rem.days
 
@@ -119,8 +122,40 @@ class Booking(models.Model):
     def get_account_number(self):
         return self.room_type.hostel.account_number
 
+
+    def account_name(self):
+        return self.room_type.hostel.account_name
+
     def get_hostel(self):
         return self.room_type.hostel
+
+
+    def get_seed_amount(self):
+        original_rate = (float(self.cost) / 1.04)
+
+        return original_rate
+
+    def send_email(self):
+        landlord = self.room_type.hostel.created_by.email
+        print(landlord)
+
+        try:
+            subject = f'{self.email_address} has just paid you!'
+            body = f'''\n
+            {self.email_address} has just booked {self.room_no}. He is expected to arrive on {self.check_in}
+            Your rent should be expected within 24hrs for our system to remit the money to your account.
+            You can view this transaction on your dashboard - www.trustunarcom.com/admin/dashboard/
+            \n
+            Do not hesitate to contact us if you have not received your funds:
+
+            Contact details
+            Tel: 0594438287/0503835921
+            Email: timothysaatum@gmail.com
+            '''
+            send_email_with_transaction(subject, body, landlord)
+
+        except Exception as e:
+            pass
   
 
 

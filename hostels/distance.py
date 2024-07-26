@@ -1,9 +1,10 @@
 from geographiclib.geodesic import Geodesic
+import requests
 
 
 def calc_distance(hostel_coordinates, school_coordinates):
 	'''
-	we will be using the central gps address of every school
+	using the central gps address of every school
 	'''
 	lat, longi = school_coordinates.split(',')
 	'''
@@ -30,3 +31,11 @@ def calc_distance(hostel_coordinates, school_coordinates):
 
 	return f'{average_walking_time} mins'
 
+def find_ip_address(request):
+	x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+	if x_forwarded_for:
+		ip = x_forwarded_for.split(',')[0]
+		return ip
+	else:
+		ip = request.META.get('REMOTE_ADDR')
+		return ip

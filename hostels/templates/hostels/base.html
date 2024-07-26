@@ -1,219 +1,350 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <meta
+      content="university hostels"
+      name="university hostels accomodation school hostels"
+    />
+    <meta
+      content="Property rental company"
+      name="students hostel, general property & accomodation rental company"
+    />
+    <!-- Favicon -->
+    <link
+      href="{% static 'hostels/images/unarcom.jpg' %}"
+      rel="icon"
+      type="image/png"
+    />
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet"/>
+    <!-- Icon Font awesome Stylesheet -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Source+Code+Pro&display=swap" rel="stylesheet"/>
+    <!--third party Libraries Stylesheet -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Ubuntu&display=swap"
+      rel="stylesheet"/>
+    <!--<link href="{% static 'fontawesomefree/css/all.min.css' %}" rel="stylesheet" type="text/css">-->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=PT+Sans&display=swap"
+      rel="stylesheet"
+    />
+    <link href="{% static 'hostels/css/animate.min.css' %}" rel="stylesheet" />
+    <link href="{% static 'hostels/css/aos.css' %}" rel="stylesheet" />
+    <!--<link rel="stylesheet" type="text/css" href="{% static 'hostels/css/jquery.mobile.min.css' %}">-->
+    <!-- Custom  Stylesheet -->
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.2/themes/smoothness/jquery-ui.css">
+    <link href="{% static 'hostels/css/style.css' %}" rel="stylesheet" />
+    <title>{% block title %}{% endblock %}</title>
+  </head>
 
-<head>
-  <meta charset="utf-8" />
-  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-  <meta content="university hostels" name="university hostels accomodation school hostels" />
-  <meta content="Property rental company" name="students hostel, general property & accomodation rental company" />
-  <!-- Favicon -->
-  <link href="{% static 'hostels/images/unarcom.jpg' %}" rel="short icon" type="image" />
-  <!-- Google Web Fonts -->
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap"
-    rel="stylesheet" />
-  <!-- Icon Font awesome Stylesheet -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro&display=swap" rel="stylesheet">
-  <!--third party Libraries Stylesheet -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous" />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Ubuntu&display=swap" rel="stylesheet">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=PT+Sans&display=swap" rel="stylesheet">
-  <link href="{% static 'hostels/css/animate.min.css' %}" rel="stylesheet" />
-  <link href="{% static 'hostels/css/aos.css' %}" rel="stylesheet" />
-  <!-- Custom  Stylesheet -->
-  <link href="{% static 'hostels/css/style.css' %}" rel="stylesheet" />
-  <title>{% block title %}{% endblock %}</title>
-</head>
-
-<body>
-  {% block navbar %}
-  <!--logo search bar & user icon-->
-  <section class="bg-light bg-onscroll fixed-top">
-    <nav>
-      <div class="container-fluid d-flex justify-content-between p-2 mx-1">
-        <div class="col-md-1 d-none d-sm-block d-md-block">
-          <a href="{% url 'home' %}" class="nav-brand"><img src="{% static 'hostels/images/unarcom.jpg' %}" alt=""
-              class="img-fluid" /></a>
+  <body>
+    {% block navbar %}
+    <!--logo search bar & user icon-->
+     <section class="bg-light bg-onscroll fixed-top">
+      <nav>
+        <div class="d-flex justify-content-between p-3">
+          <div class="col-md-1 d-none d-md-block text-center mt-2">
+            <a href="{% url 'home' %}" class="nav-brand"
+              ><img
+                src="{% static 'hostels/images/unarcom.jpg' %}"
+                alt="unarcom logo"
+                class="img-fluid icon-radius"
+            /></a>
+          </div>
+          <div class="d-flex align-items-center nav-border">
+            <a
+              href="{% url 'rooms' %}"
+              class="nav-link text-light bg-danger fw-bold p-1 btn-border"
+              role="button"
+              ><i class="fa-solid fa-chevron-right"></i> Hostels</a
+            >
+          </div>
+          <div class="col-md-5 col-lg-5 bg-dark py-1 col-sm-1 d-flex justify-content-between nav-border">
+            <form class="d-flex" role="search">
+              <input class="form-control d-none d-sm-block d-md-block nav-border" type="search" placeholder="room type, campus or price" aria-label="Search">
+              <button class="btn btn-outline-danger" type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+            </form>
+          </div>
+          <div
+            class="col-sm-5 col-md-2 d-flex justify-content-between"
+          >
+            <a href="{% url 'booking-details' %}" class="text-dark mx-2 d-flex align-items-center text-decoration-underline"
+              >My Rent <span><i class="fa-solid fa-house d-none d-md-block"></i></span
+            ></a>
+            <button class="nav-border text-dark border btn-sm" id="account">
+              <span
+                ><i class="fa-solid fa-bars mx-1"></i>
+                <i class="fa-regular fa-user mx-1"></i
+              ></span>
+            </button>
+          </div>
         </div>
-        <div class="d-flex align-items-center nav-border">
-          <a href="{% url 'rooms' %}" class="nav-link text-light bg-danger fw-bold p-1 btn-border" role="button"><i
-              class="fa-solid fa-chevron-right"></i> Hostels</a>
-        </div>
-        <div class="col-md-5 col-lg-3 py-1 col-sm-12 d-flex justify-content-between bg-light shadow-lg nav-border">
-          <button class="btn btn-sm btn-light border-end fw-bolder btn-border">Apartments
-          </button>
-          <button class="btn btn-sm btn-light border-end fw-bolder btn-border">Lands
-          </button>
-          <button class="btn btn-sm btn-pink btn-border" id="search">
-            <i class="fa-solid fa-magnifying-glass text-light"></i>
-          </button>
-        </div>
-        <div class="col-3 d-none d-lg-block d-sm-block d-flex justify-content-between">
-          <a href="{% url 'booking-details' %}" class="text-dark mx-2">My Rent <span><i
-                class="fa-solid fa-house"></i></span></a>
-          <button class="nav-border text-dark border btn-sm" id="account">
-            <span><i class="fa-solid fa-bars m-2"></i>
-              <i class="fa-regular fa-user m-2"></i></span>
-          </button>
-        </div>
-      </div>
-    </nav>
-  </section>
-  {% endblock navbar %}
-  <div class="col-2 bg-light shadow show-div">
-    <ul>
-      {% if user.is_authenticated %}
-      <li>
-        <a href="{% url 'logout' %}" class="text-decoration-underline">Logout</a>
-      </li>
-      <li>
-        <a href="{% url 'profile' %}" class="text-decoration-underline">profile</a>
-      </li>
-      {% else %}
-      <li>
-        <a href="{% url 'login' %}" class="text-decoration-underline">Login</a>
-      </li>
-      <li>
-        <a href="{% url 'register' %}" class="text-decoration-underline">Sign Up</a>
-      </li>
-      {% endif %}
-    </ul>
-  </div>
-  <div class="bg-light shadow search-form p-2 btn-border">
-    <form class="d-flex" role="search">
-      <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
-      <button class="btn btn-outline-danger" type="submit">Search</button>
-    </form>
-  </div>
-  <!--messages-->
-  {% if messages %} {% for message in messages %}
-  <div class="row d-flex justify-content-center mt-5 pt-5 mb-3">
-    <div class="col-10">
-      <div class="alert alert-{{message.tags}}">{{message}}</div>
+      </nav>
+    </section>
+    {% endblock navbar %}
+    {% block user_search_area %}
+    <div class="col-2 bg-light shadow rounded show-div">
+      <ul>
+        {% if user.is_authenticated %}
+        <li>
+          <a href="{% url 'logout' %}" class="text-decoration-underline"
+            >Logout</a
+          >
+        </li>
+        <li>
+          <a href="{% url 'profile' %}" class="text-decoration-underline"
+            >Profile</a
+          >
+        </li>
+        <li>
+          <a href="{% url 'contact' %}" class="text-decoration-underline"
+            >Contact Us</a
+          >
+        </li>
+        <li>
+          <a href="{% url 'howitworks' %}" class="text-decoration-underline"
+            >Create Property</a
+          >
+        </li>
+        {% if user.has_a_hostel %}
+        <li>
+          <a href="{% url 'management' %}" class="text-decoration-underline"
+            >Dashboard</a
+          >
+        </li>
+        {% endif %}
+        {% else %}
+        <li>
+          <a href="{% url 'login' %}" class="text-decoration-underline"
+            >Login</a
+          >
+        </li>
+        <li>
+          <a href="{% url 'register' %}" class="text-decoration-underline"
+            >Sign Up</a
+          >
+        </li>
+        {% endif %}
+      </ul>
     </div>
-  </div>
-  {% endfor %} {% endif %}
-  <!--end of messages-->
-  <!-- content block -->
-  {% block content %} {% endblock %}
-
-  <!-- Footer block -->
-  {% block footer %}
-  <footer class="pt-5">
-    <div class="container-fluid bg-dark mt-5 mb-3 text-light p-5">
-      <div class="row">
-        <div class="col-md-4 pt-3 pb-3">
-          <h6 class="text-uppercase text-decoration-underline fw-bolder footer text-danger">
-            UNARCOM
-          </h6>
-          <u class="text-decoration-none px-4">
-            <li>
-              <a href="{% url 'about' %}" title="About" class="text-light"><i class="fa-solid fa-chevron-right"></i>
-                About Us</a>
-            </li>
-            <li>
-              <a href="{% url 'contact' %}" title="contact" class="text-light"><i class="fa-solid fa-chevron-right"></i>
-                Contact</a>
-            </li>
-            <li>
-              <a href="{% url 'services' %}" title="services" class="text-light"><i
-                  class="fa-solid fa-chevron-right"></i> Services</a>
-            </li>
-            <li>
-              <a href="{% url 'mission' %}" title="our mission" class="text-light"><i
-                  class="fa-solid fa-chevron-right"></i> Our Mission</a>
-            </li>
-            <li>
-              <a href="{% url 'howitworks' %}" title="how it works" class="text-light"><i
-                  class="fa-solid fa-chevron-right"></i> How it Works</a>
-            </li>
-          </u>
+    <!--
+    <div class="bg-light shadow search-form p-2 btn-border">
+      <form class="d-flex" role="search">
+        <input
+          class="form-control me-2"
+          type="search"
+          placeholder="Search"
+          aria-label="Search"
+        />
+        <button class="btn btn-outline-danger" type="submit">Search</button>
+      </form>
+    </div>-->
+    {% endblock %}
+    <!--messages-->
+    {% if messages %} {% for message in messages %}
+    <div class="row notifications">
+      <div>
+        {% if message.tags == 'error' %}
+        <div class="alert alert-danger alert-dismissible" role="alert">
+          <small>{{message}}</small>
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
-        <div class="col-md-4 pt-3 pb-3">
-          <h6 class="text-uppercase text-decoration-underline fw-bolder footer text-danger">
-            Products &amp; Services
-          </h6>
-          <u class="text-decoration-none px-4">
-            <li>
-              <a href="{% url 'lands' %}" title="lands for sale" class="text-light"><i
-                  class="fa-solid fa-chevron-right"></i> Lands</a>
-            </li>
-            <li>
-              <a href="{% url 'appartment' %}" title="apartments for rent & sale" class="text-light"><i
-                  class="fa-solid fa-chevron-right"></i> Apartment</a>
-            </li>
-            <li>
-              <a href="{% url 'rooms' %}" title="students hostels" class="text-light"><i
-                  class="fa-solid fa-chevron-right"></i> Students</a>
-            </li>
-            <li>
-              <a href="{% url 'data' %}" title="data handling" class="text-light"><i
-                  class="fa-solid fa-chevron-right"></i> Data Handling</a>
-            </li>
-          </u>
+        {% else %}
+        <div class="alert alert-{{message.tags}} alert-dismissible mt-5" role="alert">
+          <small>{{message}}</small>
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
-        <div class="col-md-4 pt-3 pb-3">
-          <h6 class="text-uppercase text-decoration-underline fw-bolder footer text-danger">
-            Customer Support
-          </h6>
-          <u class="text-decoration-none px-4">
-            <li>
-              <a href="{% url 'complain' %}" title="complain" class="text-light"><i
-                  class="fa-solid fa-chevron-right"></i> Complains Desk</a>
-            </li>
-            <li>
-              <a href="{% url 'terms_and_conditions' %}" title="terms & conditions" class="text-light"><i
-                  class="fa-solid fa-chevron-right"></i> Terms and Conditions</a>
-            </li>
-            <li>
-              <a href="{% url 'privacy' %}" title="Privacy Policy" class="text-light"><i
-                  class="fa-solid fa-chevron-right"></i> Privacy Policy</a>
-            </li>
-            <li>
-              <a href="{% url 'faqs' %}" title="Frequently asked questions" class="text-light"><i
-                  class="fa-solid fa-chevron-right"></i> FAQs</a>
-            </li>
-          </u>
-        </div>
+        {% endif %}
       </div>
-      <p class="text-center text-secondary"> <small>copyright&copy;2023</small> </p>
-      <p class="text-center text-decoration-underline"> <small> <a href="#" class="text-secondary">powered by atlass</a> </small> </p>
     </div>
-  </footer>
-  {% endblock footer %}
-  <!-- Footer End -->
+    {% endfor %} {% endif %}
+    <!--end of messages-->
+    <!-- content block -->
+    {% block content %} {% endblock %}
 
-  <!-- JavaScript Libraries -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-    crossorigin="anonymous"></script>
+    <!-- Footer block -->
+    {% block footer %}
+    <footer class="pt-5">
+      <div class="container-fluid bg-dark mt-5 mb-3 text-light p-5">
+        <div class="row">
+          <div class="col-md-4 pt-3 pb-3">
+            <h6
+              class="text-uppercase text-decoration-underline fw-bolder footer text-danger"
+            >
+              UNARCOM
+            </h6>
+            <u class="text-decoration-none px-4">
+              <li>
+                <a href="{% url 'about' %}" title="About" class="text-light"
+                  ><i class="fa-solid fa-chevron-right"></i> About Us</a
+                >
+              </li>
+              <li>
+                <a href="{% url 'contact' %}" title="contact" class="text-light"
+                  ><i class="fa-solid fa-chevron-right"></i> Contact</a
+                >
+              </li>
+              <li>
+                <a
+                  href="{% url 'services' %}"
+                  title="services"
+                  class="text-light"
+                  ><i class="fa-solid fa-chevron-right"></i> Services</a
+                >
+              </li>
+              <li>
+                <a
+                  href="{% url 'mission' %}"
+                  title="our mission"
+                  class="text-light"
+                  ><i class="fa-solid fa-chevron-right"></i> Our Mission</a
+                >
+              </li>
+              <li>
+                <a
+                  href="{% url 'howitworks' %}"
+                  title="how it works"
+                  class="text-light"
+                  ><i class="fa-solid fa-chevron-right"></i> How it Works</a
+                >
+              </li>
+            </u>
+          </div>
+          <div class="col-md-4 pt-3 pb-3">
+            <h6
+              class="text-uppercase text-decoration-underline fw-bolder footer text-danger"
+            >
+              Products &amp; Services
+            </h6>
+            <u class="text-decoration-none px-4">
+              <li>
+                <a
+                  href="{% url 'lands' %}"
+                  title="lands for sale"
+                  class="text-light"
+                  ><i class="fa-solid fa-chevron-right"></i> Lands</a
+                >
+              </li>
+              <li>
+                <a
+                  href="{% url 'appartment' %}"
+                  title="apartments for rent & sale"
+                  class="text-light"
+                  ><i class="fa-solid fa-chevron-right"></i> Apartment</a
+                >
+              </li>
+              <li>
+                <a
+                  href="{% url 'rooms' %}"
+                  title="students hostels"
+                  class="text-light"
+                  ><i class="fa-solid fa-chevron-right"></i> Students</a
+                >
+              </li>
+              <li>
+                <a
+                  href="{% url 'data' %}"
+                  title="data handling"
+                  class="text-light"
+                  ><i class="fa-solid fa-chevron-right"></i> Data Handling</a
+                >
+              </li>
+            </u>
+          </div>
+          <div class="col-md-4 pt-3 pb-3">
+            <h6
+              class="text-uppercase text-decoration-underline fw-bolder footer text-danger"
+            >
+              Customer Support
+            </h6>
+            <u class="text-decoration-none px-4">
+              <li>
+                <a
+                  href="{% url 'complain' %}"
+                  title="complain"
+                  class="text-light"
+                  ><i class="fa-solid fa-chevron-right"></i> Complains Desk</a
+                >
+              </li>
+              <li>
+                <a
+                  href="{% url 'terms_and_conditions' %}"
+                  title="terms & conditions"
+                  class="text-light"
+                  ><i class="fa-solid fa-chevron-right"></i> Terms and
+                  Conditions</a
+                >
+              </li>
+              <li>
+                <a
+                  href="{% url 'privacy' %}"
+                  title="Privacy Policy"
+                  class="text-light"
+                  ><i class="fa-solid fa-chevron-right"></i> Privacy Policy</a
+                >
+              </li>
+              <li>
+                <a
+                  href="{% url 'faqs' %}"
+                  title="Frequently asked questions"
+                  class="text-light"
+                  ><i class="fa-solid fa-chevron-right"></i> FAQs</a
+                >
+              </li>
+            </u>
+          </div>
+        </div>
+        <p class="text-center text-secondary">
+          <small>copyright&copy;2023</small>
+        </p>
+        <p class="text-center text-decoration-underline">
+          <small>
+            <a href="#" class="text-secondary">powered by atlass</a>
+          </small>
+        </p>
+      </div>
+    </footer>
+    {% endblock footer %}
+    <!-- Footer End -->
 
+    <!-- JavaScript Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+      crossorigin="anonymous">
+    </script>
+    <!--<script src="{% static 'fontawesomefree/js/all.min.js' %}"></script>-->
+   <!-- <script src="{% static 'hostels/js/jquery/jquery.mobile.min.js' %}"></script>-->
+    <script src="{% static 'hostels/js/wow/wow.js' %}"></script>
 
-  <script src="{% static 'hostels/js/wow/wow.js' %}"></script>
+    <script src="{% static 'hostels/js/aos/aos.js' %}"></script>
 
+    <script src="{% static 'hostels/js/main.js' %}"></script>
 
-  <script src="{% static 'hostels/js/aos/aos.js' %}"></script>
+    <script src="{% static 'hostels/js/jquery/jquery.js' %}"></script>
 
-
-  <script src="{% static 'hostels/js/main.js' %}"></script>
-
-
-  <script src="{% static 'hostels/js/jquery/jquery.js' %}"></script>
-
-
-  <script src="{% static 'hostels/js/jquery/script.js' %}"></script>
-
-
-</body>
-
+    <script src="{% static 'hostels/js/jquery/script.js' %}"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js"></script>
+  </body>
 </html>

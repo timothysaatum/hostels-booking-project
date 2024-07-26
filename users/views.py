@@ -10,7 +10,8 @@ from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.contrib.auth import get_user_model
 from atlass.utils import send_email_with_transaction
-
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth import views as auth_views
 
 
 
@@ -30,13 +31,13 @@ def register(request):
             subject = 'Welcome to the UNARCOM world'
             body = f'''
             Hi {last_name}, thank you for registering a rewarding account with us. Find the best of what you need.
-             \nWe are always available to serve you. Customer satisfaction has always been our hallmark. 
-             Let's strive to help each other
-             #You deserve the best.
+            We are always available to serve you. Customer satisfaction has always been our hallmark. 
+            Let's strive to help each other
+            #You deserve the best.
              '''
-            recipient_list = ['saatumtimothy@gmail.com']
+            recipient_list = [form.cleaned_data['email']]
             #send_email_with_transaction(subject, body, recipient_list)
-            return redirect('home')
+            return redirect('login')
     else:
         form = UserRegisterForm()
     return render(request, 'users/register.html', {'form':form})
@@ -50,22 +51,49 @@ def profile(request):
 
 class ComplainView(CreateView):
     model = Complain
-    fields = ('email', 'phone', 'address', 'full_name', 'message')
+    fields = ('subject', 'message')
     template_name = 'users/complains.html'
+    success_url = reverse_lazy('home')
+
+    def form_valid(self, form):
+        form.instance.email = self.request.user.email
+        form.instance.phone = self.request.user.telephone
+        form.instance.full_name = self.request.user.first_name + ' ' + self.request.user.last_name
+        messages.success = 'Data successfully submitted. We will attend to you shortly.'
+        return super().form_valid(form)
 
 
-class ContactView(CreateView):
+
+class ContactView(LoginRequiredMixin, CreateView):
     model = Contact
-    fields = ('email', 'phone', 'address', 'full_name', 'message')
+    fields = ('subject', 'message')
     template_name = 'users/contact.html'
-    success_url = reverse_lazy('/')
+    success_url = reverse_lazy('home')
+
+    def form_valid(self, form):
+        form.instance.email = self.request.user.email
+        form.instance.phone = self.request.user.telephone
+        form.instance.full_name = self.request.user.first_name + ' ' + self.request.user.last_name
+        messages.success = 'Data successfully submitted. We will attend to you shortly.'
+        return super().form_valid(form)
+
+
+def login_redirect(request):
+    if request.user.has_a_hostel:
+        return redirect('management')
+    else:
+        return redirect('rooms')
+    return auth_views.login(request)
 
 
 class DataHandlingView(TemplateView):
     template_name = 'users/datahandling.html'
 
+
+
 class TermsAndConditions(TemplateView):
     template_name = 'users/terms_and_conditions.html'
+
 
 
 class PrivacyPolicy(TemplateView):

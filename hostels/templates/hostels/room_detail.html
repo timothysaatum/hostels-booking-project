@@ -2,91 +2,131 @@
 {% load static %}
 {% load tags %}
 
-{% block title %}{{room.hostel}} Hostel-{{room.hostel.campus}} {% endblock %}
+{% block title %}{{hostel.hostel_name}} | {{hostel.campus}} {% endblock %}
 {% block content %}
 <section class="details-mt mb-2">
-    <p class="mx-3 lead text-uppercase"><a href="{% url 'rooms' %}" class="text-danger fw-bold"
-            target="_blank">{{room.hostel}} ({{room.hostel.school.name}}-{{room.hostel.campus}})</a></p>
+    <div class="container">
+        <p class="mx-3 fw-bolder text-capitalize">
+        <span class="text-dark fw-bolder">
+            {{hostel.hostel_name}} | {{hostel.school.name}}-{{hostel.campus}}
+        </span>
+        </p>
+    </div>
     <hr>
 </section>
 <section>
     <div class="container">
-        <div class="text-center h7 mb-3">{% if request.user == room.hostel.created_by %}
-            <a href="{% url 'hostel-update' room.hostel.pk %}" class="bg-light shadow p-2 text-info">Edit details</a>
-            {% endif %}<span class="px-2 py-2 fw-bold mb-5 bg-light">Property Host:
-                {{room.hostel.owner_name}}</span> {% if request.user == room.hostel.created_by %}
-            <a href="{% url 'hostel-delete' room.hostel.pk %}" class="bg-light shadow p-2 text-danger">Delete hostel</a>
+        <div class="text-dark h7 mb-3">{% if request.user == hostel.created_by %}
+            <a href="{% url 'hostel-update' hostel.pk %}" class="bg-light shadow p-2 text-info">Edit details</a>
+            {% endif %}<span class="px-2 py-2 fw-bold mb-5 bg-light"><i class="fa-regular fa-heart text-danger"></i> Your Landlord/Manager:
+                {{hostel.owner_name}}</span> {% if request.user == hostel.created_by %}
+            <a href="{% url 'hostel-delete' hostel.pk %}" class="bg-light shadow p-2 text-danger">Delete hostel</a>
             {% endif %}
         </div>
-        <div class="d-flex justify-content-center" data-aos="fade-up">
+        <div class="row">
+            <div class="col-md-3">
+                <p class="mt-2"><i class="fa-solid fa-phone"></i> {{request.user.telephone}}</p>
+            </div>
+            <div class="col-md-3">
+                <p><i class="fa-solid fa-envelope"></i> {{request.user.email}}</p>
+            </div>
+        </div>
+        <div class="d-flex justify-content-center bg-light rounded p-2">
             <div class="row g-1">
-                <div class="col-md-8">
+                <div class="col-md-9">
                     <div class="row g-1">
-                        <div class="col-md-4 div-place">
-                            <div class="d-flex justify-content-center"><img src="{{object.room_display_image.url}}"
-                                    class="img-fluid img-hover">
+                        {% for obj in front_display %}
+                        <div class="col-md-8 d-none d-sm-block d-lg-block">
+                            <img src="{{obj.room_type_images.url}}" class="img-fluid img-hover image-effect">
+                        </div>
+                        {% endfor %}
+                        <div class="col-md-4">
+                            <div class="row g-1">
+                                <div class="col-md-12 div-place">
+                            <div class="d-flex justify-content-center"><img src="{{hostel.display_image.url}}"
+                                    class="img-fluid img-hover image-effect">
                             </div>
                             <button class="btn btn-light btn-md show-all d-block d-md-none" data-bs-toggle="modal"
                                 data-bs-target="#exampleModal"><i class="fa-solid fa-ellipsis-vertical"></i> <i
                                     class="fa-solid fa-ellipsis-vertical"></i> Show all</button>
                         </div>
-                        {% for obj in front_display %}
-                        <div class="col-md-4 d-none d-sm-block d-lg-block">
-                            <img src="{{obj.room_type_images.url}}" class="img-fluid img-hover">
-                        </div>
-                        {% endfor %}
-                        {% for obj in image_list|slice:'5:6' %}
-                        <div class="col-md-4 d-none d-sm-block d-lg-block div-place">
-                            <img src="{{obj.room_type_images.url}}" class="img-fluid img-hover">
+                        {% for obj in image_list|slice:'2:3' %}
+                        <div class="col-md-12 d-none d-sm-block d-lg-block div-place">
+                            <img src="{{obj.room_type_images.url}}" class="img-fluid img-hover image-effect">
                             <button class="btn btn-light btn-md show-all" data-bs-toggle="modal"
                                 data-bs-target="#exampleModal"><i class="fa-solid fa-ellipsis-vertical"></i> <i
                                     class="fa-solid fa-ellipsis-vertical"></i> Show all</button>
                         </div>
                         {% endfor %}
+                       </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="container">
-        <h4 class="text-capitalize mb-3 mt-5 text-decoration-underline fw-bold">General amenities at this place.</h4>
+    <div class="container-md bg-light rounded">
+        <div class="col-md-8 col-sm-12 mt-5 mb-5 p-2">
+            <h4 class="text-dark">Description.</h4>
+            <p class="text-dark">{{ hostel.description|safe }}</p>
+        </div>
+    </div>
+    <div class="container bg-light rounded">
+        <h4 class="text-dark mb-3 mt-5 text-capitalize">General amenities at {{hostel.hostel_name}}.</h4>
         <div class="row">
-            <div class="col-md-9" data-aos="fade-up">
+            <div class="col-md-9">
                 <!--offers inner row-->
                 <div class="row">
-                    {% for _, amenity in object.hostel.hostel_amenities.items %}
-                    <div class="col-md-6 col-sm-12 py-1">
-                        <span class="text-muted text-capitalize">
-                            <i class="fa-solid fa-check-double text-secondary border p-1 b-radius bg-light shadow"></i>
-                            {{amenity}}</span>
+                    {% for amenity in hostel.amenities.all %}
+                    <div class="col-md-3 col-lg-2 col-sm-2 py-1 px-1 bg-danger bg-opacity-10 m-1 rounded d-flex align-items-center">
+                        <span class="text-capitalize">
+                            <i class="{{amenity.fontawesome_icon}} text-danger mx-2"></i>
+                            {{amenity.amenity}}</span>
                     </div>
                     {% endfor %}
                 </div>
             </div>
         </div>
     </div>
-    <div class="container" data-aos="fade-up">
-        <div class="col-md-8 col-sm-12 mt-5 mb-5 p-2">
-            <h4 class="text-decoration-underline fw-bold">Your Room <span
-                    class="text-danger">({{room.room_type}})</span></h4>
-            <p class="text-dark">{{ room.details|safe }}</p>
+    <div class="container mt-3" id="rooms">
+        <div class="row">
+        <div class="col rounded bg-light m-2">
+            <h4 class="text-dark mt-3">Available Room Types.</h4>
+            <div class="row">
+                {% for roomtype in rooms %}
+                <div class="col-md-8 col-sm-12 mt-5 mb-2">
+            <small class="d-block text-danger text-decoration-underline">{{roomtype.room_type}} | {{roomtype.get_number_beds}} <i class="fa-solid fa-bed"></i></small>
+            <small class="block">{{roomtype.details|safe}}</small>
         </div>
-    </div>
-    <!--Maps-->
-
+        <div class="col-md-3 mt-5 mb-2">
+            <div class="d-flex align-items-center justify-content-center text-danger">
+                Ghs{{roomtype.cost_per_head}} <button class="btn btn-sm btn-outline-danger mx-2 booking-button" id="book{{roomtype.id}}"> book</button>
+                {% for room in spec_room|slice:'0:5' %}
+                <div class="empty-rooms{{room.id}} d-none">
+                    <small>{{room.id}}</small>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}  
+            </div>
+        </div>
+        </div>
 </section>
 
 <!--reserve-->
-<div class="col-lg-3 col-md-4 reserve bg-light shadow round" data-aos="fade-up">
-    <h3 class="mx-2 text-capitalize font-monospace d-flex d-none d-sm-block d-lg-block">{{room.hostel.hostel_name}}</h3>
-    <p class="mx-5 mt-3 mb-1 px-1 text-dark text-center border bg-light shadow  d-none d-sm-block d-lg-block"><span
-            class="fw-bolder text-danger text-decoration-underline">Cost per Head: Gh₵{{room.cost_per_head}}</span>
-    </p>
+<div class="col-lg-3 col-md-4 reserve bg-light shadow round">
+    <h3 class="mx-2 text-capitalize font-monospace d-flex d-none d-sm-block d-lg-block">Overview</h3>
     <div class="d-flex d-none d-sm-block d-lg-block mx-3">
         <ul>
-            <li><span class="fw-bold">{{room.hostel.get_dist}} walk to campus</span></li>
+            <li><p class="text-dark d-none d-sm-block d-lg-block"><span
+            class="fw-bolder text-danger text-decoration-underline">Gh₵{{hostel.cost_range}}/<i class="fa-solid fa-bed"></i></span>
+            </p>
+            </li>
+            <li><span class="fw-bold">{{hostel.get_dist}} walk to campus</span></li>
         </ul>
     </div>
+
     <div class="mx-5 d-none d-sm-block d-lg-block">
         <label for="guest" class="fw-bold">Select Room to Book</label>
         <label>F=Female, M=male</label>
@@ -123,17 +163,19 @@
         </div>
             {% endfor %}
         </div>
-    </div>
+    </div> -->
     <!--on large devices-->
-    <div class="text-center my-3 d-none mx-1 btn-reserve py-2 d-sm-none d-md-block">
-        <span class="bg-danger p-2 text-light text-center rounded">
-            Category: {{room.room_type}}</span>
+    <small class="d-block text-center">Satisfied with the above?</small>
+    <div class="text-center mb-2">
+        <a href="#rooms" class="bg-danger bg-opacity-10 p-2 rounded-pill" type="button"><i class="fa-solid fa-chevron-right"></i> Reserve a room</a>
     </div>
 </div>
 </div>
 <!--for phones-->
-<div class="d-flex justify-content-between bg-light  shadow d-block d-md-none mx-2 fix-bottom px-2 btn-reserve sm-scroll">
-                {% for room_num in spec_room %}
+<p>Select room to book</p>
+<div class="bg-light  shadow d-block d-md-none mx-2 fix-bottom px-2 btn-reserve sm-scroll border border-secondary-subtle">
+    <div class="d-flex justify-content-between">
+        {% for room_num in spec_room %}
             <div class="text-center m-2"><a href="{% url 'pay' object.pk room_num.pk %}" role="button" class="btn btn-sm btn-outline-danger {% if room_num.capacity == 0 %}disabled{% endif %}" {% if room_num.capacity %}aria-disabled="true"{% endif %}>
 
                 {% if room_num.is_booked %}
@@ -163,14 +205,16 @@
             </a>
         </div>
             {% endfor %}
+    </div>
 </div>
+-->
 
 <!-- show more -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">{{room.hostel}}</h1>
+                <h1 class="modal-title fs-5" id="exampleModalLabel">{{hostel.hostel_name}} Hostel, {{hostel.campus}}</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">

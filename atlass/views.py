@@ -17,6 +17,8 @@ class DeleteBooking(LoginRequiredMixin, DeleteView):
         queryset = super().get_queryset()
         return queryset.filter(tenant=self.request.user)
 
+
+
 class RequestToLeave(LoginRequiredMixin, CreateView):
     model = LeaveRequests
     template_name = 'atlass/leaverequests_form.html'

@@ -8,10 +8,11 @@
       <th scope="col">Phone</th>
       <th scope="col">Purpose</th>
       <th scope="col">Date</th>
+      <th scope="col">Accept</th>
     </tr>
   </thead>
   <tbody>
-    {% for leave_req in pending_approvals %}
+    {% for leave_req in pendings %}
     <tr>
       <th scope="row">{{leave_req.room}}</th>
       <td>{{leave_req.your_course}}</td>
@@ -19,6 +20,7 @@
       <td>{{leave_req.phone_number}}</td>
       <td>{{leave_req.purpose}}</td>
       <td>{{leave_req.date_created}}</td>
+      <td><button class="btn btn-success" type="submit" id="approve">Approve</button></td>
     </tr>
     {% endfor %}
   </tbody>

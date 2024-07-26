@@ -1,11 +1,106 @@
-{% extends 'hostels/base.html' %}
+{% extends 'hostels/base.html' %} 
 {% load static %}
 {% load crispy_forms_tags %}
-
-
 {% block title %}Frequently asked questions{% endblock %}
 {% block content %}
-<section class="pb-5 user">
-    <p class="text-dark">Hi</p>
+<section class="pb-5 user bg-light">
+  <div class="row">
+    <h2 class="mb-3">Frequently Asked Questions.</h2>
+    <div class="col-md-10 mx-3 p-3">
+        <strong>How does the hostel booking app work?</strong>
+      <p class="bg-secondary bg-opacity-10 rounded p-2 border-start border-danger">
+        <span class="rounded-circle bg-danger bg-opacity-10 p-2">
+            <i class="fa-solid fa-circle-info"></i>
+        </span>
+        A booking can be made on the site in 3 steps. 
+        <ul>
+            <li>Create an account <a href="{% url 'register' %}">Sign up</a> and <a href="{% url 'login' %}" title="login">Log into</a> your account</li>
+            <li>Go to <a href="{% url 'rooms' %}">Hostels</a> and browse to select a hostel of your choice</li>
+            <li>On a mobile device, click one of the buttons with<button class="btn btn-sm btn-danger fw-bold p-2">Empty beds or with some number of beds left</button> and a room number to book. On a large screen, select from the right side bar.</li>
+        </ul>
+      </p>
+      <hr />
+      <strong>Is it safe to make hostel reservations through the app?</strong>
+      <p class="bg-secondary bg-opacity-10 rounded p-2 border-start border-danger">
+        <span class="rounded-circle bg-danger bg-opacity-10 p-2">
+            <i class="fa-solid fa-circle-info"></i>
+        </span>
+        Yes, a booking through our site is very safe. We enter into agreement with schools we operate so you can easily visit us to sort you out.
+      </p>
+      <hr />
+      <strong>What information do I need to provide when making a booking?</strong>
+      <p class="bg-secondary bg-opacity-10 rounded p-2 border-start border-danger">
+        <span class="rounded-circle bg-danger bg-opacity-10 p-2">
+            <i class="fa-solid fa-circle-info"></i>
+        </span
+        >You will need your phone number, your full name and emmergency contact, you will need your UIN
+      </p>
+      <hr />
+      <strong>Are there any fees associated with using the app?</strong>
+      <p class="bg-secondary bg-opacity-10 rounded p-2 border-start border-danger">
+        <span class="rounded-circle bg-danger bg-opacity-10 p-2">
+            <i class="fa-solid fa-circle-info"></i>
+        </span>There is a small commission that is being charged to keep the site running and providing benefits to students.
+      </p>
+      <hr />
+      <strong>Can I see photos and reviews of the hostels before booking?</strong>
+      <p class="bg-secondary bg-opacity-10 rounded p-2 border-start border-danger">
+        <span class="rounded-circle bg-danger bg-opacity-10 p-2">
+            <i class="fa-solid fa-circle-info"></i>
+        </span>Yes. We take adequate pictures to upload to the site to help you make informed choices and the best decision. All pictures uploaded to the site are subjected to renewal every year to keep you updated.
+      </p>
+      <hr />
+      <strong>Is it possible to cancel or modify a booking?</strong>
+      <p class="bg-secondary bg-opacity-10 rounded p-2 border-start border-danger">
+        <span class="rounded-circle bg-danger bg-opacity-10 p-2">
+            <i class="fa-solid fa-circle-info"></i>
+        </span>Yes. You can delete a booking before making payments. After a payment is made, you may need to request for a refund from your landlord.
+      </p>
+      <hr />
+      <strong>How do I contact the hostel if I have questions or special requests?</strong>
+      <p class="bg-secondary bg-opacity-10 rounded p-2 border-start border-danger">
+        <span class="rounded-circle bg-danger bg-opacity-10 p-2">
+            <i class="fa-solid fa-circle-info"></i>
+        </span>You can reach out to your landlord via call or email provided both on the site attached to his hostel or on the booking receipt that will be sent to your email.
+      </p>
+      <strong>What happens if I arrive late for my reservation?</strong>
+      <p class="bg-secondary bg-opacity-10 rounded p-2 border-start border-danger">
+        <span class="rounded-circle bg-danger bg-opacity-10 p-2">
+            <i class="fa-solid fa-circle-info"></i>
+        </span>You can call us anytime you arrive to come and take you to your hostel.
+      </p>
+      <strong>How far in advance can I make a booking?</strong>
+      <p class="bg-secondary bg-opacity-10 rounded p-2 border-start border-danger">
+        <span class="rounded-circle bg-danger bg-opacity-10 p-2">
+            <i class="fa-solid fa-circle-info"></i>
+        </span>Once there is a vacancy you can always make a booking.
+      </p>
+      <strong>Can I book hostels in multiple cities through the same app?</strong>
+      <p class="bg-secondary bg-opacity-10 rounded p-2 border-start border-danger">
+        <span class="rounded-circle bg-danger bg-opacity-10 p-2">
+            <i class="fa-solid fa-circle-info"></i>
+        </span>You can make booking in as many schools or cities as you want.
+      </p>
+      <strong>Can I leave a review of the hostel after my stay, and how does that work?</strong>
+      <p class="bg-secondary bg-opacity-10 rounded p-2 border-start border-danger">
+        <span class="rounded-circle bg-danger bg-opacity-10 p-2">
+            <i class="fa-solid fa-circle-info"></i>
+        </span>Yes, you can review the hostel you have stayed in to help prospective tenants to know what they are signing up for.
+      </p>
+      <strong>Is my personal information secure when using the app?</strong>
+      <p class="bg-secondary bg-opacity-10 rounded p-2 border-start border-danger">
+        <span class="rounded-circle bg-danger bg-opacity-10 p-2">
+            <i class="fa-solid fa-circle-info"></i>
+        </span>Yes, your data is securely transferred to our servers. Your information is secured with us.
+      </p>
+      <strong>What do I do if I encounter problems with the app while booking or checking in?</strong>
+      <p class="bg-secondary bg-opacity-10 rounded p-2 border-start border-danger">
+        <span class="rounded-circle bg-danger bg-opacity-10 p-2">
+            <i class="fa-solid fa-circle-info"></i>
+        </span>If they is any special challenge you face during the booking process kindly go <a href="{% url 'contact' %}" title="contact">contact us to report your issues.</a>
+      </p>
+    </div>
+  </div>
+  <i class="fa-solid fa-circle-question"></i>
 </section>
 {% endblock %}

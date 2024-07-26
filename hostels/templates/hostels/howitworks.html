@@ -1,7 +1,50 @@
 {% extends 'hostels/base.html' %}
+{% load static %}
 
 
-{% block title %}how it works{% endblock %}
+{% block title %}UNARCOM | Start earning today.{% endblock %}
 {% block content %}
-
+<section class="user">
+	<div class="container">
+		<p class="text-dark text-uppercase text-decoration-underline text-center fw-bolder mb-4">Create your own unarcom and start earning today!</p>
+		<div class="row">
+			<div class="col-md-6 p-3">
+				<h1 class="text-dark text-capitalize">1. You could earn today.</h1>
+				<p class="text-dark">Start your listing today with a few steps.</p>
+				<small>Sign up and stay aheard of your competitors</small>
+				<button class="btn btn-outline-secondary">Sign up</button>
+			</div>
+			<div class="col-md-6 text-center p-3">
+				<img src="{% static 'hostels/images/door-open-arrow.png' %}" class="img-fluid">
+			</div>
+		</div>
+		<hr>
+		<div class="row user">
+			<h1 class="text-dark text-capitalize">2. After signing up,</h1>
+			<div class="col-md-6 text-center p-3">
+				<img src="{% static 'hostels/images/realty-clipart.png' %}" class="img-fluid p-3">
+			</div>
+			<div class="col-md-6">
+				<p>On your dashboard, click <a href="{% url 'create' %}" role="button" class="btn btn-outline-secondary">Create property</a> </p>
+				<small class="d-block">Select the property type you want to create and start adding all the relevant information.</small>
+				<small class="d-block">When you are done, hit create, it will take you add rooms to your property.</<small>
+			</div>
+		</div>
+		<hr>
+		<div class="row user">
+			<div class="col-md-6 text-center">
+				<img src="{% static 'hostels/images/Flat-Shaded-Business-Woman.png' %}">
+			</div>
+			<div class="col-md-6">
+				<p>Now manage your property like a magic wand by unlocking the full potential of your admin dashboard.</p>
+				<a href="{% url 'management' %}" role="button" class="btn btn-outline-secondary">My admin dashboard</a>
+			</div>
+		</div>
+	</div>
+	<hr>
+	<div class="text-center user">
+		<p class="lead fw-bolder">Still confuse?</p>
+		<a href="{% url 'contact' %}" role="button" class="btn btn-outline-secondary">Contact our support team</a>
+	</div>
+</section>
 {% endblock %}

@@ -1,21 +1,25 @@
 <p class="text-center fw-bolder text-secondary text-decoration-underline">Vacant Rooms.</p>
-<table class="table table-success table-striped table-hover table-bordered vacant" id="vacancies">
+<div class="table-responsive">
+  <table class="table table-sm table-light table-hover vacant" id="vacancies">
   <thead>
     <tr>
       <th scope="col">Room Type</th>
       <th scope="col">Room Number</th>
-      <th scope="col">Room Status</th>
+      <th scope="col">Total Beds</th>
+      <th scope="col">Beds Left</th>
       <th scope="col">Price</th>
     </tr>
   </thead>
   <tbody>
-    {% for room in vacancies %}
+    {% for room in rooms %}
     <tr>
-      <th scope="row">{{room.room_type}}</th>
+      <td>{{room.room_type}}</th>
       <td>{{room.room_number}}</td>
+      <td>{{room.room_type.max_capacity}} beds</td>
       <td>{% if not room.capacity == 0 %} {{room.capacity}} (bed)s {% else %} Full {% endif %}</td>
-      <td>GHS{{room.cost_per_head}}.00</td>
+      <td>GHS{{room.original_amount}}</td>
     </tr>
     {% endfor %}
   </tbody>
 </table>
+</div>

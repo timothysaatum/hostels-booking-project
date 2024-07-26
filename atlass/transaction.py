@@ -8,10 +8,12 @@ class Paystack:
 
     def verify_payment(self, ref, *args, **kwargs):
         path = f'transaction/verify/{ref}'
+        
         headers = {
             "Authorization": f"Bearer {self.PAYSTACK_SK}",
             "Content-Type": "application/json",
         }
+
         url = self.base_url + path
         response = requests.get(url, headers=headers)
 
@@ -35,10 +37,11 @@ class Xerxes:
         }
 
         
-    def __init__(self, amount=None, account_number=None, RECIPIENT_CODE=None, TRANSFER_CODE=None, REFERENCE=None, hostel=None):
+    def __init__(self, amount=None, account_number=None, account_name=None, RECIPIENT_CODE=None, TRANSFER_CODE=None, REFERENCE=None, hostel=None):
         
         self.amount = amount
         self.account_number = account_number
+        self.account_name = account_name
         self.hostel = hostel
         self.TRANSFER_CODE = RECIPIENT_CODE
         self.TRANSFER_CODE = TRANSFER_CODE
@@ -51,10 +54,17 @@ class Xerxes:
 
         #verif_acc = requests.post('https://api.paystack.co/bank/resolve?account_number=0594438287&bank_code=MTN', headers=self.headers)
         #print(f'code: {verif_acc}')
+        banks_url="https://api.paystack.co/bank"
+
+        bank_code = requests.get(banks_url, f'Authorization: {self.SECRET_KEY}')
+
+        print(bank_code.json())
+
+        #BLP9yzThAkqcjN3
 
         data = { 
             "type": "mobile_money",
-            "name": "Timoth Saatum",
+            "name": self.account_name,
             "account_number": self.account_number,
             "bank_code": "MTN",
             "currency": "GHS"
@@ -65,6 +75,7 @@ class Xerxes:
         try:
             response = requests.post(recipient_create_url, headers=self.headers, json=data)
             recipient_data =response.json()
+            print(recipient_data)
             self.RECIPIENT_CODE = recipient_data['data']['recipient_code']
         except Exception as e:
             raise e
