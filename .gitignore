@@ -1,0 +1,28 @@
+# ---- Django specific ----
+*.sqlite3
+*.db
+
+# Media uploads
+/media/
+
+# Collected static files
+/static/
+
+# ---- Environment variables ----
+.env
+
+# ---- Python specific ----
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+
+# ---- IDE/editor ----
+.vscode/
+.idea/
+*.swp
