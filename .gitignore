@@ -5,8 +5,6 @@
 # Media uploads
 /media/
 
-# Collected static files
-/static/
 
 # ---- Environment variables ----
 .env
