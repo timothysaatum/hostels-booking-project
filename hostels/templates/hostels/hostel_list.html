@@ -1,258 +1,517 @@
 {% extends 'hostels/base.html' %}
 {% load static %}
 
-{% block title %}Students Hostels{% endblock %}
-{% block navbar %}
-<!--navbar for the various available schools-->
-<section class="bg-light bg-onscroll fixed-top">
-    <nav>
-        <div class="container-fluid d-flex justify-content-between p-3 mx-1">
-            <div class="col-md-1 d-flex align-items-center">
-                <a href="{% url 'home' %}" class="nav-brand"><img src="{% static 'hostels/images/unarcom.jpg' %}" alt="unarcom logo"
-                        class="img-fluid icon-radius"></a>
-            </div>
-            <div class="col-md-5 col-lg-3 py-1 col-sm-12 d-flex justify-content-between bg-light shadow-lg nav-border">
-                <button class="btn btn-sm btn-light border-end fw-bolder btn-border">
-                    Apartments</button>
-                <button class="btn btn-sm btn-light border-end fw-bolder btn-border">
-                    Lands</button>
-                <button class="btn btn-sm btn-pink btn-border"><i
-                        class="fa-solid fa-magnifying-glass text-light"></i></button>
-            </div>
-            <div class="col-3 d-none d-lg-block d-sm-block d-flex justify-content-between">
-                <a href="{% url 'booking-details' %}" class="text-dark mx-2">My Rent <span><i
-                            class="fa-solid fa-house"></i></span></a>
-                <button class="nav-border text-dark border btn-sm" id="account">
-                    <span><i class="fa-solid fa-bars m-2"></i>
-                        <i class="fa-regular fa-user m-2"></i></span>
-                </button>
+{% block title %}Find Student Hostels - StudentStay{% endblock %}
+
+{% block extra_css %}
+<style>
+    .hero-section {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 120px 0 80px;
+        margin-top: -76px;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .hero-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url("data:image/svg+xml,%3csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3e%3cg fill='none' fill-rule='evenodd'%3e%3cg fill='%23ffffff' fill-opacity='0.1'%3e%3ccircle cx='7' cy='7' r='7'/%3e%3c/g%3e%3c/g%3e%3c/svg%3e") repeat;
+    }
+    
+    .hero-content {
+        position: relative;
+        z-index: 2;
+    }
+    
+    .search-card {
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        padding: 40px;
+        margin-top: 30px;
+    }
+    
+    .hostel-card {
+        border: none;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+        height: 100%;
+    }
+    
+    .hostel-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+    }
+    
+    .hostel-image {
+        height: 240px;
+        overflow: hidden;
+        position: relative;
+    }
+    
+    .hostel-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+    
+    .hostel-card:hover .hostel-image img {
+        transform: scale(1.05);
+    }
+    
+    .featured-badge {
+        position: absolute;
+        top: 15px;
+        left: 15px;
+        background: linear-gradient(45deg, #ff6b6b, #ee5a52);
+        color: white;
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+        z-index: 2;
+    }
+    
+    .hostel-content {
+        padding: 25px;
+    }
+    
+    .hostel-title {
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 8px;
+        color: #2c3e50;
+        line-height: 1.3;
+    }
+    
+    .hostel-location {
+        color: #7f8c8d;
+        font-size: 14px;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+    }
+    
+    .hostel-location i {
+        margin-right: 6px;
+    }
+    
+    .hostel-amenities {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 15px;
+    }
+    
+    .amenity-tag {
+        background: #f8f9fa;
+        color: #6c757d;
+        padding: 4px 8px;
+        border-radius: 12px;
+        font-size: 12px;
+    }
+    
+    .wifi-tag {
+        background: #e8f5e8;
+        color: #28a745;
+    }
+    
+    .hostel-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: 15px;
+        border-top: 1px solid #f1f2f6;
+    }
+    
+    .price-range {
+        font-size: 18px;
+        font-weight: 700;
+        color: #2c3e50;
+    }
+    
+    .rating {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+    
+    .rating-stars {
+        color: #ffc107;
+    }
+    
+    .rating-count {
+        color: #6c757d;
+        font-size: 14px;
+    }
+    
+    .filters-section {
+        background: #f8f9fa;
+        padding: 30px 0;
+        border-top: 1px solid #e9ecef;
+    }
+    
+    .filter-card {
+        background: white;
+        border-radius: 15px;
+        padding: 25px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    }
+    
+    .results-header {
+        background: white;
+        padding: 20px 0;
+        border-bottom: 1px solid #e9ecef;
+    }
+    
+    .view-toggle {
+        display: flex;
+        border-radius: 10px;
+        overflow: hidden;
+        border: 1px solid #e9ecef;
+    }
+    
+    .view-toggle button {
+        border: none;
+        padding: 8px 15px;
+        background: white;
+        color: #6c757d;
+        transition: all 0.3s ease;
+    }
+    
+    .view-toggle button.active {
+        background: #667eea;
+        color: white;
+    }
+    
+    @media (max-width: 768px) {
+        .hero-section {
+            padding: 100px 0 60px;
+        }
+        
+        .search-card {
+            padding: 25px;
+            margin: 20px;
+            border-radius: 15px;
+        }
+        
+        .hostel-card {
+            margin-bottom: 20px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 text-center hero-content">
+                <h1 class="display-4 fw-bold mb-4">Find Your Perfect Student Hostel</h1>
+                <p class="lead mb-4">Discover safe, affordable, and comfortable accommodation near your campus</p>
+                
+                <!-- Search Form -->
+                <div class="search-card">
+                    <form method="get" class="row g-3">
+                        <div class="col-md-4">
+                            <input type="text" name="search" class="form-control form-control-lg" 
+                                   placeholder="Search hostels..." value="{{ current_search }}">
+                        </div>
+                        <div class="col-md-3">
+                            <select name="school" class="form-select form-select-lg">
+                                <option value="">All Schools</option>
+                                {% for school in schools %}
+                                    <option value="{{ school.id }}" 
+                                            {% if current_school == school.id|stringformat:"s" %}selected{% endif %}>
+                                        {{ school.name }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <select name="sort" class="form-select form-select-lg">
+                                <option value="-is_featured" {% if current_sort == "-is_featured" %}selected{% endif %}>Featured First</option>
+                                <option value="price_low" {% if current_sort == "price_low" %}selected{% endif %}>Price: Low to High</option>
+                                <option value="price_high" {% if current_sort == "price_high" %}selected{% endif %}>Price: High to Low</option>
+                                <option value="-rating" {% if current_sort == "-rating" %}selected{% endif %}>Highest Rated</option>
+                                <option value="-created_at" {% if current_sort == "-created_at" %}selected{% endif %}>Newest</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <button type="submit" class="btn btn-primary btn-lg w-100">
+                                <i class="fas fa-search me-2"></i>Search
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
-    </nav>
-    <div class="container-fluid mx-1 border-bottom">
-        <!--
-        <div class="d-flex align-items-center">
-            <div class="flex-shrink-0">
-                <a href="#javascript(void)" class="btn-left btn-link p-2 toggle text-dark"><i
-                        class="fa-solid fa-circle-chevron-left"></i></a>
-            </div>
-            <div class="flex-grow-1 w-100 o-hidden">
-                <ul
-                    class="nav nav-fill text-uppercase small position-relative flex-nowrap text-dark font-color fw-bolder">
-                    <li class="nav-item">
-                        <input class="nav-link fw-bold text-uppercase text-dark" type="button" name="business"
-                            value="business" id="business">
-                    </li>
-                    <li class="nav-item">
-                        <input class="nav-link fw-bold text-uppercase text-dark" type="button" name="uds" value="uds"
-                            id="uds">
-                    </li>
-                    <li class="nav-item">
-                        <input class="nav-link fw-bold text-uppercase text-dark" type="button" name="knust"
-                            value="knust" id="knust">
-                    </li>
-                    <li class="nav-item">
-                        <input class="nav-link fw-bold text-uppercase text-dark" type="button" name="uhas" value="uhas"
-                            id="uhas">
-                    </li>
-                    <li class="nav-item">
-                        <input class="nav-link fw-bold text-uppercase text-dark" type="button" name="uenr" value="uenr"
-                            id="uenr">
-                    </li>
-                    <li class="nav-item">
-                        <input class="nav-link fw-bold text-uppercase text-dark" type="button" name="legon"
-                            value="legon" id="legon">
-                    </li>
-                    <li class="nav-item">
-                        <input class="nav-link fw-bold text-uppercase text-dark" type="button" name="ucc" value="ucc"
-                            id="ucc">
-                    </li>
-                    <li class="nav-item">
-                        <input class="nav-link fw-bold text-uppercase text-dark" type="button" name="stu" value="stu"
-                            id="stu">
-                    </li>
-                    <li class="nav-item">
-                        <input class="nav-link fw-bold text-uppercase text-dark" type="button" name="ubids"
-                            value="ubids" id="ubids">
-                    </li>
-                    <li class="nav-item">
-                        <input class="nav-link fw-bold text-uppercase text-dark" type="button" name="cktedam"
-                            value="cktedam" id="cktedam">
-                    </li>
-                    <li class="nav-item">
-                        <input class="nav-link fw-bold text-uppercase text-dark" type="button" name="tatco"
-                            value="tatco" id="tatco">
-                    </li>
-                    <li class="nav-item">
-                        <input class="nav-link fw-bold text-uppercase text-dark" type="button" name="batco"
-                            value="batco" id="batco">
-                    </li>
-                </ul>
-            </div>
-            <div class="flex-shrink-0">
-                <a href="#javascript(void)" class="btn-right btn-link toggle p-2 text-dark"><i
-                        class="fa-solid fa-circle-chevron-right"></i></a>
-            </div>
-        </div>
-    -->
-    <div class="row">
-    <div class="col-12">
-      <div class="d-md-block d-none mt-5">
-        <!-- <nav class="navbar mx-auto bg-light">
-          <div class="container-fluid">
-            <div>
-              <button class="btn btn-primary">link-1</button>
-            </div>
-            <div>
-              <button class="btn btn-primary">link-2</button>
-            </div>
-            <div>
-              <button class="btn btn-primary">link-3</button>
-            </div>
-            <div>
-              <button class="btn btn-primary">link-4</button>
-            </div>
-            <div>
-              <button class="btn btn-primary">link-5</button>
-            </div>
-            <div>
-              <button class="btn btn-primary">link-6</button>
-            </div>
-            <div>
-              <button class="btn btn-primary">link-7</button>
-            </div>
-            <div>
-              <button class="btn btn-primary">link-8</button>
-            </div>
-            <div>
-              <button class="btn btn-primary">link-9</button>
-            </div>
-          </div>
-        </nav>
-      </div> -->
-      <!-- slider nav is shown at "md" and below resolutions -->
-      <!-- <div class="d-md-none mt-5">
-        <div class="swiper mySwiper">
-          <div class="swiper-wrapper">
-
-            <button class="swiper-slide btn btn-primary">link-1</button>
-
-            <button class="swiper-slide btn btn-primary">link-2</button>
-
-            <button class="swiper-slide btn btn-primary">link-3</button>
-
-            <button class="swiper-slide btn btn-primary">link-4</button>
-
-            <button class="swiper-slide btn btn-primary">link-5</button>
-
-            <button class="swiper-slide btn btn-primary">link-6</button>
-
-            <button class="swiper-slide btn btn-primary">link-7</button>
-
-            <button class="swiper-slide btn btn-primary">link-8</button>
-
-            <button class="swiper-slide btn btn-primary">link-9</button>
-
-          </div>
-          <div class="swiper-button-next"></div>
-          <div class="swiper-button-prev"></div>
-        </div>
-
-      </div> -->
-    </div>
-  </div>
-</div>
     </div>
 </section>
-{% endblock navbar %}
-{% block content %}
-<section class="room-mt bg-light shadow">
-    <div class="container d-flex justify-content-between align-items-center">
-        <h2 class="text-capitalize mb-2">Students accommodation</h2>
-        <button class="btn btn-sm btn-outline h7 py-1" role="button" type="button"><i
-                class="fa-solid fa-sliders fa-2x"></i></button>
-    </div>
-    <hr>
+
+<!-- Filters Section -->
+<section class="filters-section">
     <div class="container">
-        <div class="row d-flex justify-content-between">
-            <!--{% include 'hostels/results.html' %}-->
-            {% for hostel in hostels %}
-            {% if not hostel.no_of_rooms == 0 %}
-            <div class="col-md-6 col-lg-3 mb-4 g-font d-flex justify-content-center border border-light-subtle rounded p-1" data-aos="fade-up">
-                <a href="{% url 'hostel-details' hostel.pk hostel.hostel_name %}">
-                    <img src="{{hostel.display_image.url}}" class="round img-fluid">
-                    <div class="d-flex justify-content-between pb-0 mb-0">
-                        <p class="text-start fw-bold text-capitalize text-dark">{{hostel.school.name}}, {{hostel.hostel_name}}</p>
-                        <span><i class="fa-regular fa-star text-danger"></i>4.5</span>
+        <div class="filter-card">
+            <form method="get" id="filterForm">
+                <!-- Keep search and sort values -->
+                <input type="hidden" name="search" value="{{ current_search }}">
+                <input type="hidden" name="sort" value="{{ current_sort }}">
+                <input type="hidden" name="school" value="{{ current_school }}">
+                
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <label class="form-label fw-semibold">Price Range</label>
+                        <div class="row g-2">
+                            <div class="col">
+                                <input type="number" name="min_price" class="form-control" 
+                                       placeholder="Min" value="{{ current_min_price }}" step="0.01">
+                            </div>
+                            <div class="col">
+                                <input type="number" name="max_price" class="form-control" 
+                                       placeholder="Max" value="{{ current_max_price }}" step="0.01">
+                            </div>
+                        </div>
                     </div>
-                    <small class="d-block text-start text-muted mt-2"><i class="fa-solid fa-person-walking text-danger"></i> {{hostel.get_dist}} walk to campus</small>
-                    <small class="d-block text-start text-muted mt-2"><i class="fa-regular fa-heart text-danger"></i> Stay with: {{hostel.owner_name}}</small>
-                    <small class="d-block text-start text-muted mt-2"><i class="fa-solid fa-coins text-danger"></i> GHS{{hostel.cost_range}}/year</small>
-                    <div class="text-center">
-                        <div class="bg-danger p-2 rounded bg-opacity-25">View Rooms<i class="fa-solid fa-chevron-right"></i></div>
+                    
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold">Amenities</label>
+                        <div class="row g-2">
+                            {% for amenity in amenities|slice:":6" %}
+                                <div class="col-6">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="amenities" 
+                                               value="{{ amenity.id }}" id="amenity{{ amenity.id }}"
+                                               {% if amenity.id|stringformat:"s" in current_amenities %}checked{% endif %}>
+                                        <label class="form-check-label" for="amenity{{ amenity.id }}">
+                                            {{ amenity.name }}
+                                        </label>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
                     </div>
-                </a>
-            </div>
-            {% else %}
-            <div class="container">
-                <p class="text-dark fw-bold">All rooms are fully booked. Check back in a few days</p>
-            </div>
-            {% endif %}
-            {% empty %}
-            <section>
-                <div class="container">
-                    <p class="text-dark fw-bold">No hostel available yet. Check back in a few days</p>
+                    
+                    <div class="col-md-3">
+                        <label class="form-label fw-semibold">Features</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="has_wifi" value="true" 
+                                   id="wifi" {% if current_wifi == "true" %}checked{% endif %}>
+                            <label class="form-check-label" for="wifi">
+                                <i class="fas fa-wifi me-2"></i>WiFi Available
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-2 d-flex align-items-end">
+                        <button type="submit" class="btn btn-outline-primary w-100">Apply Filters</button>
+                    </div>
                 </div>
-            </section>
-            {% endfor %}
+            </form>
         </div>
+    </div>
+</section>
+
+<!-- Results Header -->
+<section class="results-header">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <h5 class="mb-0">
+                    {{ page_obj.paginator.count }} hostel{{ page_obj.paginator.count|pluralize }} found
+                    {% if current_search %}for "{{ current_search }}"{% endif %}
+                </h5>
+            </div>
+            <div class="col-md-6 text-md-end">
+                <div class="d-flex align-items-center justify-content-md-end gap-3">
+                    <span class="text-muted">View:</span>
+                    <div class="view-toggle">
+                        <button type="button" class="active" data-view="grid">
+                            <i class="fas fa-th"></i>
+                        </button>
+                        <button type="button" data-view="list">
+                            <i class="fas fa-list"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Hostels Grid -->
+<section class="py-5">
+    <div class="container">
+        {% if hostels %}
+            <div class="row" id="hostelsGrid">
+                {% for hostel in hostels %}
+                    <div class="col-lg-4 col-md-6 mb-4">
+                        <div class="card hostel-card">
+                            <div class="hostel-image">
+                                {% if hostel.is_featured %}
+                                    <div class="featured-badge">
+                                        <i class="fas fa-star me-1"></i>Featured
+                                    </div>
+                                {% endif %}
+                                
+                                <img src="{% if hostel.main_image %}{{ hostel.main_image.url }}{% else %}{% static 'images/placeholder-hostel.jpg' %}{% endif %}" 
+                                     alt="{{ hostel.name }}" class="card-img-top">
+                            </div>
+                            
+                            <div class="hostel-content">
+                                <h5 class="hostel-title">{{ hostel.name }}</h5>
+                                <div class="hostel-location">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    {{ hostel.school.name }}, {{ hostel.school.city }}
+                                </div>
+                                
+                                <div class="hostel-amenities">
+                                    {% if hostel.has_wifi %}
+                                        <span class="amenity-tag wifi-tag">
+                                            <i class="fas fa-wifi me-1"></i>WiFi
+                                        </span>
+                                    {% endif %}
+                                    {% for amenity in hostel.amenities.all|slice:":3" %}
+                                        <span class="amenity-tag">{{ amenity.name }}</span>
+                                    {% endfor %}
+                                    {% if hostel.amenities.count > 3 %}
+                                        <span class="amenity-tag">+{{ hostel.amenities.count|add:"-3" }} more</span>
+                                    {% endif %}
+                                </div>
+                                
+                                <div class="hostel-footer">
+                                    <div class="price-range">
+                                        {{ hostel.price_range_display }}<small class="text-muted">/person</small>
+                                    </div>
+                                    
+                                    <div class="rating">
+                                        {% if hostel.rating > 0 %}
+                                            <span class="rating-stars">
+                                                {% for star in "12345"|make_list %}
+                                                    {% if forloop.counter <= hostel.rating %}
+                                                        <i class="fas fa-star"></i>
+                                                    {% else %}
+                                                        <i class="far fa-star"></i>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </span>
+                                            <span class="rating-count">({{ hostel.rating_count }})</span>
+                                        {% else %}
+                                            <span class="text-muted">New</span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                
+                                <div class="d-grid gap-2 mt-3">
+                                    <a href="{% url 'hostels:hostel-detail' hostel.slug %}" 
+                                       class="btn btn-primary">
+                                        View Details <i class="fas fa-arrow-right ms-2"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            
+            <!-- Pagination -->
+            {% if page_obj.has_other_pages %}
+                <div class="row">
+                    <div class="col-12">
+                        <nav aria-label="Hostels pagination">
+                            <ul class="pagination justify-content-center">
+                                {% if page_obj.has_previous %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value }}&{% endif %}{% endfor %}page={{ page_obj.previous_page_number }}">
+                                            <i class="fas fa-chevron-left"></i>
+                                        </a>
+                                    </li>
+                                {% endif %}
+                                
+                                {% for num in page_obj.paginator.page_range %}
+                                    {% if page_obj.number == num %}
+                                        <li class="page-item active">
+                                            <span class="page-link">{{ num }}</span>
+                                        </li>
+                                    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                                        <li class="page-item">
+                                            <a class="page-link" href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value }}&{% endif %}{% endfor %}page={{ num }}">{{ num }}</a>
+                                        </li>
+                                    {% endif %}
+                                {% endfor %}
+                                
+                                {% if page_obj.has_next %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value }}&{% endif %}{% endfor %}page={{ page_obj.next_page_number }}">
+                                            <i class="fas fa-chevron-right"></i>
+                                        </a>
+                                    </li>
+                                {% endif %}
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            {% endif %}
+        {% else %}
+            <!-- No Results -->
+            <div class="row">
+                <div class="col-12 text-center py-5">
+                    <div class="mb-4">
+                        <i class="fas fa-search fa-4x text-muted"></i>
+                    </div>
+                    <h3 class="text-muted">No hostels found</h3>
+                    <p class="text-muted">Try adjusting your search criteria or browse all available hostels.</p>
+                    <a href="{% url 'hostels:hostel_list' %}" class="btn btn-primary">
+                        <i class="fas fa-refresh me-2"></i>Clear Filters
+                    </a>
+                </div>
+            </div>
+        {% endif %}
     </div>
 </section>
 {% endblock %}
-{% block footer %}
-<section
-    class="border-top d-flex justify-content-between align-items-center px-sm-2 px-md-5 mt-2 footer-position bg-light">
-    <a href="{% url 'login' %}" class="text-dark"><i class="fa-regular fa-user m-2"></i>login / sign up <i
-            class="fa-solid fa-chevron-right"></i></a>
-    <a href="{% url 'privacy' %}" class="text-dark"><i class="fa-solid fa-user-shield"></i> privacy <i
-            class="fa-solid fa-chevron-right"></i></a>
-    <button class="btn btn-sm text-dark" id="footer" onclick="toggleContent()"><i
-            class="fa-solid fa-angle-up fa-2x"></i></button>
-</section>
-<section class="d-flex justify-content-between list-styl d-none" id="footer-content">
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-12 col-md-3">
-                <ul class="text-dark">
-                    <li>About</li>
-                    <li>About</li>
-                    <li>About</li>
-                    <li>About</li>
-                    <li>About</li>
-                    <li>About</li>
-                </ul>
-            </div>
-            <div class="col-sm-12 col-md-3">
-                <ul class="text-dark">
-                    <li>About</li>
-                    <li>About</li>
-                    <li>About</li>
-                    <li>About</li>
-                    <li>About</li>
-                    <li>About</li>
-                </ul>
-            </div>
-            <div class="col-sm-12 col-md-3">
-                <ul class="text-dark">
-                    <li>About</li>
-                    <li>About</li>
-                    <li>About</li>
-                    <li>About</li>
-                    <li>About</li>
-                    <li>About</li>
-                </ul>
-            </div>
-        </div>
-    </div>
-</section>
-{% endblock footer %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Auto-submit filter form when inputs change
+    const filterForm = document.getElementById('filterForm');
+    const filterInputs = filterForm.querySelectorAll('input, select');
+    
+    filterInputs.forEach(input => {
+        if (input.type === 'checkbox') {
+            input.addEventListener('change', () => {
+                setTimeout(() => filterForm.submit(), 300);
+            });
+        }
+    });
+    
+    // View toggle functionality
+    const viewButtons = document.querySelectorAll('[data-view]');
+    const hostelGrid = document.getElementById('hostelsGrid');
+    
+    viewButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            viewButtons.forEach(btn => btn.classList.remove('active'));
+            this.classList.add('active');
+            
+            if (this.dataset.view === 'list') {
+                hostelGrid.className = 'row row-cols-1';
+            } else {
+                hostelGrid.className = 'row';
+            }
+        });
+    });
+});
+</script>
+{% endblock %}

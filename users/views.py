@@ -53,7 +53,7 @@ class ComplainView(CreateView):
     model = Complain
     fields = ('subject', 'message')
     template_name = 'users/complains.html'
-    success_url = reverse_lazy('home')
+    success_url = reverse_lazy('hostels:home')
 
     def form_valid(self, form):
         form.instance.email = self.request.user.email
@@ -68,7 +68,7 @@ class ContactView(LoginRequiredMixin, CreateView):
     model = Contact
     fields = ('subject', 'message')
     template_name = 'users/contact.html'
-    success_url = reverse_lazy('home')
+    success_url = reverse_lazy('hostels:home')
 
     def form_valid(self, form):
         form.instance.email = self.request.user.email
@@ -80,10 +80,9 @@ class ContactView(LoginRequiredMixin, CreateView):
 
 def login_redirect(request):
     if request.user.has_a_hostel:
-        return redirect('management')
+        return redirect('hostels:home')
     else:
-        return redirect('rooms')
-    return auth_views.login(request)
+        return redirect('hostels:home')
 
 
 class DataHandlingView(TemplateView):

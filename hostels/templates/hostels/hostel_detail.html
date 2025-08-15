@@ -1,0 +1,839 @@
+{% extends 'hostels/base.html' %}
+{% load static %}
+
+{% block title %}{{ hostel.name }} - {{ hostel.school.name }} | StudentStay{% endblock %}
+
+{% block extra_css %}
+<style>
+    .property-hero {
+        height: 60vh;
+        min-height: 400px;
+        position: relative;
+        overflow: hidden;
+        background: #f8f9fa;
+    }
+    
+    .property-hero img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    
+    .hero-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(transparent, rgba(0,0,0,0.7));
+        color: white;
+        padding: 40px 0 30px;
+    }
+    
+    .property-nav {
+        background: white;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        position: sticky;
+        top: 76px;
+        z-index: 100;
+    }
+    
+    .nav-pills .nav-link {
+        color: #6c757d;
+        border-radius: 0;
+        border-bottom: 3px solid transparent;
+        background: none;
+        padding: 15px 20px;
+        transition: all 0.3s ease;
+    }
+    
+    .nav-pills .nav-link.active {
+        background: none;
+        color: #667eea;
+        border-bottom-color: #667eea;
+    }
+    
+    .property-section {
+        padding: 40px 0;
+        border-bottom: 1px solid #f1f2f6;
+    }
+    
+    .property-section:last-child {
+        border-bottom: none;
+    }
+    
+    .section-title {
+        font-size: 24px;
+        font-weight: 600;
+        margin-bottom: 20px;
+        color: #2c3e50;
+    }
+    
+    .room-type-card {
+        border: 2px solid #f1f2f6;
+        border-radius: 15px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        margin-bottom: 20px;
+    }
+    
+    .room-type-card:hover {
+        border-color: #667eea;
+        box-shadow: 0 10px 30px rgba(102, 126, 234, 0.1);
+    }
+    
+    .room-image {
+        height: 200px;
+        overflow: hidden;
+        position: relative;
+    }
+    
+    .room-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    
+    .room-content {
+        padding: 20px;
+    }
+    
+    .room-title {
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 10px;
+        color: #2c3e50;
+    }
+    
+    .room-features {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin: 15px 0;
+    }
+    
+    .feature-tag {
+        background: #e8f4f8;
+        color: #0ea5e9;
+        padding: 4px 10px;
+        border-radius: 15px;
+        font-size: 12px;
+        font-weight: 500;
+    }
+    
+    .room-price {
+        font-size: 24px;
+        font-weight: 700;
+        color: #2c3e50;
+    }
+    
+    .price-period {
+        font-size: 14px;
+        color: #6c757d;
+        font-weight: 400;
+    }
+    
+    .amenities-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+        margin: 20px 0;
+    }
+    
+    .amenity-item {
+        display: flex;
+        align-items: center;
+        padding: 12px;
+        background: #f8f9fa;
+        border-radius: 10px;
+        transition: all 0.3s ease;
+    }
+    
+    .amenity-item:hover {
+        background: #e9ecef;
+        transform: translateY(-2px);
+    }
+    
+    .amenity-icon {
+        width: 40px;
+        height: 40px;
+        background: #667eea;
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 12px;
+        flex-shrink: 0;
+    }
+    
+    .contact-sidebar {
+        position: sticky;
+        top: 120px;
+    }
+    
+    .contact-card {
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        padding: 30px;
+        margin-bottom: 20px;
+    }
+    
+    .owner-info {
+        text-align: center;
+        margin-bottom: 25px;
+        padding-bottom: 25px;
+        border-bottom: 1px solid #f1f2f6;
+    }
+    
+    .owner-avatar {
+        width: 80px;
+        height: 80px;
+        background: linear-gradient(45deg, #667eea, #764ba2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 24px;
+        font-weight: 600;
+        margin: 0 auto 15px;
+    }
+    
+    .contact-form {
+        background: #f8f9fa;
+        border-radius: 15px;
+        padding: 25px;
+    }
+    
+    .gallery-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 15px;
+        margin: 20px 0;
+    }
+    
+    .gallery-item {
+        aspect-ratio: 4/3;
+        border-radius: 10px;
+        overflow: hidden;
+        cursor: pointer;
+        transition: transform 0.3s ease;
+    }
+    
+    .gallery-item:hover {
+        transform: scale(1.05);
+    }
+    
+    .gallery-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    
+    .location-map {
+        height: 300px;
+        border-radius: 15px;
+        overflow: hidden;
+        background: #f8f9fa;
+        border: 1px solid #e9ecef;
+        margin: 20px 0;
+    }
+    
+    .contact-btn {
+        background: linear-gradient(45deg, #667eea, #764ba2);
+        border: none;
+        color: white;
+        font-weight: 600;
+        padding: 15px 30px;
+        border-radius: 50px;
+        transition: all 0.3s ease;
+    }
+    
+    .contact-btn:hover {
+        background: linear-gradient(45deg, #5a6fd8, #6a4190);
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        color: white;
+    }
+    
+    .similar-hostel-card {
+        border: none;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+        height: 100%;
+    }
+    
+    .similar-hostel-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    }
+    
+    @media (max-width: 768px) {
+        .property-hero {
+            height: 40vh;
+            min-height: 300px;
+        }
+        
+        .contact-sidebar {
+            position: static;
+            margin-top: 30px;
+        }
+        
+        .amenities-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .nav-pills .nav-link {
+            padding: 10px 15px;
+            font-size: 14px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Property Hero -->
+<section class="property-hero">
+    {% if hostel.main_image %}
+        <img src="{{ hostel.main_image.url }}" alt="{{ hostel.name }}">
+    {% else %}
+        <div class="d-flex align-items-center justify-content-center h-100 bg-light">
+            <div class="text-center text-muted">
+                <i class="fas fa-image fa-4x mb-3"></i>
+                <p>No image available</p>
+            </div>
+        </div>
+    {% endif %}
+    
+    <div class="hero-overlay">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item">
+                                <a href="{% url 'hostels:hostel_list' %}" class="text-white-50">Home</a>
+                            </li>
+                            <li class="breadcrumb-item">
+                                <a href="{% url 'hostels:hostel_list' %}?school={{ hostel.school.id }}" class="text-white-50">
+                                    {{ hostel.school.name }}
+                                </a>
+                            </li>
+                            <li class="breadcrumb-item active text-white" aria-current="page">
+                                {{ hostel.name }}
+                            </li>
+                        </ol>
+                    </nav>
+                    
+                    <h1 class="display-5 fw-bold mb-3">{{ hostel.name }}</h1>
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="fas fa-map-marker-alt me-2"></i>
+                        <span>{{ hostel.address }}</span>
+                    </div>
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-university me-2"></i>
+                            <span>{{ hostel.school.name }}, {{ hostel.school.city }}</span>
+                        </div>
+                        {% if hostel.rating > 0 %}
+                            <div class="d-flex align-items-center">
+                                <div class="text-warning me-2">
+                                    {% for star in "12345"|make_list %}
+                                        {% if forloop.counter <= hostel.rating %}
+                                            <i class="fas fa-star"></i>
+                                        {% else %}
+                                            <i class="far fa-star"></i>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                                <span>({{ hostel.rating_count }} reviews)</span>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Navigation Tabs -->
+<nav class="property-nav">
+    <div class="container">
+        <ul class="nav nav-pills" id="propertyTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="overview-tab" data-bs-toggle="pill" 
+                        data-bs-target="#overview" type="button" role="tab">
+                    <i class="fas fa-home me-2"></i>Overview
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="rooms-tab" data-bs-toggle="pill" 
+                        data-bs-target="#rooms" type="button" role="tab">
+                    <i class="fas fa-bed me-2"></i>Room Types
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="amenities-tab" data-bs-toggle="pill" 
+                        data-bs-target="#amenities" type="button" role="tab">
+                    <i class="fas fa-star me-2"></i>Amenities
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="gallery-tab" data-bs-toggle="pill" 
+                        data-bs-target="#gallery" type="button" role="tab">
+                    <i class="fas fa-images me-2"></i>Gallery
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="location-tab" data-bs-toggle="pill" 
+                        data-bs-target="#location" type="button" role="tab">
+                    <i class="fas fa-map-marker-alt me-2"></i>Location
+                </button>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<!-- Main Content -->
+<div class="container my-5">
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="tab-content" id="propertyTabContent">
+                <!-- Overview Tab -->
+                <div class="tab-pane fade show active" id="overview" role="tabpanel">
+                    <section class="property-section">
+                        <h2 class="section-title">About {{ hostel.name }}</h2>
+                        <div class="description">
+                            {{ hostel.description|safe }}
+                        </div>
+                        
+                        <div class="row mt-4">
+                            <div class="col-md-6">
+                                <div class="info-card p-3 bg-light rounded">
+                                    <h6><i class="fas fa-door-open me-2 text-primary"></i>Total Rooms</h6>
+                                    <p class="mb-0 fw-semibold">{{ hostel.total_rooms }} rooms</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="info-card p-3 bg-light rounded">
+                                    <h6><i class="fas fa-users me-2 text-success"></i>Available Spots</h6>
+                                    <p class="mb-0 fw-semibold">{{ hostel.available_rooms }} spots</p>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+                
+                <!-- Room Types Tab -->
+                <div class="tab-pane fade" id="rooms" role="tabpanel">
+                    <section class="property-section">
+                        <h2 class="section-title">Available Room Types</h2>
+                        
+                        {% if hostel.room_types.all %}
+                            <div class="row">
+                                {% for room_type in hostel.room_types.all %}
+                                    <div class="col-lg-6 mb-4">
+                                        <div class="room-type-card">
+                                            <div class="room-image">
+                                                {% if room_type.main_image %}
+                                                    <img src="{{ room_type.main_image.url }}" alt="{{ room_type.name }}">
+                                                {% else %}
+                                                    <div class="d-flex align-items-center justify-content-center h-100 bg-light">
+                                                        <i class="fas fa-bed fa-3x text-muted"></i>
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                            
+                                            <div class="room-content">
+                                                <h4 class="room-title">{{ room_type.name }}</h4>
+                                                <p class="text-muted mb-2">
+                                                    {{ room_type.get_room_type_display }} • 
+                                                    {{ room_type.total_rooms }} rooms available
+                                                </p>
+                                                
+                                                {% if room_type.feature_list %}
+                                                    <div class="room-features">
+                                                        {% for feature, icon in room_type.feature_list %}
+                                                            <span class="feature-tag">
+                                                                <i class="fas {{ icon }} me-1"></i>{{ feature }}
+                                                            </span>
+                                                        {% endfor %}
+                                                    </div>
+                                                {% endif %}
+                                                
+                                                <div class="d-flex justify-content-between align-items-center mt-3">
+                                                    <div class="room-price">
+                                                        GHS{{ room_type.price_per_person|floatformat:0 }}/yr
+                                                        <!-- <span class="price-period">per</span> -->
+                                                    </div>
+                                                    <div class="text-success">
+                                                        <i class="fas fa-check-circle me-1"></i>
+                                                        {{ room_type.get_available_rooms|length }} available
+                                                    </div>
+                                                </div>
+                                                
+                                                {% if room_type.description %}
+                                                    <div class="mt-3">
+                                                        <small class="text-muted">{{ room_type.description|safe|truncatewords:20 }}</small>
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <div class="text-center py-5">
+                                <i class="fas fa-bed fa-4x text-muted mb-3"></i>
+                                <h5 class="text-muted">No room types available</h5>
+                                <p class="text-muted">Room information is being updated.</p>
+                            </div>
+                        {% endif %}
+                    </section>
+                </div>
+                
+                <!-- Amenities Tab -->
+                <div class="tab-pane fade" id="amenities" role="tabpanel">
+                    <section class="property-section">
+                        <h2 class="section-title">Hostel Amenities</h2>
+                        
+                        {% if hostel.amenities.all or hostel.has_wifi %}
+                            <div class="amenities-grid">
+                                {% if hostel.has_wifi %}
+                                    <div class="amenity-item">
+                                        <div class="amenity-icon">
+                                            <i class="fas fa-wifi"></i>
+                                        </div>
+                                        <div>
+                                            <h6 class="mb-1">WiFi Internet</h6>
+                                            <small class="text-muted">Free high-speed internet</small>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                                
+                                {% for amenity in hostel.amenities.all %}
+                                    <div class="amenity-item">
+                                        <div class="amenity-icon">
+                                            <i class="{{ amenity.icon_class }}"></i>
+                                        </div>
+                                        <div>
+                                            <h6 class="mb-1">{{ amenity.name }}</h6>
+                                            <small class="text-muted">{{ amenity.get_category_display }} amenity</small>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <div class="text-center py-5">
+                                <i class="fas fa-star fa-4x text-muted mb-3"></i>
+                                <h5 class="text-muted">No amenities listed</h5>
+                                <p class="text-muted">Contact the hostel for more information about available facilities.</p>
+                            </div>
+                        {% endif %}
+                    </section>
+                </div>
+                
+                <!-- Gallery Tab -->
+                <div class="tab-pane fade" id="gallery" role="tabpanel">
+                    <section class="property-section">
+                        <h2 class="section-title">Photo Gallery</h2>
+                        
+                        {% if hostel.images.all %}
+                            <div class="gallery-grid">
+                                {% for image in hostel.images.all %}
+                                    <div class="gallery-item" data-bs-toggle="modal" data-bs-target="#galleryModal" 
+                                         data-image="{{ image.image.url }}" data-caption="{{ image.caption }}">
+                                        <img src="{{ image.image.url }}" alt="{{ image.caption }}">
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <div class="text-center py-5">
+                                <i class="fas fa-images fa-4x text-muted mb-3"></i>
+                                <h5 class="text-muted">No photos available</h5>
+                                <p class="text-muted">More photos will be added soon.</p>
+                            </div>
+                        {% endif %}
+                    </section>
+                </div>
+                
+                <!-- Location Tab -->
+                <div class="tab-pane fade" id="location" role="tabpanel">
+                    <section class="property-section">
+                        <h2 class="section-title">Location & Contact</h2>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h5>Address</h5>
+                                <p class="text-muted">{{ hostel.address }}</p>
+                                
+                                <h5 class="mt-4">Campus</h5>
+                                <p class="text-muted">{{ hostel.campus }}</p>
+                                
+                                <h5 class="mt-4">School</h5>
+                                <p class="text-muted">{{ hostel.school.name }}, {{ hostel.school.city }}</p>
+                                
+                                {% if hostel.coordinates %}
+                                    <h5 class="mt-4">Coordinates</h5>
+                                    <p class="text-muted">{{ hostel.coordinates }}</p>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6">
+                                <!-- Map placeholder -->
+                                <div class="location-map d-flex align-items-center justify-content-center">
+                                    <div class="text-center text-muted">
+                                        <i class="fas fa-map fa-3x mb-3"></i>
+                                        <p>Map integration coming soon</p>
+                                        {% if hostel.coordinates %}
+                                            <small>{{ hostel.coordinates }}</small>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Contact Sidebar -->
+        <div class="col-lg-4">
+            <div class="contact-sidebar">
+                <div class="contact-card">
+                    <div class="owner-info">
+                        <div class="owner-avatar">
+                            {{ hostel.owner_name|first|upper }}
+                        </div>
+                        <h5>{{ hostel.owner_name }}</h5>
+                        <p class="text-muted mb-0">Property Owner</p>
+                    </div>
+                    
+                    <div class="contact-options">
+                        <div class="mb-3">
+                            <strong>Phone:</strong>
+                            <p class="mb-0">{{ hostel.phone_number }}</p>
+                        </div>
+                        
+                        {% if hostel.email %}
+                            <div class="mb-3">
+                                <strong>Email:</strong>
+                                <p class="mb-0">{{ hostel.email }}</p>
+                            </div>
+                        {% endif %}
+                        
+                        <div class="mb-4">
+                            <strong>Price Range:</strong>
+                            <p class="mb-0 fs-5 fw-bold text-primary">{{ hostel.price_range_display }}</p>
+                            <small class="text-muted">per person/month</small>
+                        </div>
+                    </div>
+                    
+                    <div class="d-grid gap-2">
+                        <a href="tel:{{ hostel.phone_number }}" class="btn contact-btn btn-lg">
+                            <i class="fas fa-phone me-2"></i>Call Now
+                        </a>
+                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#inquiryModal">
+                            <i class="fas fa-envelope me-2"></i>Send Message
+                        </button>
+                    </div>
+                </div>
+                
+                {% if similar_hostels %}
+                    <div class="contact-card">
+                        <h5 class="mb-3">Similar Properties</h5>
+                        {% for similar in similar_hostels %}
+                            <div class="similar-hostel-card card mb-3">
+                                <div class="row g-0">
+                                    <div class="col-4">
+                                        <img src="{% if similar.main_image %}{{ similar.main_image.url }}{% else %}{% static 'images/placeholder-hostel.jpg' %}{% endif %}" 
+                                             class="img-fluid h-100" style="object-fit: cover;" alt="{{ similar.name }}">
+                                    </div>
+                                    <div class="col-8">
+                                        <div class="card-body p-2">
+                                            <h6 class="card-title mb-1">{{ similar.name|truncatechars:20 }}</h6>
+                                            <p class="card-text mb-1">
+                                                <small class="text-muted">{{ similar.price_range_display }}</small>
+                                            </p>
+                                            <a href="{% url 'hostels:hostel-detail' similar.slug %}" class="btn btn-sm btn-outline-primary">View</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Gallery Modal -->
+<div class="modal fade" id="galleryModal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body text-center p-0">
+                <img id="galleryModalImage" src="" class="img-fluid" alt="">
+                <div class="p-3">
+                    <p id="galleryModalCaption" class="mb-0 text-muted"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Inquiry Modal -->
+<div class="modal fade" id="inquiryModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Send Inquiry</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="inquiryForm" action="{% url 'hostels:contact-inquiry' hostel.slug %}" method="post">
+                <div class="modal-body">
+                    {% csrf_token %}
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            {{ contact_form.name }}
+                        </div>
+                        <div class="col-md-6">
+                            {{ contact_form.email }}
+                        </div>
+                        <div class="col-12">
+                            {{ contact_form.phone_number }}
+                        </div>
+                        <div class="col-md-6">
+                            {{ contact_form.school }}
+                        </div>
+                        <div class="col-md-6">
+                            {{ contact_form.room_type_interest }}
+                        </div>
+                        <div class="col-md-6">
+                            {{ contact_form.number_of_occupants }}
+                        </div>
+                        <div class="col-md-6">
+                            {{ contact_form.preferred_move_in_date }}
+                        </div>
+                        <div class="col-12">
+                            {{ contact_form.message }}
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Send Inquiry</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Gallery modal functionality
+    const galleryModal = document.getElementById('galleryModal');
+    const galleryItems = document.querySelectorAll('.gallery-item');
+    
+    galleryItems.forEach(item => {
+        item.addEventListener('click', function() {
+            const image = this.dataset.image;
+            const caption = this.dataset.caption;
+            
+            document.getElementById('galleryModalImage').src = image;
+            document.getElementById('galleryModalCaption').textContent = caption;
+        });
+    });
+    
+    // Initialize room type interest dropdown
+    const hostelId = {{ hostel.id }};
+    const roomTypeSelect = document.querySelector('select[name="room_type_interest"]');
+    if (roomTypeSelect) {
+        // Room types are already populated via the form
+    }
+    
+    // Smooth scrolling for navigation tabs
+    const navButtons = document.querySelectorAll('#propertyTabs button');
+    navButtons.forEach(button => {
+        button.addEventListener('shown.bs.tab', function() {
+            document.querySelector('.property-nav').scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        });
+    });
+    
+    // Form submission with AJAX
+    const inquiryForm = document.getElementById('inquiryForm');
+    inquiryForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const formData = new FormData(this);
+        const submitButton = this.querySelector('button[type="submit"]');
+        const originalText = submitButton.textContent;
+        
+        submitButton.disabled = true;
+        submitButton.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Sending...';
+        
+        fetch(this.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRFToken': formData.get('csrfmiddlewaretoken')
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Show success message
+                const alertDiv = document.createElement('div');
+                alertDiv.className = 'alert alert-success alert-dismissible fade show';
+                alertDiv.innerHTML = `
+                    <i class="fas fa-check-circle me-2"></i>
+                    ${data.message}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                `;
+                
+                document.querySelector('.container').insertAdjacentElement('afterbegin', alertDiv);
+                
+                // Close modal and reset form
+                bootstrap.Modal.getInstance(document.getElementById('inquiryModal')).hide();
+                inquiryForm.reset();
+                
+                // Auto dismiss alert after 5 seconds
+                setTimeout(() => {
+                    if (alertDiv && alertDiv.parentNode) {
+                        alertDiv.remove();
+                    }
+                }, 5000);
+            } else {
+                // Show error messages
+                Object.keys(data.errors).forEach(field => {
+                    const fieldElement = document.querySelector(`[name="${field}"]`);
+                    if (fieldElement) {
+                        fieldElement.classList.add('is-invalid');
+                        // You can add error message display here
+                    }
+                });
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred. Please try again.');
+        })
+        .finally(() => {
+            submitButton.disabled = false;
+            submitButton.textContent = originalText;
+        });
+    });
+});
+</script>
+{% endblock %}

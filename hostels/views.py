@@ -1,617 +1,457 @@
-from django.shortcuts import render, redirect, reverse
-from django.views.generic import ListView, DetailView, CreateView, TemplateView, DeleteView, UpdateView, View
-from .models import Hostel, RoomType, RoomTypeImages, Room, Amenities
-from atlass.models import Booking, Account, LeaveRequests
-from properties.models import Apartment, Property
-from django.contrib.auth import get_user_model
-from django.contrib.auth.decorators import login_required
-from .forms import BookingCreationForm, HostelCreationForm, RoomTypeCreationForm
-from django.utils.decorators import method_decorator
-from django.views.decorators.csrf import csrf_exempt
-from django.urls import reverse_lazy
-from django.http import JsonResponse
-from django.core import serializers
-from atlass.utils import send_email_with_transaction, create_pdf
-from atlass.transaction import Xerxes
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.conf import settings
-from django.core.exceptions import ObjectDoesNotExist
-import random
+from django.shortcuts import render, get_object_or_404, redirect
+from django.views.generic import (
+    ListView, DetailView, CreateView, UpdateView, DeleteView
+)
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib import messages
-from django.http import HttpResponse
-from .distance import find_ip_address
+from django.urls import reverse_lazy, reverse
+from django.db.models import Q, Prefetch
+from django.core.paginator import Paginator
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
+from django.db import transaction
+
+from .models import Hostel, RoomType, School, Amenity, HostelImage, RoomTypeImage, ContactInquiry
+from .forms import (
+    HostelCreateForm, HostelUpdateForm, RoomTypeForm, 
+    ContactInquiryForm, HostelImageFormSet, RoomTypeImageFormSet
+)
 
 
-
-
-
-user = get_user_model()
-
-
-class HomeView(ListView):
-
+class HostelListView(ListView):
+    """Public view for students to browse hostels"""
     model = Hostel
-
-    template_name = 'hostels/index.html'
-
-    context_object_name = 'hostels'
-
-    slug_url_kwarg = 'pk'
-
-    def get_context_data(self, **kwargs):
-
-        context = super(HomeView, self).get_context_data(**kwargs)
-
-        context['hostels'] = context['hostels'][0:12]
-
-        #context['apartments'] = Apartment.objects.all()[0:12]
-
-        #context['general_properties'] = Property.objects.all()[0:12]
-
-        ip = find_ip_address(self.request)
-
-        print(f'Your IP is: {ip}')
-
-        return context
-
-
-
-
-
-@method_decorator(csrf_exempt, name='dispatch')
-class HostelsListView(ListView):
-
-    model = Hostel
-
-    context_object_name = 'hostels'
-
     template_name = 'hostels/hostel_list.html'
+    context_object_name = 'hostels'
+    paginate_by = 12
 
-    slug_url_kwarg = 'pk'
-
-
-
-class RoomsListView(ListView):
-
-    model = RoomType
-
-    context_object_name = 'rooms'
-
-    template_name = 'hostels/room_list.html'
-
-    slug_url_kwarg = 'pk'
+    def get_queryset(self):
+        queryset = Hostel.active.all().with_stats()
+        
+        # Search functionality
+        search_query = self.request.GET.get('search')
+        if search_query:
+            queryset = queryset.search(search_query)
+        
+        # Filter by school
+        school_id = self.request.GET.get('school')
+        if school_id:
+            queryset = queryset.filter(school_id=school_id)
+        
+        # Filter by price range
+        min_price = self.request.GET.get('min_price')
+        max_price = self.request.GET.get('max_price')
+        if min_price:
+            queryset = queryset.filter(min_price__gte=min_price)
+        if max_price:
+            queryset = queryset.filter(max_price__lte=max_price)
+        
+        # Filter by amenities
+        amenities = self.request.GET.getlist('amenities')
+        if amenities:
+            queryset = queryset.filter(amenities__in=amenities).distinct()
+        
+        # Filter by wifi
+        has_wifi = self.request.GET.get('has_wifi')
+        if has_wifi == 'true':
+            queryset = queryset.filter(has_wifi=True)
+        
+        # Sorting
+        sort_by = self.request.GET.get('sort', '-is_featured')
+        if sort_by == 'price_low':
+            queryset = queryset.order_by('min_price')
+        elif sort_by == 'price_high':
+            queryset = queryset.order_by('-min_price')
+        elif sort_by == 'rating':
+            queryset = queryset.order_by('-rating')
+        elif sort_by == 'newest':
+            queryset = queryset.order_by('-created_at')
+        else:
+            queryset = queryset.order_by('-is_featured', '-created_at')
+        
+        return queryset
 
     def get_context_data(self, **kwargs):
-
-        context = super(RoomsListView, self).get_context_data(**kwargs)
-
-        context['room_type_list'] = RoomType.objects.filter(hostel_id=self.kwargs.get('pk'))
-
+        context = super().get_context_data(**kwargs)
+        context['schools'] = School.active.all()
+        context['amenities'] = Amenity.active.all()
+        
+        # Preserve filters in context
+        context['current_search'] = self.request.GET.get('search', '')
+        context['current_school'] = self.request.GET.get('school', '')
+        context['current_min_price'] = self.request.GET.get('min_price', '')
+        context['current_max_price'] = self.request.GET.get('max_price', '')
+        context['current_amenities'] = self.request.GET.getlist('amenities')
+        context['current_wifi'] = self.request.GET.get('has_wifi', '')
+        context['current_sort'] = self.request.GET.get('sort', '-is_featured')
+        
         return context
 
 
 class HostelDetailView(DetailView):
-
+    """Detailed view of a hostel for students"""
     model = Hostel
-
-    slug_url_kwarg = 'pk'
-
+    template_name = 'hostels/hostel_detail.html'
     context_object_name = 'hostel'
-
-    template_name = 'hostels/room_detail.html'
-
-    def get_context_data(self, **kwargs):
-
-        context = super(HostelDetailView, self).get_context_data(**kwargs)
-
-        hostel_id = self.kwargs.get('pk')
-
-        amenties = Amenities.objects.all()
-        #print(amenties)
-
-        context['rooms'] =  RoomType.objects.filter(hostel_id=hostel_id)
-
-        context['image_list'] = RoomTypeImages.objects.filter(room__hostel_id=hostel_id)
-
-        context['front_display'] = RoomTypeImages.objects.filter(room__hostel_id=hostel_id)[0:1]
-
-        context['spec_room'] = Room.objects.select_related('room_type').filter(room_type__hostel_id=hostel_id)
-        #print(context['hostel'].amenities.all())
-        return context
-
-"""
-class RoomDetailView(DetailView):
-
-    model = RoomType
-    slug_url_kwarg = 'pk'
-    context_object_name = 'room'
-
-    #template_name = 'hostels/room_detail.html'
-    def get_context_data(self, **kwargs):
-
-        context = super(RoomDetailView, self).get_context_data(**kwargs)
-        context['image_list'] = RoomTypeImages.objects.filter(room_id=self.kwargs.get('pk'))
-        context['front_display'] = RoomTypeImages.objects.filter(room_id=self.kwargs.get('pk'))[0:4]
-        context['spec_room'] = Room.objects.select_related('room_type').filter(room_type=self.kwargs.get('pk'))     
-        return context
-
-"""
-
-class Services(TemplateView):
-
-    template_name = 'hostels/services.html'
-
-
-
-class Mission(TemplateView):
-
-    template_name = 'hostels/mission.html'
-
-
-
-class HowItWorks(TemplateView):
-
-    template_name = 'hostels/howitworks.html'
-
-
-
-class AboutView(TemplateView):
-
-    template_name = 'hostels/about.html'
-
-
-
-
-@login_required
-def make_booking(request, pk, room_pk):
-
-    if request.method == 'POST':
-
-        form = BookingCreationForm(request.POST)
-        if form.is_valid():
-
-            phone_number = form.cleaned_data['phone_number']
-
-            first_name = form.cleaned_data['first_name']
-
-            last_name = form.cleaned_data['last_name']
-
-            email_address = form.cleaned_data['email_address']
-
-            city_or_town = form.cleaned_data['city_or_town']
-
-            university_identification_number = form.cleaned_data['university_identification_number']
-
-            region_of_residence = form.cleaned_data['region_of_residence']
-
-            digital_address = form.cleaned_data['digital_address']
-
-            gender = form.cleaned_data['gender']
-
-            number_of_guests = form.cleaned_data['number_of_guests']
-
-            check_in = form.cleaned_data['check_in']
-
-            receipt = str(random.randrange(0, 100)) + university_identification_number
-
-            room = Room.objects.get(pk=room_pk)
-
-            cost = room.room_type.cost_per_head * number_of_guests
-
-            bk = Booking.objects.filter(room_no=room.room_number).first()
-            print(bk)
-            if bk:
-
-                if (room.room_type == bk.room_type) and (bk.gender != gender):
-
-                    messages.error(request, f'A {gender} cannot book this room because it has a {bk.gender} occupant')
-                    
-                    return redirect('hostel-details', pk, room.room_type)
-
-                if room.capacity == 0:
-
-                    messages.error(request, f'({room.room_type}) cannot accept extra booking')
-                    
-                    return redirect('hostel-details', pk, room.room_type)
-
-            if number_of_guests > room.capacity:
-
-                messages.error(request, f'{number_of_guests} cannot book this room because is {room.room_type}')
-                    
-                return redirect('hostel-details', pk, room.room_type)
-
-
-            try:
-                booking = Booking.objects.create(room=room, tenant=request.user,
-                    phone_number=phone_number, room_type=room.room_type,check_in=check_in,
-                    cost=cost, number_of_guests=number_of_guests,
-                    room_no=room.room_number, first_name=first_name, last_name=last_name, 
-                    email_address=email_address,gender=gender, city_or_town=city_or_town, 
-                    university_identification_number=university_identification_number, 
-                    region_of_residence=region_of_residence, digital_address=digital_address,
-                    receipt_number=receipt
-                )
-
-            except Exception as e:
-
-                messages.error(request, f'{e}, contact support if the issue persists.')
-
-                return redirect('hostel-details', pk, room.room_type)
-
-            
-            #create an account for the user when they make a booking
-            acc = Account.objects.filter(user_id=request.user.id)
-            
-            #checking to see if user already have an account
-            if not acc:
-                Account.objects.create(user_id=request.user.id, hostel_id=booking.room_type.hostel.pk)
-
-            return redirect('book', booking.pk)
-    room = Room.objects.get(pk=room_pk)
-    
-    form = BookingCreationForm()
-
-    return render(request, 'hostels/booking_form.html', {'form': form, 'room':room})
-
-
-@login_required
-def make_payment(request, pk):
-
-    booking = Booking.objects.get(pk=pk)
-    key = settings.PAYSTACK_PUBLIC_KEY
-    
-    return render(request, 'hostels/make_payment.html', {'booking':booking, 'paystack_pub_key':key})
-
-
-@login_required
-def verify_booking(request, ref):
-
-    booking = Booking.objects.get(ref=ref)
-
-    verified = booking.verify_payment
-
-    if verified:
-
-        account = Account.objects.get(user=request.user)
-
-        account.balance += booking.cost
-
-        booking.is_verified = True
-
-        booking.save()
-
-        account.save()
-
-        #Get the account number for the hostel the user is booking
-        account_number = booking.get_account_number()
-        account_name = booking.account_name()
-
-        #transfering landlord's money after verifying payment
-        hostel_fee = booking.cost
-        print(hostel_fee)
-        account_number = account_number
-
-        hostel_fee = float(hostel_fee)
-
-
-        #calculating how much should be transferred to the landlord base on
-        #our commission rate of 4%
-        #this will be uncommented if we agreed a percentage later
-        #amount = (hostel_fee / 1.04) * 100
-        amount = hostel_fee * 100
-
-        hostel = booking.room_type.hostel
-        
-        #call transfer to take place
-        try:
-            xerxes = Xerxes(amount=amount, account_number=account_number, account_name=account_name, hostel=hostel)
-
-
-            #transferring landlords money
-            xerxes.create_recipient()
-
-            xerxes.initiate_transfer()
-
-            xerxes.finalize_transfer()
-
-            xerxes.verify_transfer()
-
-        except Exception as e:
-
-            messages.error(request, f'{e}, Instant cash transfer could not be initiated. Manually verification initiated.')
-        
-        finally:
-
-            #notify the user of the successful booking
-            recipient_list = [booking.email_address]
-        
-            #email subject
-            subject = 'Thank you for booking with us.'
-
-            #email body
-            body = f'''\n
-            Thank you for booking with us.
-            \n
-            Hostel:{booking.get_hostel()}
-            Room Type:{booking.room_type} 
-            Room No:{booking.room_no}
-            Receipt No:{booking.receipt_number}
-            \n
-            We are dedicated to giving you the best of treatment on campus.
-            We are excited to know you believe and trust in us to manage your accomodation proceedings
-            on campus.
-            Your hostel will be transfered to your landlord. Your room is now secured.
-            Find attach your receipt www.trustunarcom.com/booking/receipts/download/
-            Do not hesitate to reach out to us with your concerns, our team will respond immediately.
-            \n
-            Contact us when you are reporting.
-            Tel: 0594438287
-            Email: timothysaatum@gmail.com
-            WhatsApp: 0594438287
-            '''
-
-            send_email_with_transaction(subject, body, recipient_list)
-
-        messages.success(request, f'Your booking was successfully verified. Thank you')  
-
-        return redirect('home')
-
-    messages.error(request, f'Your booking could not be verified. You may have to re-book.')
-
-    return redirect('home')
-
-
-class CreateHostel(LoginRequiredMixin, CreateView):
-
-    model = Hostel
-
-    form_class = HostelCreationForm
-
-    success_url = reverse_lazy('room-create')
-
-    template_name = 'hostels/create.html'
-
-    def form_valid(self, form):
-
-        try:
-            
-            form.instance.created_by = self.request.user
-
-        except Exception as e:
-
-            raise e
-
-        return super().form_valid(form)
-
-
-
-class RoomTypeCreateView(LoginRequiredMixin, CreateView):
-
-    model = RoomType
-
-    form_class = RoomTypeCreationForm
-
-    success_url = reverse_lazy('room-create')
-
-    def form_valid(self, form):
-
-        list_room_numbers = form.cleaned_data['room_numbers'].split(',')
-
-        room_dict = {}
-
-        for val in range(len(list_room_numbers)):
-
-            room_dict_key = 'room' + str(val)
-
-            room_dict.update({room_dict_key:list_room_numbers[val]})
-        
-
-        #instantiating room values before saving
-        rel_host = Hostel.objects.filter(created_by=self.request.user).first()
-        form.instance.db_use_only = form.cleaned_data['room_type_number']
-
-        form.instance.max_capacity = form.cleaned_data['room_capacity']
-
-        form.instance.room_numbers = room_dict
-
-        form.instance.hostel = rel_host
-        form.instance.cost_per_head = float(form.cleaned_data['cost_per_head']) + float(50)#(float(form.cleaned_data['cost_per_head']) * 0.04)
-
-        return super().form_valid(form)
-
-
-
-class HostelDelete(LoginRequiredMixin, DeleteView):
-
-    model = Hostel
-
-    success_url = reverse_lazy('management')
+    slug_field = 'slug'
+    slug_url_kwarg = 'slug'
 
     def get_queryset(self):
+        return Hostel.active.all().select_related('school', 'owner').prefetch_related(
+            'amenities',
+            'images',
+            Prefetch('room_types', queryset=RoomType.objects.prefetch_related('images'))
+        )
 
-        queryset = super().get_queryset()
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['contact_form'] = ContactInquiryForm()
+        context['similar_hostels'] = Hostel.active.all().filter(
+            school=self.object.school
+        ).exclude(id=self.object.id)[:4]
+        return context
 
-        return queryset.filter(created_by=self.request.user)
 
-
-class HostelUpdate(LoginRequiredMixin, UpdateView):
-
+class HostelCreateView(LoginRequiredMixin, CreateView):
+    """Create new hostel - for authenticated users"""
     model = Hostel
+    form_class = HostelCreateForm
+    template_name = 'hostels/hostel_form.html'
 
-    template_name = 'hostels/update.html'
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if self.request.POST:
+            context['image_formset'] = HostelImageFormSet(self.request.POST, self.request.FILES)
+        else:
+            context['image_formset'] = HostelImageFormSet()
+        return context
 
-    fields = ['owner_name', 'school', 'campus', 'hostel_name', 'contact', 'display_image', 'no_of_rooms',
-                'hostel_coordinates', 'cost_range', 'duration_of_rent', 'wifi', 'amenities']
-
-
-    def get_queryset(self):
-
-        queryset = super().get_queryset()
-
-        return queryset.filter(created_by=self.request.user)
-
+    def form_valid(self, form):
+        context = self.get_context_data()
+        image_formset = context['image_formset']
+        
+        with transaction.atomic():
+            form.instance.owner = self.request.user
+            form.instance.owner_name = self.request.user.full_name or self.request.user.email
+            self.object = form.save()
+            
+            if image_formset.is_valid():
+                image_formset.instance = self.object
+                image_formset.save()
+        
+        messages.success(self.request, 'Hostel created successfully! Now add your room types.')
+        return super().form_valid(form)
 
     def get_success_url(self):
+        # Redirect to room type creation with a flag to indicate it's a new hostel
+        return reverse('hostels:roomtype-create', kwargs={'hostel_slug': self.object.slug}) + '?new_hostel=1'
 
-        return reverse('hostel-details', kwargs={'pk': self.object.pk, 'hostel':self.object.hostel_name})
+
+class HostelUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    """Update hostel - only for hostel owner"""
+    model = Hostel
+    form_class = HostelUpdateForm
+    template_name = 'hostels/hostel_update.html'
+    slug_field = 'slug'
+    slug_url_kwarg = 'slug'
+
+    def test_func(self):
+        return self.get_object().owner == self.request.user
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if self.request.POST:
+            context['image_formset'] = HostelImageFormSet(
+                self.request.POST, 
+                self.request.FILES, 
+                instance=self.object
+            )
+        else:
+            context['image_formset'] = HostelImageFormSet(instance=self.object)
+        return context
+
+    def form_valid(self, form):
+        context = self.get_context_data()
+        image_formset = context['image_formset']
+        
+        with transaction.atomic():
+            self.object = form.save()
+            
+            if image_formset.is_valid():
+                image_formset.save()
+        
+        messages.success(self.request, 'Hostel updated successfully!')
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse('hostels:hostel-detail', kwargs={'slug': self.object.slug})
+
+
+class HostelDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    """Delete hostel - only for hostel owner"""
+    model = Hostel
+    template_name = 'hostels/hostel_delete.html'
+    slug_field = 'slug'
+    slug_url_kwarg = 'slug'
+    success_url = reverse_lazy('hostels:dashboard')
+
+    def test_func(self):
+        return self.get_object().owner == self.request.user
+
+    def delete(self, request, *args, **kwargs):
+        messages.success(request, 'Hostel deleted successfully!')
+        return super().delete(request, *args, **kwargs)
+
+
+class RoomTypeCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
+    """Create room type for a hostel"""
+    model = RoomType
+    form_class = RoomTypeForm
+    template_name = 'hostels/roomtype_form.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        self.hostel = get_object_or_404(Hostel, slug=kwargs['hostel_slug'])
+        return super().dispatch(request, *args, **kwargs)
+
+    def test_func(self):
+        return self.hostel.owner == self.request.user
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['hostel'] = self.hostel
+        context['is_new_hostel'] = self.request.GET.get('new_hostel') == '1'
+        
+        if self.request.POST:
+            context['image_formset'] = RoomTypeImageFormSet(self.request.POST, self.request.FILES)
+        else:
+            context['image_formset'] = RoomTypeImageFormSet()
+        return context
+
+    def form_valid(self, form):
+        context = self.get_context_data()
+        image_formset = context['image_formset']
+        is_new_hostel = context['is_new_hostel']
+        
+        with transaction.atomic():
+            form.instance.hostel = self.hostel
+            self.object = form.save()
+            
+            if image_formset.is_valid():
+                image_formset.instance = self.object
+                image_formset.save()
+        
+        if is_new_hostel:
+            messages.success(
+                self.request, 
+                'Room type added successfully! You can add more room types or finish setup.'
+            )
+        else:
+            messages.success(self.request, 'Room type created successfully!')
+        
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        is_new_hostel = self.request.GET.get('new_hostel') == '1'
+        
+        if is_new_hostel:
+            # For new hostels, redirect to add another room type or finish
+            return reverse('hostels:roomtype-create', kwargs={'hostel_slug': self.hostel.slug}) + '?new_hostel=1&continue=1'
+        else:
+            return reverse('hostels:hostel-detail', kwargs={'slug': self.hostel.slug})
+
+
+class RoomTypeUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    """Update room type"""
+    model = RoomType
+    form_class = RoomTypeForm
+    template_name = 'hostels/roomtype_update.html'
+
+    def test_func(self):
+        return self.get_object().hostel.owner == self.request.user
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['hostel'] = self.object.hostel
+        if self.request.POST:
+            context['image_formset'] = RoomTypeImageFormSet(
+                self.request.POST, 
+                self.request.FILES, 
+                instance=self.object
+            )
+        else:
+            context['image_formset'] = RoomTypeImageFormSet(instance=self.object)
+        return context
+
+    def form_valid(self, form):
+        context = self.get_context_data()
+        image_formset = context['image_formset']
+        
+        with transaction.atomic():
+            self.object = form.save()
+            
+            if image_formset.is_valid():
+                image_formset.save()
+        
+        messages.success(self.request, 'Room type updated successfully!')
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse('hostels:hostel-detail', kwargs={'slug': self.object.hostel.slug})
+
+
+class RoomTypeDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    """Delete room type"""
+    model = RoomType
+    template_name = 'hostels/roomtype_delete.html'
+
+    def test_func(self):
+        return self.get_object().hostel.owner == self.request.user
+
+    def get_success_url(self):
+        return reverse('hostels:hostel-detail', kwargs={'slug': self.object.hostel.slug})
+
+    def delete(self, request, *args, **kwargs):
+        messages.success(request, 'Room type deleted successfully!')
+        return super().delete(request, *args, **kwargs)
+
+
+class DashboardView(LoginRequiredMixin, ListView):
+    """Owner dashboard to manage their hostels"""
+    template_name = 'hostels/dashboard.html'
+    context_object_name = 'hostels'
+    paginate_by = 10
+
+    def get_queryset(self):
+        return Hostel.objects.filter(owner=self.request.user).with_stats()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        # Get summary stats
+        user_hostels = Hostel.objects.filter(owner=self.request.user)
+        context['total_hostels'] = user_hostels.count()
+        context['total_inquiries'] = ContactInquiry.objects.filter(
+            hostel__owner=self.request.user
+        ).count()
+        context['new_inquiries'] = ContactInquiry.objects.filter(
+            hostel__owner=self.request.user,
+            status='new'
+        ).count()
+        
+        return context
+
+
+class ContactInquiryCreateView(CreateView):
+    """Create contact inquiry - AJAX view"""
+    model = ContactInquiry
+    form_class = ContactInquiryForm
+
+    def form_valid(self, form):
+        hostel = get_object_or_404(Hostel, slug=self.kwargs['hostel_slug'])
+        form.instance.hostel = hostel
+        
+        if self.request.user.is_authenticated:
+            form.instance.user = self.request.user
+        
+        self.object = form.save()
+        
+        if self.request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            return JsonResponse({
+                'success': True,
+                'message': 'Your inquiry has been sent successfully! The hostel owner will contact you soon.'
+            })
+        else:
+            messages.success(
+                self.request, 
+                'Your inquiry has been sent successfully! The hostel owner will contact you soon.'
+            )
+            return redirect('hostels:hostel-detail', slug=hostel.slug)
+
+    def form_invalid(self, form):
+        if self.request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            return JsonResponse({
+                'success': False,
+                'errors': form.errors
+            })
+        else:
+            return super().form_invalid(form)
+
+
+class InquiryListView(LoginRequiredMixin, ListView):
+    """List inquiries for hostel owner"""
+    model = ContactInquiry
+    template_name = 'hostels/inquiry_list.html'
+    context_object_name = 'inquiries'
+    paginate_by = 20
+
+    def get_queryset(self):
+        return ContactInquiry.objects.filter(
+            hostel__owner=self.request.user
+        ).select_related('hostel', 'room_type_interest', 'school')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        # Filter options
+        status_filter = self.request.GET.get('status')
+        if status_filter:
+            context['inquiries'] = context['inquiries'].filter(status=status_filter)
+        
+        context['status_choices'] = ContactInquiry.STATUS_CHOICES
+        context['current_status'] = status_filter
+        
+        return context
+
+
+@method_decorator(login_required, name='dispatch')
+class InquiryDetailView(DetailView):
+    """Detailed view of inquiry for owner"""
+    model = ContactInquiry
+    template_name = 'hostels/inquiry_detail.html'
+    context_object_name = 'inquiry'
+
+    def get_queryset(self):
+        return ContactInquiry.objects.filter(
+            hostel__owner=self.request.user
+        ).select_related('hostel', 'room_type_interest', 'school', 'user')
+
+
+@require_POST
+@login_required
+def mark_inquiry_contacted(request, inquiry_id):
+    """Mark inquiry as contacted"""
+    inquiry = get_object_or_404(
+        ContactInquiry, 
+        id=inquiry_id, 
+        hostel__owner=request.user
+    )
+    
+    inquiry.mark_as_contacted(user=request.user)
+    
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        return JsonResponse({'success': True})
+    else:
+        messages.success(request, 'Inquiry marked as contacted.')
+        return redirect('hostels:inquiry-detail', pk=inquiry.id)
 
 
 @login_required
-def user_dashboard(request):
-
-    dash = Booking.objects.filter(tenant=request.user)
-
-    return render(request, 'hostels/user_dashboard.html', {'dash':dash})
-
-
-class Management(LoginRequiredMixin, ListView):
-
-    model = Booking
-
-    slug_url_kwarg = 'pk'
-
-    context_object_name = 'bookings'
-
-    template_name = 'hostels/management.html'
-
-    def get_context_data(self, **kwargs):
-
-        context = super(Management, self).get_context_data(**kwargs)
-
-        context['bookings'] = Booking.objects.filter(room_type__hostel__created_by=self.request.user)
-
-        context['vacancies'] = Room.objects.filter(room_type__hostel__created_by=self.request.user).filter(is_full=False)
-
-        context['approved_leaves'] = LeaveRequests.objects.filter(room__room_type__hostel__created_by=self.request.user).filter(is_approved=True)
-        
-        context['pending_approvals'] = LeaveRequests.objects.filter(room__room_type__hostel__created_by=self.request.user).filter(is_approved=False)
-        
-        context['hostels'] = Hostel.objects.filter(created_by=self.request.user)
-        
-        return context
-
-
-
-
-class VacantRooms(LoginRequiredMixin, ListView):
-
-    model = Room
-
-    template_name = 'hostels/vacant_rooms.html'
-
-    context_object_name = 'rooms'
-
-    def get_context_data(self, **kwargs):
-
-        context = super(VacantRooms, self).get_context_data(**kwargs)
-
-        context['rooms'] = Room.objects.filter(room_type__hostel__created_by=self.request.user).filter(is_full=False)
-        
-        return context
-
-
-
-class BookingsView(LoginRequiredMixin, ListView):
-
-    model = Booking
+def finish_hostel_setup(request, hostel_slug):
+    """Complete hostel setup after adding room types"""
+    hostel = get_object_or_404(Hostel, slug=hostel_slug, owner=request.user)
     
-    context_object_name = 'bookings'
+    # Check if hostel has at least one room type
+    if hostel.room_types.count() == 0:
+        messages.warning(
+            request, 
+            'Please add at least one room type to complete your hostel setup.'
+        )
+        return redirect('hostels:roomtype-create', hostel_slug=hostel.slug)
     
-    template_name = 'hostels/bookings.html'
-
-    def get_context_data(self, **kwargs):
-        
-        context = super(BookingsView, self).get_context_data(**kwargs)
-        
-        context['bookings'] = Booking.objects.filter(room_type__hostel__created_by=self.request.user)
-
-        return context
-
-
-
-class PendingView(LoginRequiredMixin, ListView):
-
-    model = LeaveRequests
-    
-    context_object_name = 'pendings'
-
-    template_name = 'hostels/pending_approvals.html'
-
-    def get_context_data(self, **kwargs):
-
-        context = super(PendingView, self).get_context_data(**kwargs)
-
-        context['pendings'] = LeaveRequests.objects.filter(room__room_type__hostel__created_by=self.request.user).filter(is_approved=False)
-        
-        return context
-
-
-
-class ApprovalsView(LoginRequiredMixin, ListView):
-
-    model = LeaveRequests
-
-    context_object_name = 'approved_leaves'
-
-    template_name = 'hostels/approved.html'
-
-
-    def get_context_data(self, **kwargs):
-
-        context = super(ApprovalsView, self).get_context_data(**kwargs)
-
-        context['approved_leaves'] = LeaveRequests.objects.filter(room__room_type__hostel__created_by=self.request.user).filter(is_approved=True)
-        
-        return context
-
-
-
-class SalesStatistics(LoginRequiredMixin, ListView):
-
-    model = Booking
-
-    context_object_name = 'statistics'
-
-    template_name = 'hostels/statistics.html'
-
-
-
-class GeneratePdf(LoginRequiredMixin, DetailView):
-
-    model = Booking
-
-    def get(self, *args, **kwargs):
-        print(args)
-        booking = Booking.objects.filter(tenant=self.request.user).first()
-
-        context = {'booking':booking}
-        
-        pdf = create_pdf('hostels/receipt.html', context)
-
-        return HttpResponse(pdf, content_type='application/pdf')
-
-
-#number = '+233594438287'
-#from phonenumberrs import geocoder
-#from phonenumbers import carrier
-#pepnum = phonenumbers.parse(number)
-#location = geocoder.description_for_number(pepnum, 'en')
-#print(location)
-#service_pro = phonenumbers.parse(number)
-#service = carrier.name_for_number(service_pro)
-#pip install opencage, folium
-#import opencage
-#from opencage.geocoder import OpenCageGeocode
-#go to open cage web
-#copy and create a variable call key
-#key = api_key
-#geocoder = OpenCageGeocode(key)
-#query = str(location)
-#results = geocoder.geocode(query)
-#print(results)
-#lat = results[0]['geometry']['lat']
-#lng = results[0]['geometry']['lng']
-#import folium
-#myMap = folium.Map(location=[lat, lng], zoom_start=9)
-#folium.marker([lat, lng], popup=location).add_to(myMap)
-#myMap.save('myLocation.html')
+    messages.success(
+        request, 
+        f'Congratulations! Your hostel "{hostel.name}" is now live and ready to receive bookings.'
+    )
+    return redirect('hostels:hostel-detail', slug=hostel.slug)

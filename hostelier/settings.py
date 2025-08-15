@@ -32,15 +32,14 @@ ALLOWED_HOSTS = config('CURRENT_ALLOWED_HOST', cast = Csv())
 
 INSTALLED_APPS = [
     #created apps
-    'ckeditor',
+    # 'ckeditor',
     #'fontawesomefree',
-    'ckeditor_uploader',
-    'crispy_forms',
+    'django_ckeditor_5',
     'hostels',
     'atlass',
-    'properties',
     'crispy_bootstrap5',
     'users',
+    "crispy_forms",
     #default apps
     #'jazzmin',
     'django.contrib.admin',
@@ -82,17 +81,35 @@ TEMPLATES = [
     },
 ]
 CKEDITOR_UPLOAD_PATH = "uploads/"
-CKEDITOR_CONFIGS = {
-    'default': {
-        'toolbar': 'full',
-        'height': 300,
-        'width': '100%',
-        'extraPlugins': ','.join([
-            'uploadimage',  # the upload image feature
-            # your extra plugins
-        ]),
+# Path where uploaded images will be stored
+CKEDITOR_5_FILE_STORAGE = "media/"
+
+# CKEditor 5 configurations
+CUSTOM_CONFIG = {
+    "default": {
+        "toolbar": [
+            "heading", "|",
+            "bold", "italic", "link", "bulletedList", "numberedList", "|",
+            "blockQuote", "insertTable", "mediaEmbed", "undo", "redo"
+        ],
+        "height": "300px",
+        "width": "100%",
     },
+    "advanced": {
+        "toolbar": [
+            "heading", "|",
+            "bold", "italic", "link", "underline", "strikethrough", "subscript", "superscript",
+            "bulletedList", "numberedList", "outdent", "indent", "|",
+            "blockQuote", "insertTable", "imageUpload", "mediaEmbed", "|",
+            "undo", "redo", "codeBlock"
+        ],
+        "height": "500px",
+        "width": "100%",
+    }
 }
+CKEDITOR_5_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
+CKEDITOR_5_CONFIGS = CUSTOM_CONFIG
+
 
 WSGI_APPLICATION = 'hostelier.wsgi.application'
 
@@ -178,7 +195,7 @@ CRISPY_TEMPLATE_PACK = 'bootstrap5'
 
 
 LOGIN_URL = 'login'
-LOGIN_REDIRECT_URL = 'rooms'
+LOGIN_REDIRECT_URL = '/'
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587

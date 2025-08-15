@@ -1,0 +1,350 @@
+{% extends 'hostels/base.html' %}
+{% load static %}
+
+{% block title %}StudentStay - Find Your Perfect Student Accommodation{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="hero-overlay"></div>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 text-center">
+                <h1 class="hero-title">
+                    Find Your Perfect 
+                    <span class="text-highlight">Student Home</span>
+                </h1>
+                <p class="hero-subtitle">
+                    Discover comfortable, affordable, and safe student accommodation 
+                    near your university. Your home away from home awaits.
+                </p>
+                
+                <!-- Search Form -->
+                <div class="search-container">
+                    <form method="GET" action="{% url 'hostels:hostel-list' %}" class="hero-search-form">
+                        <div class="search-wrapper">
+                            <div class="search-field">
+                                <label class="search-label">Location</label>
+                                <select name="school" class="form-select search-input">
+                                    <option value="">Select University...</option>
+                                    {% for school in schools %}
+                                        <option value="{{ school.id }}">{{ school.name }}</option>
+                                    {% endfor %}
+                                </select>
+                                <i class="fas fa-map-marker-alt search-icon"></i>
+                            </div>
+                            
+                            <div class="search-divider"></div>
+                            
+                            <div class="search-field">
+                                <label class="search-label">Room Type</label>
+                                <select name="room_type" class="form-select search-input">
+                                    <option value="">Any Room Type</option>
+                                    <option value="single">Single Room</option>
+                                    <option value="shared_2">2 Beds per Room</option>
+                                    <option value="shared_3">3 Beds per Room</option>
+                                    <option value="shared_4">4 Beds per Room</option>
+                                </select>
+                                <i class="fas fa-bed search-icon"></i>
+                            </div>
+                            
+                            <div class="search-divider"></div>
+                            
+                            <div class="search-field">
+                                <label class="search-label">Budget</label>
+                                <select name="max_price" class="form-select search-input">
+                                    <option value="">Any Budget</option>
+                                    <option value="2000">Under GHS2,000</option>
+                                    <option value="3000">Under GHS30,00</option>
+                                    <option value="4000">Under GHS4,200</option>
+                                    <option value="6000">Under GHS6,000</option>
+                                </select>
+                                <i class="fas fa-dollar-sign search-icon"></i>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary search-btn">
+                                <i class="fas fa-search"></i>
+                                <span>Search</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Statistics Section -->
+<section class="stats-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3 col-sm-6 mb-4">
+                <div class="stat-item">
+                    <div class="stat-icon">
+                        <i class="fas fa-building"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 class="stat-number">{{ stats.total_hostels }}+</h3>
+                        <p class="stat-label">Verified Hostels</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6 mb-4">
+                <div class="stat-item">
+                    <div class="stat-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 class="stat-number">{{ stats.total_schools }}+</h3>
+                        <p class="stat-label">Universities Covered</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6 mb-4">
+                <div class="stat-item">
+                    <div class="stat-icon">
+                        <i class="fas fa-door-open"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 class="stat-number">{{ stats.total_rooms }}+</h3>
+                        <p class="stat-label">Available Rooms</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6 mb-4">
+                <div class="stat-item">
+                    <div class="stat-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 class="stat-number">5,000+</h3>
+                        <p class="stat-label">Happy Students</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Hostels Section -->
+{% if featured_hostels %}
+<section class="featured-section">
+    <div class="container">
+        <div class="section-header text-center mb-5">
+            <h2 class="section-title">Featured Hostels</h2>
+            <p class="section-subtitle">
+                Handpicked accommodation options that offer the best value and comfort
+            </p>
+        </div>
+        
+        <div class="row">
+            {% for hostel in featured_hostels %}
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="hostel-card">
+                    <div class="hostel-image">
+                        {% if hostel.main_image %}
+                            <img src="{{ hostel.main_image.url }}" alt="{{ hostel.name }}" class="card-img">
+                        {% else %}
+                            <div class="placeholder-image">
+                                <i class="fas fa-building"></i>
+                            </div>
+                        {% endif %}
+                        
+                        <div class="hostel-badge">Featured</div>
+                        <div class="hostel-actions">
+                            <button class="action-btn favorite-btn" data-hostel-id="{{ hostel.id }}">
+                                <i class="far fa-heart"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="hostel-content">
+                        <div class="hostel-header">
+                            <h3 class="hostel-title">
+                                <a href="{% url 'hostels:hostel-detail' slug=hostel.slug %}">{{ hostel.name }}</a>
+                            </h3>
+                            <div class="hostel-rating">
+                                {% if hostel.average_rating %}
+                                    <span class="rating-stars">
+                                        {% for i in "12345" %}
+                                            {% if forloop.counter <= hostel.average_rating %}
+                                                <i class="fas fa-star"></i>
+                                            {% else %}
+                                                <i class="far fa-star"></i>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </span>
+                                    <span class="rating-count">({{ hostel.rating_count }})</span>
+                                {% else %}
+                                    <span class="text-muted">New</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <p class="hostel-location">
+                            <i class="fas fa-map-marker-alt me-1"></i>
+                            {{ hostel.school.name }}
+                        </p>
+                        
+                        <div class="hostel-amenities">
+                            {% for amenity in hostel.amenities.all|slice:":3" %}
+                                <span class="amenity-tag">{{ amenity.name }}</span>
+                            {% endfor %}
+                            {% if hostel.amenities.count > 3 %}
+                                <span class="amenity-more">+{{ hostel.amenities.count|add:"-3" }} more</span>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="hostel-footer">
+                            <div class="price-info">
+                                <span class="price">
+                                    ${{ hostel.min_price|floatformat:0 }}
+                                    {% if hostel.max_price != hostel.min_price %}
+                                        - ${{ hostel.max_price|floatformat:0 }}
+                                    {% endif %}
+                                </span>
+                                <span class="price-period">/ month</span>
+                            </div>
+                            
+                            <a href="{% url 'hostels:hostel-detail' slug=hostel.slug %}" class="btn btn-outline-primary btn-sm">
+                                View Details
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <div class="text-center mt-4">
+            <a href="{% url 'hostels:hostel-list' %}" class="btn btn-primary btn-lg">
+                View All Hostels
+                <i class="fas fa-arrow-right ms-2"></i>
+            </a>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- How It Works Section -->
+<section class="how-it-works-section">
+    <div class="container">
+        <div class="section-header text-center mb-5">
+            <h2 class="section-title">How It Works</h2>
+            <p class="section-subtitle">
+                Finding your perfect student accommodation has never been easier
+            </p>
+        </div>
+        
+        <div class="row">
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="step-card text-center">
+                    <div class="step-icon">
+                        <div class="step-number">1</div>
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <h4 class="step-title">Search & Filter</h4>
+                    <p class="step-description">
+                        Browse through verified hostels near your university. 
+                        Use our filters to find exactly what you need.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="step-card text-center">
+                    <div class="step-icon">
+                        <div class="step-number">2</div>
+                        <i class="fas fa-eye"></i>
+                    </div>
+                    <h4 class="step-title">View & Compare</h4>
+                    <p class="step-description">
+                        Check detailed photos, amenities, and reviews. 
+                        Compare different options to make an informed choice.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="step-card text-center">
+                    <div class="step-icon">
+                        <div class="step-number">3</div>
+                        <i class="fas fa-phone"></i>
+                    </div>
+                    <h4 class="step-title">Contact Owner</h4>
+                    <p class="step-description">
+                        Get in touch directly with property managers 
+                        to ask questions and arrange viewings.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="step-card text-center">
+                    <div class="step-icon">
+                        <div class="step-number">4</div>
+                        <i class="fas fa-home"></i>
+                    </div>
+                    <h4 class="step-title">Move In</h4>
+                    <p class="step-description">
+                        Complete your booking process and move into 
+                        your new home away from home!
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta-section">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 mb-4 mb-lg-0">
+                <h2 class="cta-title">Own a Student Property?</h2>
+                <p class="cta-description">
+                    Join thousands of property owners who trust StudentStay to connect 
+                    them with quality students. List your property today and start earning.
+                </p>
+                <ul class="cta-benefits">
+                    <li><i class="fas fa-check text-success me-2"></i>Free property listing</li>
+                    <li><i class="fas fa-check text-success me-2"></i>Verified student tenants</li>
+                    <li><i class="fas fa-check text-success me-2"></i>Easy property management</li>
+                </ul>
+            </div>
+            <div class="col-lg-6 text-center text-lg-end">
+                <a href="{% url 'hostels:hostel-create' %}" class="btn btn-primary btn-lg cta-btn">
+                    List Your Property
+                    <i class="fas fa-plus ms-2"></i>
+                </a>
+                <p class="cta-note">It's free and takes less than 5 minutes</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Initialize favorite functionality
+    document.addEventListener('DOMContentLoaded', function() {
+        const favoriteButtons = document.querySelectorAll('.favorite-btn');
+        
+        favoriteButtons.forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                const icon = this.querySelector('i');
+                if (icon.classList.contains('far')) {
+                    icon.classList.replace('far', 'fas');
+                    icon.classList.add('text-danger');
+                } else {
+                    icon.classList.replace('fas', 'far');
+                    icon.classList.remove('text-danger');
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

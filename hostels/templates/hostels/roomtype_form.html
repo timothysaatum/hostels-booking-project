@@ -1,30 +1,776 @@
 {% extends 'hostels/base.html' %}
 {% load static %}
-{% load crispy_forms_tags %}
 
-{% block title %}Add Room Category{% endblock %}
+{% block title %}
+    {% if is_new_hostel %}
+        Add Room Types - {{ hostel.name }}
+    {% else %}
+        Add Room Type - {{ hostel.name }}
+    {% endif %}
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .setup-header {
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        color: white;
+        padding: 100px 0 50px;
+        margin-top: -76px;
+    }
+    
+    .progress-indicator {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 15px;
+        margin: 30px 0;
+    }
+    
+    .progress-step {
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 600;
+        font-size: 14px;
+    }
+    
+    .progress-step.completed {
+        background: rgba(255, 255, 255, 0.9);
+        color: #28a745;
+    }
+    
+    .progress-step.active {
+        background: white;
+        color: #28a745;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+    
+    .progress-line {
+        width: 40px;
+        height: 2px;
+        background: rgba(255, 255, 255, 0.3);
+    }
+    
+    .progress-line.completed {
+        background: rgba(255, 255, 255, 0.7);
+    }
+    
+    .form-section {
+        background: white;
+        border-radius: 20px;
+        padding: 40px;
+        margin-bottom: 30px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        border: 1px solid #f1f2f6;
+    }
+    
+    .section-header {
+        border-bottom: 2px solid #f1f2f6;
+        padding-bottom: 15px;
+        margin-bottom: 30px;
+    }
+    
+    .section-title {
+        font-size: 20px;
+        font-weight: 600;
+        color: #2c3e50;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .section-icon {
+        width: 40px;
+        height: 40px;
+        background: linear-gradient(45deg, #28a745, #20c997);
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+    }
+    
+    .hostel-info {
+        background: #f8f9fa;
+        border-radius: 15px;
+        padding: 20px;
+        margin-bottom: 30px;
+        border-left: 4px solid #28a745;
+    }
+    
+    .room-type-preview {
+        background: #f8f9fa;
+        border-radius: 15px;
+        padding: 20px;
+        margin: 20px 0;
+        border: 2px dashed #dee2e6;
+    }
+    
+    .feature-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+        margin: 20px 0;
+    }
+    
+    .feature-card {
+        background: #f8f9fa;
+        border-radius: 12px;
+        padding: 15px;
+        border: 2px solid #e9ecef;
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+    
+    .feature-card:hover {
+        border-color: #28a745;
+        background: #f0fff4;
+    }
+    
+    .feature-card input[type="checkbox"]:checked ~ .feature-content {
+        color: #28a745;
+    }
+    
+    .feature-icon {
+        width: 40px;
+        height: 40px;
+        background: linear-gradient(45deg, #28a745, #20c997);
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        margin-bottom: 10px;
+    }
+    
+    .image-upload-zone {
+        border: 2px dashed #dee2e6;
+        border-radius: 15px;
+        padding: 30px;
+        text-align: center;
+        transition: all 0.3s ease;
+        background: #fafbfc;
+        margin: 15px 0;
+    }
+    
+    .image-upload-zone:hover {
+        border-color: #28a745;
+        background: #f0fff4;
+    }
+    
+    .action-buttons {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+        margin: 40px 0;
+        flex-wrap: wrap;
+    }
+    
+    .btn-success-custom {
+        background: linear-gradient(45deg, #28a745, #20c997);
+        border: none;
+        color: white;
+        padding: 15px 30px;
+        border-radius: 50px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-success-custom:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(40, 167, 69, 0.3);
+    }
+    
+    .btn-outline-success-custom {
+        border: 2px solid #28a745;
+        color: #28a745;
+        background: transparent;
+        padding: 13px 30px;
+        border-radius: 50px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-outline-success-custom:hover {
+        background: #28a745;
+        color: white;
+        transform: translateY(-2px);
+    }
+    
+    .form-floating label {
+        color: #6c757d;
+    }
+    
+    .required-field::after {
+        content: '*';
+        color: #dc3545;
+        margin-left: 4px;
+    }
+    
+    .completion-banner {
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        color: white;
+        border-radius: 20px;
+        padding: 30px;
+        text-align: center;
+        margin: 30px 0;
+    }
+    
+    .existing-room-types {
+        background: #f8f9fa;
+        border-radius: 15px;
+        padding: 20px;
+        margin-bottom: 30px;
+    }
+    
+    .room-type-item {
+        background: white;
+        border-radius: 10px;
+        padding: 15px;
+        margin-bottom: 10px;
+        border-left: 4px solid #28a745;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    
+    .price-badge {
+        background: linear-gradient(45deg, #28a745, #20c997);
+        color: white;
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 14px;
+    }
+    
+    @media (max-width: 768px) {
+        .setup-header {
+            padding: 80px 0 30px;
+        }
+        
+        .form-section {
+            padding: 25px;
+        }
+        
+        .feature-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .action-buttons {
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .action-buttons .btn {
+            width: 100%;
+            max-width: 300px;
+        }
+    }
+</style>
+{% endblock %}
+
 {% block content %}
-<section class="user pb-5">
+<!-- Header Section -->
+<section class="setup-header">
     <div class="container">
-        <div class="row d-flex justify-content-center">
-            <div class="col-sm-12 col-md-12 col-lg-10 bg-light">
-                <p class="lead text-center p-3 text-dark fw-bold">
-                    Enter valid information to add a room type
-                </p>
-                <form method="POST" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    <div class="form-group">
-                        <div class="text-danger">
-                            {{ form|crispy }}
-                            {{ form.media }}
-                            <div class="form-group text-center my-3">
-                                <button class="btn btn-outline-danger" type="submit">Create</button>
-                            </div>
-                        </div>
-                    </div>
-                </form>
+        <div class="row justify-content-center">
+            <div class="col-lg-8 text-center">
+                {% if is_new_hostel %}
+                    <h1 class="display-6 fw-bold mb-3">Add Room Types</h1>
+                    <p class="lead mb-4">Define the different types of rooms in your hostel</p>
+                {% else %}
+                    <h1 class="display-6 fw-bold mb-3">Add New Room Type</h1>
+                    <p class="lead mb-4">Add another room type to {{ hostel.name }}</p>
+                {% endif %}
+                
+                <!-- Progress Indicator -->
+                <div class="progress-indicator">
+                    <div class="progress-step completed">1</div>
+                    <div class="progress-line completed"></div>
+                    <div class="progress-step completed">2</div>
+                    <div class="progress-line completed"></div>
+                    <div class="progress-step completed">3</div>
+                    <div class="progress-line completed"></div>
+                    <div class="progress-step active">4</div>
+                </div>
+                <p class="small text-white-50">Basic Info → Rooms & Pricing → Photos → <strong>Room Types</strong></p>
             </div>
         </div>
     </div>
 </section>
+
+<!-- Main Content -->
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            
+            <!-- Hostel Info -->
+            <div class="hostel-info">
+                <div class="d-flex align-items-center mb-3">
+                    <div class="me-3">
+                        {% if hostel.main_image %}
+                            <img src="{{ hostel.main_image.url }}" alt="{{ hostel.name }}" 
+                                 class="rounded" style="width: 60px; height: 60px; object-fit: cover;">
+                        {% else %}
+                            <div class="bg-success rounded d-flex align-items-center justify-content-center" 
+                                 style="width: 60px; height: 60px;">
+                                <i class="fas fa-home text-white fa-lg"></i>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div>
+                        <h5 class="mb-1">{{ hostel.name }}</h5>
+                        <p class="mb-0 text-muted">{{ hostel.school.name }} - {{ hostel.campus }}</p>
+                    </div>
+                </div>
+                
+                {% if is_new_hostel %}
+                    <div class="alert alert-success mb-0">
+                        <i class="fas fa-check-circle me-2"></i>
+                        Great! Your hostel has been created. Now add room types to define your accommodation options.
+                    </div>
+                {% endif %}
+            </div>
+            
+            <!-- Existing Room Types (if any) -->
+            {% if hostel.room_types.exists %}
+                <div class="existing-room-types">
+                    <h6 class="mb-3">
+                        <i class="fas fa-list me-2"></i>
+                        Existing Room Types ({{ hostel.room_types.count }})
+                    </h6>
+                    {% for room_type in hostel.room_types.all %}
+                        <div class="room-type-item d-flex justify-content-between align-items-center">
+                            <div>
+                                <strong>{{ room_type.name }}</strong>
+                                <span class="text-muted ms-2">{{ room_type.get_room_type_display }}</span>
+                                <div class="small text-muted">
+                                    {{ room_type.total_rooms }} rooms • {{ room_type.beds_per_room }} bed(s) per room
+                                </div>
+                            </div>
+                            <div class="price-badge">
+                                GH₵{{ room_type.price_per_person|floatformat:0 }}/person
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            
+            <!-- Room Type Form -->
+            <form method="post" enctype="multipart/form-data" id="roomTypeForm">
+                {% csrf_token %}
+                
+                <!-- Basic Room Information -->
+                <div class="form-section">
+                    <div class="section-header">
+                        <div class="section-title">
+                            <div class="section-icon">
+                                <i class="fas fa-bed"></i>
+                            </div>
+                            <span class="required-field">Room Type Details</span>
+                        </div>
+                        <p class="text-muted mb-0">Define the basic information for this room type</p>
+                    </div>
+                    
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                {{ form.name }}
+                                <label for="{{ form.name.id_for_label }}" class="required-field">Room Type Name</label>
+                            </div>
+                            <div class="form-help small text-muted mt-1">e.g., "Standard Single Room", "Premium Double"</div>
+                            {% if form.name.errors %}
+                                <div class="text-danger small mt-1">{{ form.name.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                {{ form.room_type }}
+                                <label for="{{ form.room_type.id_for_label }}" class="required-field">Bed Configuration</label>
+                            </div>
+                            {% if form.room_type.errors %}
+                                <div class="text-danger small mt-1">{{ form.room_type.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <div class="form-floating">
+                                {{ form.beds_per_room }}
+                                <label for="{{ form.beds_per_room.id_for_label }}" class="required-field">Beds per Room</label>
+                            </div>
+                            {% if form.beds_per_room.errors %}
+                                <div class="text-danger small mt-1">{{ form.beds_per_room.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <div class="form-floating">
+                                {{ form.total_rooms }}
+                                <label for="{{ form.total_rooms.id_for_label }}" class="required-field">Total Rooms</label>
+                            </div>
+                            {% if form.total_rooms.errors %}
+                                <div class="text-danger small mt-1">{{ form.total_rooms.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <div class="form-floating">
+                                {{ form.price_per_person }}
+                                <label for="{{ form.price_per_person.id_for_label }}" class="required-field">Price per Person (GH₵)</label>
+                            </div>
+                            {% if form.price_per_person.errors %}
+                                <div class="text-danger small mt-1">{{ form.price_per_person.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="col-12">
+                            <label class="form-label">Description</label>
+                            {{ form.description }}
+                            <div class="form-help small text-muted mt-1">Describe this room type and its unique features</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Room Features -->
+                <div class="form-section">
+                    <div class="section-header">
+                        <div class="section-title">
+                            <div class="section-icon">
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <span>Room Features</span>
+                        </div>
+                        <p class="text-muted mb-0">What features does this room type include?</p>
+                    </div>
+                    
+                    <div class="feature-grid">
+                        <div class="feature-card">
+                            {{ form.has_private_bathroom }}
+                            <div class="feature-content">
+                                <div class="feature-icon">
+                                    <i class="fas fa-bath"></i>
+                                </div>
+                                <strong>Private Bathroom</strong>
+                                <div class="small text-muted">En-suite bathroom for each room</div>
+                            </div>
+                        </div>
+                        
+                        <div class="feature-card">
+                            {{ form.has_balcony }}
+                            <div class="feature-content">
+                                <div class="feature-icon">
+                                    <i class="fas fa-building"></i>
+                                </div>
+                                <strong>Balcony</strong>
+                                <div class="small text-muted">Private or shared balcony access</div>
+                            </div>
+                        </div>
+                        
+                        <div class="feature-card">
+                            {{ form.has_ac }}
+                            <div class="feature-content">
+                                <div class="feature-icon">
+                                    <i class="fas fa-snowflake"></i>
+                                </div>
+                                <strong>Air Conditioning</strong>
+                                <div class="small text-muted">Climate control system</div>
+                            </div>
+                        </div>
+                        
+                        <div class="feature-card">
+                            {{ form.has_study_desk }}
+                            <div class="feature-content">
+                                <div class="feature-icon">
+                                    <i class="fas fa-desk"></i>
+                                </div>
+                                <strong>Study Desk</strong>
+                                <div class="small text-muted">Dedicated workspace for studying</div>
+                            </div>
+                        </div>
+                        
+                        <div class="feature-card">
+                            {{ form.has_wardrobe }}
+                            <div class="feature-content">
+                                <div class="feature-icon">
+                                    <i class="fas fa-tshirt"></i>
+                                </div>
+                                <strong>Wardrobe</strong>
+                                <div class="small text-muted">Built-in storage for clothes</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Main Image -->
+                <div class="form-section">
+                    <div class="section-header">
+                        <div class="section-title">
+                            <div class="section-icon">
+                                <i class="fas fa-camera"></i>
+                            </div>
+                            <span>Room Type Photo</span>
+                        </div>
+                        <p class="text-muted mb-0">Upload a representative photo for this room type</p>
+                    </div>
+                    
+                    <div class="image-upload-zone">
+                        <i class="fas fa-upload fa-2x text-muted mb-3"></i>
+                        <h6>Upload Room Photo</h6>
+                        <p class="text-muted mb-3">Show potential students what this room type looks like</p>
+                        {{ form.main_image }}
+                        <div class="form-help small text-muted">Recommended: 800x600px, JPG or PNG</div>
+                    </div>
+                </div>
+                
+                <!-- Additional Images -->
+                <div class="form-section">
+                    <div class="section-header">
+                        <div class="section-title">
+                            <div class="section-icon">
+                                <i class="fas fa-images"></i>
+                            </div>
+                            <span>Additional Photos</span>
+                        </div>
+                        <p class="text-muted mb-0">Add more photos to showcase this room type</p>
+                    </div>
+                    
+                    <div class="image-formset">
+                        {{ image_formset.management_form }}
+                        
+                        <div id="image-forms">
+                            {% for form_item in image_formset %}
+                                <div class="image-form-item border rounded p-3 mb-3">
+                                    <div class="row g-3 align-items-end">
+                                        <div class="col-md-4">
+                                            <label class="form-label">Image</label>
+                                            {{ form_item.image }}
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-floating">
+                                                {{ form_item.caption }}
+                                                <label for="{{ form_item.caption.id_for_label }}">Caption (Optional)</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="form-floating">
+                                                {{ form_item.order }}
+                                                <label for="{{ form_item.order.id_for_label }}">Order</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    {% if form_item.DELETE %}
+                                        <div class="form-check mt-2">
+                                            {{ form_item.DELETE }}
+                                            <label class="form-check-label text-danger" for="{{ form_item.DELETE.id_for_label }}">
+                                                Delete this image
+                                            </label>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Action Buttons -->
+                <div class="action-buttons">
+                    {% if is_new_hostel %}
+                        {% if request.GET.continue %}
+                            <a href="{% url 'hostels:finish-hostel-setup' hostel.slug %}" 
+                               class="btn btn-outline-success-custom btn-lg">
+                                <i class="fas fa-check me-2"></i>Finish Setup
+                            </a>
+                        {% endif %}
+                        
+                        <button type="submit" class="btn btn-success-custom btn-lg">
+                            <i class="fas fa-plus me-2"></i>Add Room Type
+                        </button>
+                        
+                        {% if hostel.room_types.exists %}
+                            <a href="{% url 'hostels:finish-hostel-setup' hostel.slug %}" 
+                               class="btn btn-outline-success-custom btn-lg">
+                                <i class="fas fa-arrow-right me-2"></i>Complete Setup
+                            </a>
+                        {% endif %}
+                    {% else %}
+                        <a href="{% url 'hostels:hostel-detail' hostel.slug %}" 
+                           class="btn btn-outline-success-custom btn-lg">
+                            <i class="fas fa-arrow-left me-2"></i>Back to Hostel
+                        </a>
+                        
+                        <button type="submit" class="btn btn-success-custom btn-lg">
+                            <i class="fas fa-plus me-2"></i>Add Room Type
+                        </button>
+                    {% endif %}
+                </div>
+                
+                {% if is_new_hostel and not hostel.room_types.exists %}
+                    <div class="text-center mt-4">
+                        <p class="text-muted">
+                            <i class="fas fa-info-circle me-1"></i>
+                            You need to add at least one room type to complete your hostel setup
+                        </p>
+                    </div>
+                {% endif %}
+            </form>
+        </div>
+    </div>
+</div>
+
+{% if is_new_hostel %}
+    <!-- Completion Banner -->
+    {% if hostel.room_types.exists %}
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="completion-banner">
+                        <i class="fas fa-check-circle fa-3x mb-3"></i>
+                        <h4>Great Progress!</h4>
+                        <p class="mb-0">
+                            You've added {{ hostel.room_types.count }} room type{{ hostel.room_types.count|pluralize }}.
+                            You can add more or finish your hostel setup.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('roomTypeForm');
+    
+    // Auto-adjust beds per room based on room type selection
+    const roomTypeSelect = document.querySelector('select[name="room_type"]');
+    const bedsPerRoomInput = document.querySelector('input[name="beds_per_room"]');
+    
+    roomTypeSelect.addEventListener('change', function() {
+        const bedsMap = {
+            'single': 1,
+            'double': 2,
+            'triple': 3,
+            'quad': 4
+        };
+        
+        if (bedsMap[this.value]) {
+            bedsPerRoomInput.value = bedsMap[this.value];
+            bedsPerRoomInput.readOnly = true;
+            bedsPerRoomInput.style.backgroundColor = '#f8f9fa';
+        } else {
+            bedsPerRoomInput.readOnly = false;
+            bedsPerRoomInput.style.backgroundColor = '';
+        }
+    });
+    
+    // Feature card click handling
+    const featureCards = document.querySelectorAll('.feature-card');
+    featureCards.forEach(card => {
+        const checkbox = card.querySelector('input[type="checkbox"]');
+        
+        card.addEventListener('click', function(e) {
+            if (e.target === checkbox) return;
+            checkbox.checked = !checkbox.checked;
+            updateFeatureCard(card, checkbox.checked);
+        });
+        
+        checkbox.addEventListener('change', function() {
+            updateFeatureCard(card, this.checked);
+        });
+        
+        // Initial state
+        updateFeatureCard(card, checkbox.checked);
+    });
+    
+    function updateFeatureCard(card, checked) {
+        if (checked) {
+            card.style.borderColor = '#28a745';
+            card.style.backgroundColor = '#f0fff4';
+        } else {
+            card.style.borderColor = '#e9ecef';
+            card.style.backgroundColor = '#f8f9fa';
+        }
+    }
+    
+    // Form validation
+    form.addEventListener('submit', function(e) {
+        let isValid = true;
+        const requiredFields = form.querySelectorAll('[required]');
+        
+        requiredFields.forEach(field => {
+            if (!field.value.trim()) {
+                field.classList.add('is-invalid');
+                isValid = false;
+            } else {
+                field.classList.remove('is-invalid');
+            }
+        });
+        
+        if (!isValid) {
+            e.preventDefault();
+            
+            // Scroll to first error
+            const firstError = form.querySelector('.is-invalid');
+            if (firstError) {
+                firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                firstError.focus();
+            }
+            
+            // Show error message
+            const alertDiv = document.createElement('div');
+            alertDiv.className = 'alert alert-danger alert-dismissible fade show';
+            alertDiv.innerHTML = `
+                <i class="fas fa-exclamation-triangle me-2"></i>
+                Please fill in all required fields.
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            
+            document.querySelector('.container').insertAdjacentElement('afterbegin', alertDiv);
+            
+            setTimeout(() => {
+                if (alertDiv && alertDiv.parentNode) {
+                    alertDiv.remove();
+                }
+            }, 5000);
+        } else {
+            // Show loading state
+            const submitBtn = form.querySelector('button[type="submit"]');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Adding Room Type...';
+        }
+    });
+    
+    // Price formatting
+    const priceInput = document.querySelector('input[name="price_per_person"]');
+    priceInput.addEventListener('input', function() {
+        let value = this.value.replace(/[^0-9.]/g, '');
+        const parts = value.split('.');
+        if (parts.length > 2) {
+            value = parts[0] + '.' + parts.slice(1).join('');
+        }
+        if (parts[1] && parts[1].length > 2) {
+            value = parseFloat(value).toFixed(2);
+        }
+        this.value = value;
+    });
+    
+    // Number inputs validation
+    const numberInputs = document.querySelectorAll('input[type="number"]');
+    numberInputs.forEach(input => {
+        input.addEventListener('input', function() {
+            if (parseInt(this.value) < 0) {
+                this.value = '0';
+            }
+        });
+    });
+});
+</script>
 {% endblock %}
