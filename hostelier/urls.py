@@ -42,4 +42,3 @@ if settings.DEBUG:
 admin.site.site_header  =  "Unarcom Management"  
 admin.site.site_title  =  "Unarcom Administration"
 admin.site.index_title  =  "Unarcom Administration"
-

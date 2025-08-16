@@ -1,29 +1,832 @@
 {% extends 'hostels/base.html' %}
 {% load static %}
-{% load crispy_forms_tags %}
 
-{% block title %}Add Room{% endblock %}
+{% block title %}{{ hostel.name }} - {{ hostel.school.name }} | StudentStay{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Your existing styles remain the same */
+    .property-hero {
+        height: 60vh;
+        min-height: 400px;
+        position: relative;
+        overflow: hidden;
+        background: #f8f9fa;
+    }
+    
+    .property-hero img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    
+    .hero-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(transparent, rgba(0,0,0,0.7));
+        color: white;
+        padding: 40px 0 30px;
+    }
+    
+    /* Enhanced distance display */
+    .distance-info-card {
+        background: linear-gradient(135deg, #28a745, #20c997);
+        color: white;
+        border-radius: 15px;
+        padding: 20px;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+    
+    .distance-value {
+        font-size: 24px;
+        font-weight: 700;
+        margin-bottom: 5px;
+    }
+    
+    .distance-description {
+        font-size: 14px;
+        opacity: 0.9;
+    }
+    
+    /* Management button styles */
+    .management-buttons {
+        background: #f8f9fa;
+        border-radius: 15px;
+        padding: 20px;
+        margin-bottom: 20px;
+        border-left: 4px solid #667eea;
+    }
+    
+    .management-buttons h6 {
+        color: #667eea;
+        font-weight: 600;
+        margin-bottom: 15px;
+    }
+    
+    .btn-manage {
+        background: linear-gradient(45deg, #667eea, #764ba2);
+        border: none;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 25px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-right: 10px;
+        margin-bottom: 10px;
+    }
+    
+    .btn-manage:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        color: white;
+    }
+    
+    .btn-manage.btn-success {
+        background: linear-gradient(45deg, #28a745, #20c997);
+    }
+    
+    .btn-manage.btn-success:hover {
+        box-shadow: 0 8px 20px rgba(40, 167, 69, 0.3);
+    }
+    
+    .btn-manage.btn-outline-primary {
+        background: transparent;
+        border: 2px solid #667eea;
+        color: #667eea;
+    }
+    
+    .btn-manage.btn-outline-primary:hover {
+        background: #667eea;
+        color: white;
+    }
+    
+    /* Room types section enhancement */
+    .room-types-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+    
+    .add-room-type-btn {
+        background: linear-gradient(45deg, #28a745, #20c997);
+        border: none;
+        color: white;
+        padding: 12px 24px;
+        border-radius: 25px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .add-room-type-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(40, 167, 69, 0.3);
+        color: white;
+    }
+    
+    .room-type-card {
+        border: 2px solid #f1f2f6;
+        border-radius: 15px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        margin-bottom: 20px;
+        position: relative;
+    }
+    
+    .room-type-card:hover {
+        border-color: #667eea;
+        box-shadow: 0 10px 30px rgba(102, 126, 234, 0.1);
+    }
+    
+    /* Room type management overlay */
+    .room-type-management {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        display: flex;
+        gap: 5px;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+    
+    .room-type-card:hover .room-type-management {
+        opacity: 1;
+    }
+    
+    .room-type-management .btn {
+        padding: 6px 12px;
+        font-size: 12px;
+        border-radius: 15px;
+    }
+    
+    .room-image {
+        height: 200px;
+        overflow: hidden;
+        position: relative;
+    }
+    
+    .room-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    
+    .room-content {
+        padding: 20px;
+    }
+    
+    .room-title {
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 10px;
+        color: #2c3e50;
+    }
+    
+    .room-features {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin: 15px 0;
+    }
+    
+    .feature-tag {
+        background: #e8f4f8;
+        color: #0ea5e9;
+        padding: 4px 10px;
+        border-radius: 15px;
+        font-size: 12px;
+        font-weight: 500;
+    }
+    
+    .room-price {
+        font-size: 24px;
+        font-weight: 700;
+        color: #2c3e50;
+    }
+    
+    .price-period {
+        font-size: 14px;
+        color: #6c757d;
+        font-weight: 400;
+    }
+    
+    /* Location tab enhancement */
+    .location-info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+        margin: 20px 0;
+    }
+    
+    .location-info-card {
+        background: #f8f9fa;
+        border-radius: 15px;
+        padding: 20px;
+        border-left: 4px solid #667eea;
+    }
+    
+    .location-info-card h6 {
+        color: #667eea;
+        margin-bottom: 10px;
+    }
+    
+    .coordinates-display {
+        background: #e9ecef;
+        border-radius: 10px;
+        padding: 15px;
+        font-family: 'Courier New', monospace;
+        font-size: 14px;
+        margin: 10px 0;
+    }
+    
+    @media (max-width: 768px) {
+        .room-types-header {
+            flex-direction: column;
+            align-items: stretch;
+        }
+        
+        .add-room-type-btn {
+            text-align: center;
+            justify-content: center;
+        }
+        
+        .management-buttons {
+            text-align: center;
+        }
+        
+        .room-type-management {
+            opacity: 1;
+            position: static;
+            justify-content: center;
+            margin-top: 10px;
+        }
+    }
+</style>
+{% endblock %}
+
 {% block content %}
-<section class="user pb-5">
-    <div class="container">
-        <div class="row d-flex justify-content-center">
-            <div class="col-sm-12 col-md-12 col-lg-10 bg-light">
-                <p class="lead text-center p-3 text-dark fw-bold">
-                    Enter valid information to create a room
-                </p>
-                <form method="POST" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    <div class="form-group">
-                        <div class="text-danger">
-                            {{ form|crispy }}
-                            <div class="form-group text-center my-3">
-                                <button class="btn btn-outline-danger" type="submit">Create</button>
-                            </div>
-                        </div>
+<!-- Property Hero -->
+<section class="property-hero">
+    {% if hostel.main_image %}
+        <img src="{{ hostel.main_image.url }}" alt="{{ hostel.name }}">
+    {% else %}
+        <div class="d-flex align-items-center justify-content-center h-100 bg-light">
+            <div class="text-center text-muted">
+                <i class="fas fa-image fa-4x mb-3"></i>
+                <p>No image available</p>
+            </div>
+        </div>
+    {% endif %}
+    
+    <div class="hero-overlay">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item">
+                                <a href="{% url 'hostels:hostel_list' %}" class="text-white-50">Home</a>
+                            </li>
+                            <li class="breadcrumb-item">
+                                <a href="{% url 'hostels:hostel_list' %}?school={{ hostel.school.id }}" class="text-white-50">
+                                    {{ hostel.school.name }}
+                                </a>
+                            </li>
+                            <li class="breadcrumb-item active text-white" aria-current="page">
+                                {{ hostel.name }}
+                            </li>
+                        </ol>
+                    </nav>
+                    
+                    <h1 class="display-5 fw-bold mb-3">{{ hostel.name }}</h1>
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="fas fa-map-marker-alt me-2"></i>
+                        <span>{{ hostel.address }}</span>
                     </div>
-                </form>
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-university me-2"></i>
+                            <span>{{ hostel.school.name }}, {{ hostel.school.city }}</span>
+                        </div>
+                        {% if hostel.rating > 0 %}
+                            <div class="d-flex align-items-center">
+                                <div class="text-warning me-2">
+                                    {% for star in "12345"|make_list %}
+                                        {% if forloop.counter <= hostel.rating %}
+                                            <i class="fas fa-star"></i>
+                                        {% else %}
+                                            <i class="far fa-star"></i>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                                <span>({{ hostel.rating_count }} reviews)</span>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </section>
+
+<!-- Navigation Tabs -->
+<nav class="property-nav">
+    <div class="container">
+        <ul class="nav nav-pills" id="propertyTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="overview-tab" data-bs-toggle="pill" 
+                        data-bs-target="#overview" type="button" role="tab">
+                    <i class="fas fa-home me-2"></i>Overview
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="rooms-tab" data-bs-toggle="pill" 
+                        data-bs-target="#rooms" type="button" role="tab">
+                    <i class="fas fa-bed me-2"></i>Room Types
+                    <span class="badge bg-primary ms-2">{{ hostel.room_types.count }}</span>
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="amenities-tab" data-bs-toggle="pill" 
+                        data-bs-target="#amenities" type="button" role="tab">
+                    <i class="fas fa-star me-2"></i>Amenities
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="gallery-tab" data-bs-toggle="pill" 
+                        data-bs-target="#gallery" type="button" role="tab">
+                    <i class="fas fa-images me-2"></i>Gallery
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="location-tab" data-bs-toggle="pill" 
+                        data-bs-target="#location" type="button" role="tab">
+                    <i class="fas fa-map-marker-alt me-2"></i>Location
+                </button>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<!-- Main Content -->
+<div class="container my-5">
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="tab-content" id="propertyTabContent">
+                <!-- Overview Tab -->
+                <div class="tab-pane fade show active" id="overview" role="tabpanel">
+                    <section class="property-section">
+                        <h2 class="section-title">About {{ hostel.name }}</h2>
+                        <div class="description">
+                            {{ hostel.description|safe }}
+                        </div>
+                        
+                        <div class="row mt-4">
+                            <div class="col-md-6">
+                                <div class="info-card p-3 bg-light rounded">
+                                    <h6><i class="fas fa-door-open me-2 text-primary"></i>Total Rooms</h6>
+                                    <p class="mb-0 fw-semibold">{{ hostel.total_rooms }} rooms</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="info-card p-3 bg-light rounded">
+                                    <h6><i class="fas fa-users me-2 text-success"></i>Available Spots</h6>
+                                    <p class="mb-0 fw-semibold">{{ hostel.available_rooms }} spots</p>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+                
+                <!-- Enhanced Room Types Tab -->
+                <div class="tab-pane fade" id="rooms" role="tabpanel">
+                    <section class="property-section">
+                        <div class="room-types-header">
+                            <h2 class="section-title">Available Room Types</h2>
+                            
+                            {% if can_manage %}
+                                <a href="{% url 'hostels:roomtype-create' hostel.slug %}" class="add-room-type-btn">
+                                    <i class="fas fa-plus"></i>
+                                    Add New Room Type
+                                </a>
+                            {% endif %}
+                        </div>
+                        
+                        {% if hostel.room_types.all %}
+                            <div class="row">
+                                {% for room_type in hostel.room_types.all %}
+                                    <div class="col-lg-6 mb-4">
+                                        <div class="room-type-card">
+                                            {% if can_manage %}
+                                                <div class="room-type-management">
+                                                    <a href="{% url 'hostels:roomtype-update' room_type.id %}" 
+                                                       class="btn btn-sm btn-outline-primary" title="Edit Room Type">
+                                                        <i class="fas fa-edit"></i>
+                                                    </a>
+                                                    <a href="{% url 'hostels:roomtype-delete' room_type.id %}" 
+                                                       class="btn btn-sm btn-outline-danger" title="Delete Room Type"
+                                                       onclick="return confirm('Are you sure you want to delete this room type?')">
+                                                        <i class="fas fa-trash"></i>
+                                                    </a>
+                                                </div>
+                                            {% endif %}
+                                            
+                                            <div class="room-image">
+                                                {% if room_type.main_image %}
+                                                    <img src="{{ room_type.main_image.url }}" alt="{{ room_type.name }}">
+                                                {% else %}
+                                                    <div class="d-flex align-items-center justify-content-center h-100 bg-light">
+                                                        <i class="fas fa-bed fa-3x text-muted"></i>
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                            
+                                            <div class="room-content">
+                                                <h4 class="room-title">{{ room_type.name }}</h4>
+                                                <p class="text-muted mb-2">
+                                                    {{ room_type.get_room_type_display }} • 
+                                                    {{ room_type.total_rooms }} rooms available
+                                                </p>
+                                                
+                                                {% if room_type.feature_list %}
+                                                    <div class="room-features">
+                                                        {% for feature, icon in room_type.feature_list %}
+                                                            <span class="feature-tag">
+                                                                <i class="fas {{ icon }} me-1"></i>{{ feature }}
+                                                            </span>
+                                                        {% endfor %}
+                                                    </div>
+                                                {% endif %}
+                                                
+                                                <div class="d-flex justify-content-between align-items-center mt-3">
+                                                    <div class="room-price">
+                                                        GHS{{ room_type.price_per_person|floatformat:0 }}/yr
+                                                    </div>
+                                                    <div class="text-success">
+                                                        <i class="fas fa-check-circle me-1"></i>
+                                                        {{ room_type.get_available_rooms|length }} available
+                                                    </div>
+                                                </div>
+                                                
+                                                {% if room_type.description %}
+                                                    <div class="mt-3">
+                                                        <small class="text-muted">{{ room_type.description|safe|truncatewords:20 }}</small>
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <div class="text-center py-5">
+                                <i class="fas fa-bed fa-4x text-muted mb-3"></i>
+                                <h5 class="text-muted">No room types available</h5>
+                                {% if can_manage %}
+                                    <p class="text-muted">Add your first room type to get started.</p>
+                                    <a href="{% url 'hostels:roomtype-create' hostel.slug %}" class="btn btn-primary">
+                                        <i class="fas fa-plus me-2"></i>Add Room Type
+                                    </a>
+                                {% else %}
+                                    <p class="text-muted">Room information is being updated.</p>
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                    </section>
+                </div>
+                
+                <!-- Amenities Tab (unchanged) -->
+                <div class="tab-pane fade" id="amenities" role="tabpanel">
+                    <section class="property-section">
+                        <h2 class="section-title">Hostel Amenities</h2>
+                        
+                        {% if hostel.amenities.all or hostel.has_wifi %}
+                            <div class="amenities-grid">
+                                {% if hostel.has_wifi %}
+                                    <div class="amenity-item">
+                                        <div class="amenity-icon">
+                                            <i class="fas fa-wifi"></i>
+                                        </div>
+                                        <div>
+                                            <h6 class="mb-1">WiFi Internet</h6>
+                                            <small class="text-muted">Free high-speed internet</small>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                                
+                                {% for amenity in hostel.amenities.all %}
+                                    <div class="amenity-item">
+                                        <div class="amenity-icon">
+                                            <i class="{{ amenity.icon_class }}"></i>
+                                        </div>
+                                        <div>
+                                            <h6 class="mb-1">{{ amenity.name }}</h6>
+                                            <small class="text-muted">{{ amenity.get_category_display }} amenity</small>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <div class="text-center py-5">
+                                <i class="fas fa-star fa-4x text-muted mb-3"></i>
+                                <h5 class="text-muted">No amenities listed</h5>
+                                <p class="text-muted">Contact the hostel for more information about available facilities.</p>
+                            </div>
+                        {% endif %}
+                    </section>
+                </div>
+                
+                <!-- Gallery Tab (unchanged) -->
+                <div class="tab-pane fade" id="gallery" role="tabpanel">
+                    <section class="property-section">
+                        <h2 class="section-title">Photo Gallery</h2>
+                        
+                        {% if hostel.images.all %}
+                            <div class="gallery-grid">
+                                {% for image in hostel.images.all %}
+                                    <div class="gallery-item" data-bs-toggle="modal" data-bs-target="#galleryModal" 
+                                         data-image="{{ image.image.url }}" data-caption="{{ image.caption }}">
+                                        <img src="{{ image.image.url }}" alt="{{ image.caption }}">
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <div class="text-center py-5">
+                                <i class="fas fa-images fa-4x text-muted mb-3"></i>
+                                <h5 class="text-muted">No photos available</h5>
+                                <p class="text-muted">More photos will be added soon.</p>
+                            </div>
+                        {% endif %}
+                    </section>
+                </div>
+                
+                <!-- Enhanced Location Tab -->
+                <div class="tab-pane fade" id="location" role="tabpanel">
+                    <section class="property-section">
+                        <h2 class="section-title">Location & Distance</h2>
+                        
+                        <div class="location-info-grid">
+                            <div class="location-info-card">
+                                <h6><i class="fas fa-map-marker-alt me-2"></i>Address</h6>
+                                <p class="mb-0">{{ hostel.address }}</p>
+                            </div>
+                            
+                            <div class="location-info-card">
+                                <h6><i class="fas fa-university me-2"></i>Campus</h6>
+                                <p class="mb-0">{{ hostel.campus|default:"Main Campus" }}</p>
+                            </div>
+                            
+                            <div class="location-info-card">
+                                <h6><i class="fas fa-graduation-cap me-2"></i>School</h6>
+                                <p class="mb-0">{{ hostel.school.name }}, {{ hostel.school.city }}</p>
+                            </div>
+                            
+                            {% if hostel.coordinates %}
+                                <div class="location-info-card">
+                                    <h6><i class="fas fa-crosshairs me-2"></i>Coordinates</h6>
+                                    <div class="coordinates-display">
+                                        <div>Lat: {{ hostel.latitude }}</div>
+                                        <div>Lng: {{ hostel.longitude }}</div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        {% if distance_to_campus %}
+                            <div class="alert alert-success d-flex align-items-center mt-4">
+                                <i class="fas fa-route fa-2x me-3"></i>
+                                <div>
+                                    <h6 class="mb-1">Distance to Campus</h6>
+                                    <strong>{{ distance_to_campus }}</strong>
+                                    {% with distance=hostel.calculate_distance_to_school %}
+                                        {% if distance <= 0.5 %}
+                                            <span class="text-success"> • Perfect walking distance!</span>
+                                        {% elif distance <= 1 %}
+                                            <span class="text-success"> • Easy walk to classes</span>
+                                        {% elif distance <= 3 %}
+                                            <span class="text-warning"> • Consider cycling or transport</span>
+                                        {% else %}
+                                            <span class="text-info"> • Transport recommended</span>
+                                        {% endif %}
+                                    {% endwith %}
+                                </div>
+                            </div>
+                        {% else %}
+                            <div class="alert alert-info mt-4">
+                                <i class="fas fa-info-circle me-2"></i>
+                                Distance calculation not available. Contact the hostel for location details.
+                            </div>
+                        {% endif %}
+                        
+                        <!-- Map placeholder -->
+                        <div class="location-map d-flex align-items-center justify-content-center mt-4">
+                            <div class="text-center text-muted">
+                                <i class="fas fa-map fa-3x mb-3"></i>
+                                <p>Interactive map integration coming soon</p>
+                                {% if hostel.coordinates %}
+                                    <small>{{ hostel.coordinates }}</small>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Enhanced Contact Sidebar -->
+        <div class="col-lg-4">
+            <div class="contact-sidebar">
+                {% if can_manage %}
+                    <!-- Management Panel for Owners -->
+                    <div class="management-buttons">
+                        <h6><i class="fas fa-cog me-2"></i>Manage Your Hostel</h6>
+                        <div class="d-flex flex-column gap-2">
+                            <a href="{% url 'hostels:hostel-update' hostel.slug %}" class="btn-manage">
+                                <i class="fas fa-edit"></i>Edit Hostel Details
+                            </a>
+                            <a href="{% url 'hostels:roomtype-create' hostel.slug %}" class="btn-manage btn-success">
+                                <i class="fas fa-plus"></i>Add Room Type
+                            </a>
+                            <a href="{% url 'hostels:dashboard' %}" class="btn-manage btn-outline-primary">
+                                <i class="fas fa-tachometer-alt"></i>Dashboard
+                            </a>
+                        </div>
+                    </div>
+                {% endif %}
+                
+                <!-- Distance Information Card -->
+                {% if distance_to_campus %}
+                    <div class="distance-info-card">
+                        <div class="distance-value">
+                            <i class="fas fa-route me-2"></i>{{ distance_to_campus }}
+                        </div>
+                        <div class="distance-description">
+                            Distance to {{ hostel.school.name }} campus
+                        </div>
+                    </div>
+                {% endif %}
+                
+                <!-- Contact Card -->
+                <div class="contact-card">
+                    <div class="owner-info">
+                        <div class="owner-avatar">
+                            {{ hostel.owner_name|first|upper }}
+                        </div>
+                        <h5>{{ hostel.owner_name }}</h5>
+                        <p class="text-muted mb-0">Property Owner</p>
+                    </div>
+                    
+                    <div class="contact-options">
+                        <div class="mb-3">
+                            <strong>Phone:</strong>
+                            <p class="mb-0">{{ hostel.phone_number }}</p>
+                        </div>
+                        
+                        {% if hostel.email %}
+                            <div class="mb-3">
+                                <strong>Email:</strong>
+                                <p class="mb-0">{{ hostel.email }}</p>
+                            </div>
+                        {% endif %}
+                        
+                        <div class="mb-4">
+                            <strong>Price Range:</strong>
+                            <p class="mb-0 fs-5 fw-bold text-primary">{{ hostel.price_range_display }}</p>
+                            <small class="text-muted">per person/year</small>
+                        </div>
+                    </div>
+                    
+                    {% if not can_manage %}
+                        <div class="d-grid gap-2">
+                            <a href="tel:{{ hostel.phone_number }}" class="btn contact-btn btn-lg">
+                                <i class="fas fa-phone me-2"></i>Call Now
+                            </a>
+                            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#inquiryModal">
+                                <i class="fas fa-envelope me-2"></i>Send Message
+                            </button>
+                        </div>
+                    {% endif %}
+                </div>
+                
+                {% if similar_hostels %}
+                    <div class="contact-card">
+                        <h5 class="mb-3">Similar Properties</h5>
+                        {% for similar in similar_hostels %}
+                            <div class="similar-hostel-card card mb-3">
+                                <div class="row g-0">
+                                    <div class="col-4">
+                                        <img src="{% if similar.main_image %}{{ similar.main_image.url }}{% else %}{% static 'images/placeholder-hostel.jpg' %}{% endif %}" 
+                                             class="img-fluid h-100" style="object-fit: cover;" alt="{{ similar.name }}">
+                                    </div>
+                                    <div class="col-8">
+                                        <div class="card-body p-2">
+                                            <h6 class="card-title mb-1">{{ similar.name|truncatechars:20 }}</h6>
+                                            <p class="card-text mb-1">
+                                                <small class="text-muted">{{ similar.price_range_display }}</small>
+                                            </p>
+                                            {% if similar.get_distance_to_lecture_halls %}
+                                                <p class="card-text mb-1">
+                                                    <small class="text-success">{{ similar.get_distance_to_lecture_halls }}</small>
+                                                </p>
+                                            {% endif %}
+                                            <a href="{% url 'hostels:hostel-detail' similar.slug %}" class="btn btn-sm btn-outline-primary">View</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Your existing modals remain the same -->
+<!-- Gallery Modal, Inquiry Modal, etc. -->
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Your existing JavaScript remains the same
+    
+    // Enhanced room type management
+    const roomTypeCards = document.querySelectorAll('.room-type-card');
+    
+    roomTypeCards.forEach(card => {
+        const managementButtons = card.querySelector('.room-type-management');
+        
+        if (managementButtons) {
+            // Show management buttons on hover for desktop
+            card.addEventListener('mouseenter', function() {
+                managementButtons.style.opacity = '1';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                managementButtons.style.opacity = '0';
+            });
+        }
+    });
+    
+    // Distance information tooltips
+    const distanceElements = document.querySelectorAll('[data-distance]');
+    distanceElements.forEach(element => {
+        const distance = parseFloat(element.dataset.distance);
+        let tooltip = '';
+        
+        if (distance <= 0.5) {
+            tooltip = 'Perfect walking distance - you can easily walk to classes!';
+        } else if (distance <= 1) {
+            tooltip = 'Great location - just a short walk to campus';
+        } else if (distance <= 3) {
+            tooltip = 'Moderate distance - consider cycling or campus transport';
+        } else {
+            tooltip = 'Further from campus - regular transport may be needed';
+        }
+        
+        element.setAttribute('title', tooltip);
+    });
+    
+    // Auto-focus on room types tab if coming from room type creation
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('room_added')) {
+        const roomsTab = document.getElementById('rooms-tab');
+        if (roomsTab) {
+            roomsTab.click();
+            
+            // Show success message
+            const alertDiv = document.createElement('div');
+            alertDiv.className = 'alert alert-success alert-dismissible fade show';
+            alertDiv.innerHTML = `
+                <i class="fas fa-check-circle me-2"></i>
+                Room type added successfully!
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            
+            document.querySelector('.container').insertAdjacentElement('afterbegin', alertDiv);
+            
+            setTimeout(() => {
+                if (alertDiv && alertDiv.parentNode) {
+                    alertDiv.remove();
+                }
+            }, 5000);
+        }
+    }
+});
+</script>
 {% endblock %}
