@@ -31,17 +31,12 @@ ALLOWED_HOSTS = config('CURRENT_ALLOWED_HOST', cast = Csv())
 # Application definition
 
 INSTALLED_APPS = [
-    #created apps
-    # 'ckeditor',
-    #'fontawesomefree',
     'django_ckeditor_5',
     'hostels',
-    'atlass',
+    # 'atlass',
     'crispy_bootstrap5',
     'users',
     "crispy_forms",
-    #default apps
-    #'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
