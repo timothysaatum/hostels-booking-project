@@ -1,343 +1,269 @@
 {% extends 'hostels/base.html' %}
 {% load static %}
 
-{% block title %}List Your Hostel - StudentStay{% endblock %}
+{% block title %}
+    {% if object %}Update {{ object.name }}{% else %}Create New Hostel{% endif %} | StudentStay
+{% endblock %}
 
 {% block extra_css %}
 <style>
-    .create-header {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        padding: 100px 0 50px;
-        margin-top: -76px;
+    .form-container {
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        padding: 40px;
+        margin: 30px 0;
+    }
+    
+    .form-header {
+        text-align: center;
+        margin-bottom: 40px;
+        padding-bottom: 20px;
+        border-bottom: 2px solid #f1f2f6;
+    }
+    
+    .form-header h1 {
+        color: #2c3e50;
+        font-weight: 600;
+        margin-bottom: 10px;
+    }
+    
+    .form-header p {
+        color: #6c757d;
+        font-size: 16px;
     }
     
     .form-section {
-        background: white;
-        border-radius: 20px;
-        padding: 40px;
-        margin-bottom: 30px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-        border: 1px solid #f1f2f6;
+        margin-bottom: 40px;
+        padding: 30px;
+        background: #f8f9fa;
+        border-radius: 15px;
+        border-left: 4px solid #667eea;
     }
     
-    .section-header {
-        border-bottom: 2px solid #f1f2f6;
-        padding-bottom: 15px;
-        margin-bottom: 30px;
-    }
-    
-    .section-title {
+    .form-section h3 {
+        color: #2c3e50;
         font-size: 20px;
         font-weight: 600;
-        color: #2c3e50;
-        margin: 0;
+        margin-bottom: 20px;
         display: flex;
         align-items: center;
-        gap: 10px;
     }
     
-    .section-icon {
-        width: 40px;
-        height: 40px;
-        background: linear-gradient(45deg, #667eea, #764ba2);
-        border-radius: 10px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-    }
-    
-    .form-floating label {
-        color: #6c757d;
-    }
-    
-    .form-floating > .form-control:focus,
-    .form-floating > .form-control:not(:placeholder-shown) {
-        padding-top: 1.625rem;
-        padding-bottom: 0.625rem;
-    }
-    
-    .form-floating > label {
-        padding: 1rem 1rem;
-    }
-    
-    .amenity-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 15px;
-        margin: 20px 0;
-    }
-    
-    .amenity-item {
-        display: flex;
-        align-items: center;
-        padding: 15px;
-        border: 2px solid #f1f2f6;
-        border-radius: 10px;
-        transition: all 0.3s ease;
-        cursor: pointer;
-    }
-    
-    .amenity-item:hover {
-        border-color: #667eea;
-        background: #f8f9ff;
-    }
-    
-    .amenity-item input[type="checkbox"] {
-        margin-right: 12px;
-        transform: scale(1.2);
-    }
-    
-    .amenity-item input[type="checkbox"]:checked + label {
-        color: #667eea;
-        font-weight: 500;
-    }
-    
-    .image-upload-section {
-        border: 2px dashed #d1d5db;
-        border-radius: 15px;
-        padding: 40px;
+    .form-section h3 i {
+        margin-right: 10px;
+        width: 24px;
         text-align: center;
-        transition: all 0.3s ease;
-        background: #fafbfc;
-        margin: 20px 0;
-    }
-    
-    .image-upload-section:hover {
-        border-color: #667eea;
-        background: #f8f9ff;
-    }
-    
-    .image-preview {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-        gap: 15px;
-        margin: 20px 0;
-    }
-    
-    .preview-item {
-        position: relative;
-        aspect-ratio: 4/3;
-        border-radius: 10px;
-        overflow: hidden;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    }
-    
-    .preview-item img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-    
-    .preview-remove {
-        position: absolute;
-        top: 5px;
-        right: 5px;
-        background: rgba(220, 53, 69, 0.9);
-        color: white;
-        border: none;
-        border-radius: 50%;
-        width: 25px;
-        height: 25px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 12px;
-        cursor: pointer;
-        transition: all 0.3s ease;
-    }
-    
-    .preview-remove:hover {
-        background: #dc3545;
-        transform: scale(1.1);
-    }
-    
-    .form-help {
-        font-size: 14px;
-        color: #6c757d;
-        margin-top: 5px;
-    }
-    
-    .required-field::after {
-        content: '*';
-        color: #dc3545;
-        margin-left: 4px;
-    }
-    
-    .form-check-custom {
-        background: #f8f9fa;
-        border-radius: 10px;
-        padding: 15px;
-        margin: 10px 0;
-        transition: all 0.3s ease;
-    }
-    
-    .form-check-custom:hover {
-        background: #e9ecef;
-    }
-    
-    .form-check-custom input[type="checkbox"]:checked ~ label {
         color: #667eea;
-        font-weight: 500;
     }
     
-    .submit-section {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        border-radius: 20px;
-        padding: 40px;
-        text-align: center;
-        color: white;
-        margin: 40px 0;
+    .form-group {
+        margin-bottom: 25px;
     }
     
-    .btn-submit {
-        background: white;
-        color: #667eea;
-        border: none;
-        padding: 15px 40px;
-        border-radius: 50px;
+    .form-label {
         font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+    }
+    
+    .form-label .required {
+        color: #e74c3c;
+        margin-left: 5px;
+    }
+    
+    .form-control, .form-select {
+        border: 2px solid #e9ecef;
+        border-radius: 10px;
+        padding: 12px 15px;
         font-size: 16px;
         transition: all 0.3s ease;
     }
     
-    .btn-submit:hover {
-        background: #f8f9fa;
-        transform: translateY(-2px);
-        box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-        color: #5a67d8;
-    }
-    
-    .progress-nav {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 20px;
-        margin: 30px 0;
-    }
-    
-    .progress-step {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        background: #e9ecef;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: #6c757d;
-        font-weight: 600;
-        position: relative;
-    }
-    
-    .progress-step.active {
-        background: #667eea;
-        color: white;
-    }
-    
-    .progress-step.completed {
-        background: #28a745;
-        color: white;
-    }
-    
-    .progress-line {
-        width: 50px;
-        height: 2px;
-        background: #e9ecef;
-    }
-    
-    .progress-line.completed {
-        background: #28a745;
-    }
-
-    .pricing-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 20px;
-        margin: 20px 0;
-    }
-
-    .pricing-card {
-        background: #f8f9fa;
-        border-radius: 15px;
-        padding: 20px;
-        border: 2px solid #e9ecef;
-        transition: all 0.3s ease;
-    }
-
-    .pricing-card:hover {
-        border-color: #667eea;
-        background: #f8f9ff;
-    }
-
-    .pricing-icon {
-        width: 50px;
-        height: 50px;
-        background: linear-gradient(45deg, #667eea, #764ba2);
-        border-radius: 12px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        margin-bottom: 15px;
-    }
-
-    .input-group-text {
-        background: #f8f9fa;
-        border-color: #e9ecef;
-        color: #6c757d;
-        font-weight: 500;
-    }
-
-    .input-group .form-control:focus {
+    .form-control:focus, .form-select:focus {
         border-color: #667eea;
         box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
     }
-
-    .validation-message {
-        font-size: 13px;
-        margin-top: 5px;
-        padding: 8px 12px;
+    
+    .location-section {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-left: none;
+    }
+    
+    .location-section h3 {
+        color: white;
+    }
+    
+    .location-section h3 i {
+        color: rgba(255, 255, 255, 0.8);
+    }
+    
+    .location-btn {
+        background: rgba(255, 255, 255, 0.2);
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        color: white;
+        padding: 12px 20px;
+        border-radius: 10px;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(10px);
+    }
+    
+    .location-btn:hover {
+        background: rgba(255, 255, 255, 0.3);
+        border-color: rgba(255, 255, 255, 0.5);
+        color: white;
+        transform: translateY(-2px);
+    }
+    
+    .location-btn i {
+        margin-right: 8px;
+    }
+    
+    .coordinates-display {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 10px;
+        padding: 15px;
+        margin-top: 15px;
+        backdrop-filter: blur(10px);
+    }
+    
+    .coordinates-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+    
+    .coordinates-item:last-child {
+        margin-bottom: 0;
+    }
+    
+    .coordinate-label {
+        font-weight: 500;
+        opacity: 0.9;
+    }
+    
+    .coordinate-value {
+        font-family: 'Courier New', monospace;
+        background: rgba(255, 255, 255, 0.1);
+        padding: 5px 10px;
+        border-radius: 5px;
+        font-size: 14px;
+    }
+    
+    .checkbox-section {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+        margin-top: 15px;
+    }
+    
+    .checkbox-item {
+        display: flex;
+        align-items: center;
+        padding: 12px 15px;
+        background: white;
+        border: 2px solid #e9ecef;
+        border-radius: 10px;
+        transition: all 0.3s ease;
+    }
+    
+    .checkbox-item:hover {
+        border-color: #667eea;
+        background: #f8f9fa;
+    }
+    
+    .checkbox-item input:checked + .checkbox-item {
+        border-color: #667eea;
+        background: #e8f4f8;
+    }
+    
+    .image-upload-section {
+        border: 2px dashed #667eea;
+        border-radius: 15px;
+        padding: 30px;
+        text-align: center;
+        transition: all 0.3s ease;
+        background: rgba(102, 126, 234, 0.05);
+    }
+    
+    .image-upload-section:hover {
+        border-color: #5a6fd8;
+        background: rgba(102, 126, 234, 0.1);
+    }
+    
+    .submit-section {
+        text-align: center;
+        padding: 30px 0;
+        border-top: 1px solid #e9ecef;
+        margin-top: 40px;
+    }
+    
+    .btn-primary {
+        background: linear-gradient(45deg, #667eea, #764ba2);
+        border: none;
+        padding: 15px 40px;
+        font-size: 16px;
+        font-weight: 600;
+        border-radius: 50px;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-primary:hover {
+        background: linear-gradient(45deg, #5a6fd8, #6a4190);
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+    }
+    
+    .btn-secondary {
+        background: #6c757d;
+        border: none;
+        padding: 15px 30px;
+        font-size: 16px;
+        font-weight: 600;
+        border-radius: 50px;
+        margin-right: 15px;
+    }
+    
+    .loading-btn {
+        opacity: 0.7;
+        pointer-events: none;
+    }
+    
+    .location-status {
+        margin-top: 15px;
+        padding: 10px 15px;
         border-radius: 8px;
-        background: rgba(220, 53, 69, 0.1);
-        color: #dc3545;
-        border-left: 3px solid #dc3545;
         display: none;
     }
-
-    .validation-message.show {
-        display: block;
+    
+    .location-status.success {
+        background: rgba(40, 167, 69, 0.2);
+        border: 1px solid rgba(40, 167, 69, 0.3);
+        color: rgba(255, 255, 255, 0.9);
+    }
+    
+    .location-status.error {
+        background: rgba(220, 53, 69, 0.2);
+        border: 1px solid rgba(220, 53, 69, 0.3);
+        color: rgba(255, 255, 255, 0.9);
     }
     
     @media (max-width: 768px) {
-        .create-header {
-            padding: 80px 0 30px;
+        .form-container {
+            padding: 20px;
+            margin: 15px;
         }
         
         .form-section {
-            padding: 25px;
-            border-radius: 15px;
+            padding: 20px;
         }
         
-        .amenity-grid {
-            grid-template-columns: 1fr;
-        }
-        
-        .progress-nav {
-            gap: 10px;
-        }
-        
-        .progress-line {
-            width: 30px;
-        }
-        
-        .progress-step {
-            width: 35px;
-            height: 35px;
-            font-size: 14px;
-        }
-
-        .pricing-grid {
+        .checkbox-section {
             grid-template-columns: 1fr;
         }
     }
@@ -345,415 +271,281 @@
 {% endblock %}
 
 {% block content %}
-<!-- Header Section -->
-<section class="create-header">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-lg-8 text-center">
-                <h1 class="display-5 fw-bold mb-3">List Your Hostel</h1>
-                <p class="lead mb-4">Join thousands of property owners earning with StudentStay</p>
-                
-                <!-- Progress Navigation -->
-                <div class="progress-nav">
-                    <div class="progress-step active">1</div>
-                    <div class="progress-line"></div>
-                    <div class="progress-step">2</div>
-                    <div class="progress-line"></div>
-                    <div class="progress-step">3</div>
-                    <div class="progress-line"></div>
-                    <div class="progress-step">4</div>
-                </div>
-                <p class="small text-white-50">Basic Info → Rooms & Pricing → Photos → Room Types</p>
-            </div>
+<div class="container">
+    <div class="form-container">
+        <div class="form-header">
+            <h1>
+                {% if object %}
+                    <i class="fas fa-edit me-2"></i>Update Hostel
+                {% else %}
+                    <i class="fas fa-plus-circle me-2"></i>Create New Hostel
+                {% endif %}
+            </h1>
+            <p>
+                {% if object %}
+                    Update your hostel information to keep it current and attractive to students.
+                {% else %}
+                    Fill in the details below to list your hostel and start receiving bookings from students.
+                {% endif %}
+            </p>
         </div>
-    </div>
-</section>
 
-<!-- Main Form -->
-<div class="container py-5">
-    <div class="row justify-content-center">
-        <div class="col-lg-10">
-            <form method="post" enctype="multipart/form-data" id="hostelForm">
-                {% csrf_token %}
+        <form method="post" enctype="multipart/form-data" id="hostelForm">
+            {% csrf_token %}
+            
+            <!-- Basic Information Section -->
+            <div class="form-section">
+                <h3><i class="fas fa-info-circle"></i>Basic Information</h3>
                 
-                <!-- Basic Information Section -->
-                <div class="form-section">
-                    <div class="section-header">
-                        <div class="section-title">
-                            <div class="section-icon">
-                                <i class="fas fa-home"></i>
-                            </div>
-                            <span class="required-field">Basic Information</span>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="{{ form.school.id_for_label }}" class="form-label">
+                                School <span class="required">*</span>
+                            </label>
+                            {{ form.school }}
                         </div>
-                        <p class="text-muted mb-0">Tell us about your property</p>
                     </div>
-                    
-                    <div class="row g-4">
-                        <div class="col-md-6">
-                            <div class="form-floating">
-                                {{ form.name }}
-                                <label for="{{ form.name.id_for_label }}" class="required-field">Hostel Name</label>
-                            </div>
-                            {% if form.name.errors %}
-                                <div class="text-danger small mt-1">{{ form.name.errors.0 }}</div>
-                            {% endif %}
-                        </div>
-                        
-                        <div class="col-md-6">
-                            <div class="form-floating">
-                                {{ form.school }}
-                                <label for="{{ form.school.id_for_label }}" class="required-field">School/University</label>
-                            </div>
-                            {% if form.school.errors %}
-                                <div class="text-danger small mt-1">{{ form.school.errors.0 }}</div>
-                            {% endif %}
-                        </div>
-                        
-                        <div class="col-md-6">
-                            <div class="form-floating">
-                                {{ form.campus }}
-                                <label for="{{ form.campus.id_for_label }}">Campus</label>
-                            </div>
-                            <div class="form-help">e.g., Main Campus, North Campus</div>
-                        </div>
-                        
-                        <div class="col-12">
-                            <label class="form-label required-field">Description</label>
-                            {{ form.description }}
-                            <div class="form-help">Describe your hostel, its features, and what makes it special</div>
-                            {% if form.description.errors %}
-                                <div class="text-danger small mt-1">{{ form.description.errors.0 }}</div>
-                            {% endif %}
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="{{ form.campus.id_for_label }}" class="form-label">Campus</label>
+                            {{ form.campus }}
                         </div>
                     </div>
                 </div>
+                
+                <div class="form-group">
+                    <label for="{{ form.name.id_for_label }}" class="form-label">
+                        Hostel Name <span class="required">*</span>
+                    </label>
+                    {{ form.name }}
+                </div>
+                
+                <div class="form-group">
+                    <label for="{{ form.description.id_for_label }}" class="form-label">
+                        Description <span class="required">*</span>
+                    </label>
+                    {{ form.description }}
+                </div>
+            </div>
 
-                <!-- Rooms & Pricing Section -->
-                <div class="form-section">
-                    <div class="section-header">
-                        <div class="section-title">
-                            <div class="section-icon">
-                                <i class="fas fa-bed"></i>
-                            </div>
-                            <span class="required-field">Rooms & Pricing Overview</span>
-                        </div>
-                        <p class="text-muted mb-0">Basic room and pricing information (you'll add detailed room types later)</p>
-                    </div>
-                    
-                    <div class="pricing-grid">
-                        <div class="pricing-card">
-                            <div class="pricing-icon">
-                                <i class="fas fa-door-open"></i>
-                            </div>
-                            <h6 class="mb-3">Room Count</h6>
-                            <div class="row g-3">
-                                <div class="col-12">
-                                    <div class="input-group">
-                                        <span class="input-group-text">Total</span>
-                                        {{ form.total_rooms }}
-                                    </div>
-                                    {% if form.total_rooms.errors %}
-                                        <div class="text-danger small mt-1">{{ form.total_rooms.errors.0 }}</div>
-                                    {% endif %}
-                                </div>
-                                <div class="col-12">
-                                    <div class="input-group">
-                                        <span class="input-group-text">Available</span>
-                                        {{ form.available_rooms }}
-                                    </div>
-                                    {% if form.available_rooms.errors %}
-                                        <div class="text-danger small mt-1">{{ form.available_rooms.errors.0 }}</div>
-                                    {% endif %}
-                                    <div id="roomCountValidation" class="validation-message">
-                                        Available rooms cannot exceed total rooms
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="pricing-card">
-                            <div class="pricing-icon">
-                                <i class="fas fa-money-bill-wave"></i>
-                            </div>
-                            <h6 class="mb-3">Price Range (per person)</h6>
-                            <div class="row g-3">
-                                <div class="col-12">
-                                    <div class="input-group">
-                                        <span class="input-group-text">GH₵</span>
-                                        {{ form.min_price }}
-                                        <span class="input-group-text">Min</span>
-                                    </div>
-                                    {% if form.min_price.errors %}
-                                        <div class="text-danger small mt-1">{{ form.min_price.errors.0 }}</div>
-                                    {% endif %}
-                                </div>
-                                <div class="col-12">
-                                    <div class="input-group">
-                                        <span class="input-group-text">GH₵</span>
-                                        {{ form.max_price }}
-                                        <span class="input-group-text">Max</span>
-                                    </div>
-                                    {% if form.max_price.errors %}
-                                        <div class="text-danger small mt-1">{{ form.max_price.errors.0 }}</div>
-                                    {% endif %}
-                                    <div id="priceRangeValidation" class="validation-message">
-                                        Maximum price must be greater than or equal to minimum price
-                                    </div>
-                                </div>
-                            </div>
+            <!-- Contact Information Section -->
+            <div class="form-section">
+                <h3><i class="fas fa-phone"></i>Contact Information</h3>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="{{ form.phone_number.id_for_label }}" class="form-label">
+                                Phone Number <span class="required">*</span>
+                            </label>
+                            {{ form.phone_number }}
                         </div>
                     </div>
-                    
-                    <div class="alert alert-info mt-3">
-                        <i class="fas fa-info-circle me-2"></i>
-                        <strong>Note:</strong> These are overview numbers. After creating your hostel, you'll be able to add specific room types with detailed pricing and features.
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="{{ form.email.id_for_label }}" class="form-label">Email Address</label>
+                            {{ form.email }}
+                        </div>
                     </div>
                 </div>
+            </div>
+
+            <!-- Location Section with GPS -->
+            <div class="form-section location-section">
+                <h3><i class="fas fa-map-marker-alt"></i>Location & GPS Coordinates</h3>
                 
-                <!-- Contact Information Section -->
-                <div class="form-section">
-                    <div class="section-header">
-                        <div class="section-title">
-                            <div class="section-icon">
-                                <i class="fas fa-phone"></i>
-                            </div>
-                            <span class="required-field">Contact Information</span>
+                <div class="form-group">
+                    <label for="{{ form.address.id_for_label }}" class="form-label">
+                        Full Address <span class="required">*</span>
+                    </label>
+                    {{ form.address }}
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="{{ form.latitude.id_for_label }}" class="form-label">Latitude</label>
+                            {{ form.latitude }}
                         </div>
-                        <p class="text-muted mb-0">How students can reach you</p>
                     </div>
-                    
-                    <div class="row g-4">
-                        <div class="col-md-6">
-                            <div class="form-floating">
-                                {{ form.phone_number }}
-                                <label for="{{ form.phone_number.id_for_label }}" class="required-field">Phone Number</label>
-                            </div>
-                            {% if form.phone_number.errors %}
-                                <div class="text-danger small mt-1">{{ form.phone_number.errors.0 }}</div>
-                            {% endif %}
-                        </div>
-                        
-                        <div class="col-md-6">
-                            <div class="form-floating">
-                                {{ form.email }}
-                                <label for="{{ form.email.id_for_label }}">Email Address</label>
-                            </div>
-                            <div class="form-help">Optional - for email inquiries</div>
-                            {% if form.email.errors %}
-                                <div class="text-danger small mt-1">{{ form.email.errors.0 }}</div>
-                            {% endif %}
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="{{ form.longitude.id_for_label }}" class="form-label">Longitude</label>
+                            {{ form.longitude }}
                         </div>
                     </div>
                 </div>
                 
-                <!-- Location Section -->
-                <div class="form-section">
-                    <div class="section-header">
-                        <div class="section-title">
-                            <div class="section-icon">
-                                <i class="fas fa-map-marker-alt"></i>
-                            </div>
-                            <span class="required-field">Location Details</span>
-                        </div>
-                        <p class="text-muted mb-0">Where is your hostel located?</p>
+                <div class="text-center">
+                    <button type="button" id="getCurrentLocation" class="btn location-btn">
+                        <i class="fas fa-crosshairs"></i>Get Current Location
+                    </button>
+                    <p class="mt-2 mb-0" style="opacity: 0.8; font-size: 14px;">
+                        Make sure you're at the hostel premises when clicking this button
+                    </p>
+                </div>
+                
+                <div id="locationStatus" class="location-status"></div>
+                
+                <div id="coordinatesDisplay" class="coordinates-display" style="display: none;">
+                    <div class="coordinates-item">
+                        <span class="coordinate-label">Latitude:</span>
+                        <span id="displayLatitude" class="coordinate-value">-</span>
                     </div>
-                    
-                    <div class="row g-4">
-                        <div class="col-12">
-                            <label class="form-label required-field">Full Address</label>
-                            {{ form.address }}
-                            <div class="form-help">Include street address, area, and any landmarks</div>
-                            {% if form.address.errors %}
-                                <div class="text-danger small mt-1">{{ form.address.errors.0 }}</div>
-                            {% endif %}
+                    <div class="coordinates-item">
+                        <span class="coordinate-label">Longitude:</span>
+                        <span id="displayLongitude" class="coordinate-value">-</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Room & Pricing Information -->
+            <div class="form-section">
+                <h3><i class="fas fa-bed"></i>Room & Pricing Information</h3>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="{{ form.total_rooms.id_for_label }}" class="form-label">
+                                Total Rooms <span class="required">*</span>
+                            </label>
+                            {{ form.total_rooms }}
                         </div>
-                        
-                        <div class="col-md-6">
-                            <div class="form-floating">
-                                {{ form.latitude }}
-                                <label for="{{ form.latitude.id_for_label }}">Latitude</label>
-                            </div>
-                            <div class="form-help">Optional - for map location</div>
-                        </div>
-                        
-                        <div class="col-md-6">
-                            <div class="form-floating">
-                                {{ form.longitude }}
-                                <label for="{{ form.longitude.id_for_label }}">Longitude</label>
-                            </div>
-                            <div class="form-help">Optional - for map location</div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="{{ form.available_rooms.id_for_label }}" class="form-label">
+                                Available Rooms <span class="required">*</span>
+                            </label>
+                            {{ form.available_rooms }}
                         </div>
                     </div>
                 </div>
                 
-                <!-- Payment Information Section -->
-                <div class="form-section">
-                    <div class="section-header">
-                        <div class="section-title">
-                            <div class="section-icon">
-                                <i class="fas fa-credit-card"></i>
-                            </div>
-                            <span class="required-field">Payment Information</span>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="{{ form.min_price.id_for_label }}" class="form-label">
+                                Minimum Price (GHS) <span class="required">*</span>
+                            </label>
+                            {{ form.min_price }}
                         </div>
-                        <p class="text-muted mb-0">Bank details for payments</p>
                     </div>
-                    
-                    <div class="row g-4">
-                        <div class="col-md-6">
-                            <div class="form-floating">
-                                {{ form.account_name }}
-                                <label for="{{ form.account_name.id_for_label }}" class="required-field">Account Name</label>
-                            </div>
-                            {% if form.account_name.errors %}
-                                <div class="text-danger small mt-1">{{ form.account_name.errors.0 }}</div>
-                            {% endif %}
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="{{ form.max_price.id_for_label }}" class="form-label">
+                                Maximum Price (GHS) <span class="required">*</span>
+                            </label>
+                            {{ form.max_price }}
                         </div>
-                        
-                        <div class="col-md-6">
-                            <div class="form-floating">
-                                {{ form.bank_name }}
-                                <label for="{{ form.bank_name.id_for_label }}">Bank Name</label>
-                            </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Banking Information -->
+            <div class="form-section">
+                <h3><i class="fas fa-university"></i>Banking Information</h3>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="{{ form.account_name.id_for_label }}" class="form-label">
+                                Account Name <span class="required">*</span>
+                            </label>
+                            {{ form.account_name }}
                         </div>
-                        
-                        <div class="col-12">
-                            <div class="form-floating">
-                                {{ form.account_number }}
-                                <label for="{{ form.account_number.id_for_label }}">Account Number</label>
-                            </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="{{ form.account_number.id_for_label }}" class="form-label">Account Number</label>
+                            {{ form.account_number }}
                         </div>
                     </div>
                 </div>
                 
-                <!-- Main Image Section -->
-                <div class="form-section">
-                    <div class="section-header">
-                        <div class="section-title">
-                            <div class="section-icon">
-                                <i class="fas fa-camera"></i>
-                            </div>
-                            <span>Main Photo</span>
-                        </div>
-                        <p class="text-muted mb-0">Upload your best photo - this will be shown first</p>
-                    </div>
-                    
-                    <div class="image-upload-section">
-                        <i class="fas fa-cloud-upload-alt fa-3x text-muted mb-3"></i>
-                        <h5>Upload Main Photo</h5>
-                        <p class="text-muted">Choose your best exterior or interior shot</p>
-                        {{ form.main_image }}
-                        <div class="form-help">Recommended: 1200x800px, JPG or PNG, max 5MB</div>
-                    </div>
-                    
-                    <div id="mainImagePreview" class="image-preview d-none">
-                        <!-- Preview will be inserted here -->
-                    </div>
+                <div class="form-group">
+                    <label for="{{ form.bank_name.id_for_label }}" class="form-label">Bank Name</label>
+                    {{ form.bank_name }}
                 </div>
+            </div>
+
+            <!-- Main Image -->
+            <div class="form-section">
+                <h3><i class="fas fa-image"></i>Main Image</h3>
                 
-                <!-- Additional Images Section -->
-                <div class="form-section">
-                    <div class="section-header">
-                        <div class="section-title">
-                            <div class="section-icon">
-                                <i class="fas fa-images"></i>
-                            </div>
-                            <span>Photo Gallery</span>
-                        </div>
-                        <p class="text-muted mb-0">Add more photos to showcase your hostel</p>
-                    </div>
-                    
-                    <div class="image-formset">
-                        {{ image_formset.management_form }}
-                        
-                        <div id="image-forms">
-                            {% for form_item in image_formset %}
-                                <div class="image-form-item border rounded p-3 mb-3">
-                                    <div class="row g-3 align-items-end">
-                                        <div class="col-md-4">
-                                            <label class="form-label">Image</label>
-                                            {{ form_item.image }}
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-floating">
-                                                {{ form_item.caption }}
-                                                <label for="{{ form_item.caption.id_for_label }}">Caption (Optional)</label>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-2">
-                                            <div class="form-floating">
-                                                {{ form_item.order }}
-                                                <label for="{{ form_item.order.id_for_label }}">Order</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    
-                                    {% if form_item.DELETE %}
-                                        <div class="form-check mt-2">
-                                            {{ form_item.DELETE }}
-                                            <label class="form-check-label text-danger" for="{{ form_item.DELETE.id_for_label }}">
-                                                Delete this image
-                                            </label>
-                                        </div>
-                                    {% endif %}
-                                </div>
-                            {% endfor %}
-                        </div>
-                    </div>
+                <div class="image-upload-section">
+                    <i class="fas fa-cloud-upload-alt fa-3x mb-3 text-primary"></i>
+                    <h5>Upload Main Hostel Image</h5>
+                    <p class="text-muted">Choose a high-quality image that represents your hostel</p>
+                    {{ form.main_image }}
                 </div>
+            </div>
+
+            <!-- Amenities -->
+            <div class="form-section">
+                <h3><i class="fas fa-star"></i>Amenities & Features</h3>
                 
-                <!-- Amenities Section -->
-                <div class="form-section">
-                    <div class="section-header">
-                        <div class="section-title">
-                            <div class="section-icon">
-                                <i class="fas fa-star"></i>
-                            </div>
-                            <span>Amenities & Features</span>
-                        </div>
-                        <p class="text-muted mb-0">What facilities do you offer?</p>
-                    </div>
-                    
-                    <div class="form-check-custom">
+                <div class="form-group">
+                    <div class="form-check mb-3">
                         {{ form.has_wifi }}
                         <label class="form-check-label" for="{{ form.has_wifi.id_for_label }}">
-                            <i class="fas fa-wifi me-2 text-primary"></i>
-                            <strong>WiFi Internet</strong>
-                            <div class="small text-muted">Free wireless internet access</div>
+                            <i class="fas fa-wifi me-2"></i>WiFi Available
                         </label>
                     </div>
-                    
-                    <div class="amenity-grid">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Additional Amenities</label>
+                    <div class="checkbox-section">
                         {% for choice in form.amenities %}
-                            <div class="amenity-item">
+                            <div class="checkbox-item">
                                 {{ choice.tag }}
-                                <label class="form-check-label" for="{{ choice.id_for_label }}">
-                                    {{ choice.choice_label }}
-                                </label>
+                                <label for="{{ choice.id_for_label }}" class="ms-2">{{ choice.choice_label }}</label>
                             </div>
                         {% endfor %}
                     </div>
                 </div>
+            </div>
+
+            <!-- Gallery Images -->
+            {% if image_formset %}
+            <div class="form-section">
+                <h3><i class="fas fa-images"></i>Gallery Images</h3>
                 
-                <!-- Submit Section -->
-                <div class="submit-section">
-                    <h3 class="mb-3">Ready to Create Your Hostel?</h3>
-                    <p class="mb-4">After creating your hostel, you'll be guided to add specific room types and their details</p>
-                    
-                    <div class="d-flex gap-3 justify-content-center">
-                        <a href="{% url 'hostels:hostel_list' %}" class="btn btn-outline-light btn-lg">
-                            <i class="fas fa-arrow-left me-2"></i>Cancel
-                        </a>
-                        <button type="submit" class="btn btn-submit btn-lg">
-                            <i class="fas fa-plus me-2"></i>Create Hostel & Continue
-                        </button>
-                    </div>
-                    
-                    <div class="small mt-3 text-white-50">
-                        Next: Add room types, set detailed pricing, and configure room-specific features
-                    </div>
+                <div id="gallery-formset">
+                    {{ image_formset.management_form }}
+                    {% for form in image_formset %}
+                        <div class="gallery-form-item mb-3 p-3 border rounded">
+                            {% if form.instance.pk %}{{ form.DELETE }}{% endif %}
+                            <div class="row">
+                                <div class="col-md-4">
+                                    {{ form.image }}
+                                </div>
+                                <div class="col-md-4">
+                                    {{ form.caption }}
+                                </div>
+                                <div class="col-md-4">
+                                    {{ form.order }}
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
                 </div>
-            </form>
-        </div>
+            </div>
+            {% endif %}
+
+            <!-- Submit Section -->
+            <div class="submit-section">
+                <button type="button" class="btn btn-secondary" onclick="history.back()">
+                    <i class="fas fa-arrow-left me-2"></i>Cancel
+                </button>
+                <button type="submit" class="btn btn-primary" id="submitBtn">
+                    <i class="fas fa-save me-2"></i>
+                    {% if object %}Update Hostel{% else %}Create Hostel{% endif %}
+                </button>
+            </div>
+        </form>
     </div>
 </div>
 {% endblock %}
@@ -761,80 +553,103 @@
 {% block extra_js %}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Main image preview
-    const mainImageInput = document.querySelector('input[name="main_image"]');
-    const mainImagePreview = document.getElementById('mainImagePreview');
+    const getCurrentLocationBtn = document.getElementById('getCurrentLocation');
+    const locationStatus = document.getElementById('locationStatus');
+    const coordinatesDisplay = document.getElementById('coordinatesDisplay');
+    const latitudeField = document.getElementById('{{ form.latitude.id_for_label }}');
+    const longitudeField = document.getElementById('{{ form.longitude.id_for_label }}');
+    const displayLatitude = document.getElementById('displayLatitude');
+    const displayLongitude = document.getElementById('displayLongitude');
     
-    mainImageInput.addEventListener('change', function(e) {
-        const file = e.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                mainImagePreview.innerHTML = `
-                    <div class="preview-item">
-                        <img src="${e.target.result}" alt="Main image preview">
-                        <button type="button" class="preview-remove" onclick="removeMainImage()">
-                            <i class="fas fa-times"></i>
-                        </button>
-                    </div>
-                `;
-                mainImagePreview.classList.remove('d-none');
-            };
-            reader.readAsDataURL(file);
+    // Check if coordinates are already filled
+    if (latitudeField.value && longitudeField.value) {
+        displayLatitude.textContent = latitudeField.value;
+        displayLongitude.textContent = longitudeField.value;
+        coordinatesDisplay.style.display = 'block';
+    }
+    
+    getCurrentLocationBtn.addEventListener('click', function() {
+        if (!navigator.geolocation) {
+            showLocationStatus('Geolocation is not supported by this browser.', 'error');
+            return;
         }
+        
+        // Show loading state
+        getCurrentLocationBtn.classList.add('loading-btn');
+        getCurrentLocationBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Getting Location...';
+        
+        navigator.geolocation.getCurrentPosition(
+            function(position) {
+                const latitude = position.coords.latitude;
+                const longitude = position.coords.longitude;
+                
+                // Update form fields
+                latitudeField.value = latitude.toFixed(6);
+                longitudeField.value = longitude.toFixed(6);
+                
+                // Update display
+                displayLatitude.textContent = latitude.toFixed(6);
+                displayLongitude.textContent = longitude.toFixed(6);
+                coordinatesDisplay.style.display = 'block';
+                
+                showLocationStatus('Location captured successfully!', 'success');
+                
+                // Reset button
+                getCurrentLocationBtn.classList.remove('loading-btn');
+                getCurrentLocationBtn.innerHTML = '<i class="fas fa-check me-2"></i>Location Captured';
+                
+                setTimeout(() => {
+                    getCurrentLocationBtn.innerHTML = '<i class="fas fa-crosshairs me-2"></i>Get Current Location';
+                }, 3000);
+            },
+            function(error) {
+                let errorMessage = 'Unable to retrieve your location.';
+                
+                switch(error.code) {
+                    case error.PERMISSION_DENIED:
+                        errorMessage = 'Location access denied. Please enable location permissions.';
+                        break;
+                    case error.POSITION_UNAVAILABLE:
+                        errorMessage = 'Location information is unavailable.';
+                        break;
+                    case error.TIMEOUT:
+                        errorMessage = 'Location request timed out.';
+                        break;
+                }
+                
+                showLocationStatus(errorMessage, 'error');
+                
+                // Reset button
+                getCurrentLocationBtn.classList.remove('loading-btn');
+                getCurrentLocationBtn.innerHTML = '<i class="fas fa-crosshairs me-2"></i>Get Current Location';
+            },
+            {
+                enableHighAccuracy: true,
+                timeout: 10000,
+                maximumAge: 60000
+            }
+        );
     });
     
-    // Real-time validation for room counts and pricing
-    const totalRoomsInput = document.querySelector('input[name="total_rooms"]');
-    const availableRoomsInput = document.querySelector('input[name="available_rooms"]');
-    const minPriceInput = document.querySelector('input[name="min_price"]');
-    const maxPriceInput = document.querySelector('input[name="max_price"]');
-    
-    function validateRoomCounts() {
-        const totalRooms = parseInt(totalRoomsInput.value) || 0;
-        const availableRooms = parseInt(availableRoomsInput.value) || 0;
-        const validationMsg = document.getElementById('roomCountValidation');
+    function showLocationStatus(message, type) {
+        locationStatus.textContent = message;
+        locationStatus.className = `location-status ${type}`;
+        locationStatus.style.display = 'block';
         
-        if (availableRooms > totalRooms && totalRooms > 0) {
-            validationMsg.classList.add('show');
-            availableRoomsInput.classList.add('is-invalid');
-            return false;
-        } else {
-            validationMsg.classList.remove('show');
-            availableRoomsInput.classList.remove('is-invalid');
-            return true;
-        }
+        setTimeout(() => {
+            locationStatus.style.display = 'none';
+        }, 5000);
     }
-    
-    function validatePriceRange() {
-        const minPrice = parseFloat(minPriceInput.value) || 0;
-        const maxPrice = parseFloat(maxPriceInput.value) || 0;
-        const validationMsg = document.getElementById('priceRangeValidation');
-        
-        if (maxPrice < minPrice && minPrice > 0 && maxPrice > 0) {
-            validationMsg.classList.add('show');
-            maxPriceInput.classList.add('is-invalid');
-            return false;
-        } else {
-            validationMsg.classList.remove('show');
-            maxPriceInput.classList.remove('is-invalid');
-            return true;
-        }
-    }
-    
-    // Add event listeners for real-time validation
-    totalRoomsInput.addEventListener('input', validateRoomCounts);
-    availableRoomsInput.addEventListener('input', validateRoomCounts);
-    minPriceInput.addEventListener('input', validatePriceRange);
-    maxPriceInput.addEventListener('input', validatePriceRange);
     
     // Form validation
     const form = document.getElementById('hostelForm');
+    const submitBtn = document.getElementById('submitBtn');
+    
     form.addEventListener('submit', function(e) {
-        let isValid = true;
+        // Basic validation
         const requiredFields = form.querySelectorAll('[required]');
+        let isValid = true;
         
-        // Check required fields
         requiredFields.forEach(field => {
             if (!field.value.trim()) {
                 field.classList.add('is-invalid');
@@ -844,57 +659,21 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
         
-        // Check custom validations
-        if (!validateRoomCounts()) {
-            isValid = false;
-        }
-        
-        if (!validatePriceRange()) {
-            isValid = false;
-        }
-        
         if (!isValid) {
             e.preventDefault();
-            // Scroll to first error
-            const firstError = form.querySelector('.is-invalid, .validation-message.show');
-            if (firstError) {
-                firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                
-                // Focus on the invalid field if it's an input
-                if (firstError.tagName === 'INPUT' || firstError.tagName === 'TEXTAREA') {
-                    setTimeout(() => firstError.focus(), 500);
-                }
-            }
-            
-            // Show error message
-            const alertDiv = document.createElement('div');
-            alertDiv.className = 'alert alert-danger alert-dismissible fade show';
-            alertDiv.innerHTML = `
-                <i class="fas fa-exclamation-triangle me-2"></i>
-                Please fix all errors before submitting. Check required fields and validation messages.
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            `;
-            
-            document.querySelector('.container').insertAdjacentElement('afterbegin', alertDiv);
-            
-            // Auto dismiss after 7 seconds
-            setTimeout(() => {
-                if (alertDiv && alertDiv.parentNode) {
-                    alertDiv.remove();
-                }
-            }, 7000);
-        } else {
-            // Show loading state
-            const submitBtn = form.querySelector('button[type="submit"]');
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Creating Hostel...';
+            showLocationStatus('Please fill in all required fields.', 'error');
+            return;
         }
+        
+        // Show loading state on submit
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Saving...';
     });
     
     // Real-time validation for required fields
-    const requiredInputs = form.querySelectorAll('[required]');
-    requiredInputs.forEach(input => {
-        input.addEventListener('blur', function() {
+    const requiredFields = form.querySelectorAll('[required]');
+    requiredFields.forEach(field => {
+        field.addEventListener('blur', function() {
             if (!this.value.trim()) {
                 this.classList.add('is-invalid');
             } else {
@@ -902,63 +681,12 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
         
-        input.addEventListener('input', function() {
+        field.addEventListener('input', function() {
             if (this.classList.contains('is-invalid') && this.value.trim()) {
                 this.classList.remove('is-invalid');
             }
         });
     });
-    
-    // Auto-resize textareas
-    const textareas = form.querySelectorAll('textarea');
-    textareas.forEach(textarea => {
-        textarea.addEventListener('input', function() {
-            this.style.height = 'auto';
-            this.style.height = this.scrollHeight + 'px';
-        });
-    });
-    
-    // Number input formatting
-    const priceInputs = [minPriceInput, maxPriceInput];
-    priceInputs.forEach(input => {
-        input.addEventListener('input', function() {
-            // Remove non-numeric characters except decimal point
-            let value = this.value.replace(/[^0-9.]/g, '');
-            
-            // Ensure only one decimal point
-            const parts = value.split('.');
-            if (parts.length > 2) {
-                value = parts[0] + '.' + parts.slice(1).join('');
-            }
-            
-            // Limit to 2 decimal places
-            if (parts[1] && parts[1].length > 2) {
-                value = parseFloat(value).toFixed(2);
-            }
-            
-            this.value = value;
-        });
-    });
-    
-    // Room count input validation
-    const roomInputs = [totalRoomsInput, availableRoomsInput];
-    roomInputs.forEach(input => {
-        input.addEventListener('input', function() {
-            // Remove non-numeric characters
-            this.value = this.value.replace(/[^0-9]/g, '');
-            
-            // Ensure minimum value of 0
-            if (parseInt(this.value) < 0) {
-                this.value = '0';
-            }
-        });
-    });
 });
-
-function removeMainImage() {
-    document.querySelector('input[name="main_image"]').value = '';
-    document.getElementById('mainImagePreview').classList.add('d-none');
-    document.getElementById('mainImagePreview').innerHTML = '';
-}
 </script>
 {% endblock %}

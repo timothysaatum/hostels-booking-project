@@ -36,11 +36,9 @@
             
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
-        
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'hostels:hostel_list' %}">Browse Hostels</a>
                     </li>
-        
                 </ul>
                 
                 <ul class="navbar-nav">
@@ -53,9 +51,9 @@
                                 <span class="ms-2">{{ user.get_full_name|default:user.email }}</span>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end user-dropdown">
-                                <li><a class="dropdown-item" href="{% url 'hostels:dashboard' %}">
+                                <!-- <li><a class="dropdown-item" href="{% url 'hostels:dashboard' %}">
                                     <i class="fas fa-tachometer-alt me-2"></i>Dashboard
-                                </a></li>
+                                </a></li> -->
                                 <li><a class="dropdown-item" href="{% url 'hostels:inquiry-list' %}">
                                     <i class="fas fa-envelope me-2"></i>Messages
                                 </a></li>
@@ -63,6 +61,32 @@
                                 <li><a class="dropdown-item" href="{% url 'hostels:hostel-create' %}">
                                     <i class="fas fa-plus me-2"></i>List Your Property
                                 </a></li>
+                                
+                                <!-- Dynamic Room Type Management Links -->
+                                {% if user.owned_hostels.exists %}
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li class="dropdown-submenu">
+                                        <a class="dropdown-item dropdown-toggle" href="#">
+                                            <i class="fas fa-bed me-2"></i>Manage Room Types
+                                        </a>
+                                        <ul class="dropdown-menu submenu">
+                                            {% for hostel in user.owned_hostels.all %}
+                                                <li class="submenu-item">
+                                                    <a class="dropdown-item" href="{% url 'hostels:hostel-room-types' hostel.slug %}">
+                                                        <i class="fas fa-building me-2"></i>{{ hostel.name|truncatechars:25 }}
+                                                    </a>
+                                                    <div class="submenu-actions">
+                                                        <a href="{% url 'hostels:roomtype-create' hostel.slug %}" 
+                                                           class="btn btn-sm btn-outline-primary" title="Add Room Type">
+                                                            <i class="fas fa-plus"></i>
+                                                        </a>
+                                                    </div>
+                                                </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </li>
+                                {% endif %}
+                                
                                 <li><hr class="dropdown-divider"></li>
                                 <li><a class="dropdown-item" href="{% url 'logout' %}">
                                     <i class="fas fa-sign-out-alt me-2"></i>Logout
@@ -74,7 +98,7 @@
                             <a class="nav-link" href="{% url 'login' %}">Login</a>
                         </li>
                         <li class="nav-item">
-                            <a class="btn btn-primary nav-cta" href="{% url 'register' %}">Sign Up</a>
+                            <a class="btn btn-primary nav-cta" href="">Sign Up</a>
                         </li>
                     {% endif %}
                 </ul>
@@ -199,5 +223,125 @@
     <script src="{% static 'hostels/js/main.js' %}"></script>
     
     {% block extra_js %}{% endblock %}
+
+    <!-- Additional CSS for dropdown submenu -->
+    <style>
+        .dropdown-submenu {
+            position: relative;
+        }
+
+        .dropdown-submenu .dropdown-menu.submenu {
+            top: 0;
+            left: 100%;
+            margin-top: -1px;
+            min-width: 250px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            border: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .dropdown-submenu:hover .dropdown-menu.submenu {
+            display: block;
+        }
+
+        .submenu-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 16px;
+            border-bottom: 1px solid #f1f2f6;
+        }
+
+        .submenu-item:last-child {
+            border-bottom: none;
+        }
+
+        .submenu-item .dropdown-item {
+            flex: 1;
+            padding: 4px 0;
+            border: none;
+        }
+
+        .submenu-actions {
+            margin-left: 10px;
+        }
+
+        .submenu-actions .btn {
+            padding: 4px 8px;
+            font-size: 12px;
+        }
+
+        .dropdown-submenu .dropdown-toggle::after {
+            display: inline-block;
+            margin-left: 0.255em;
+            vertical-align: 0.255em;
+            content: "";
+            border-top: 0.3em solid transparent;
+            border-right: 0;
+            border-bottom: 0.3em solid transparent;
+            border-left: 0.3em solid;
+        }
+
+        .dropdown-submenu .dropdown-toggle[aria-expanded="true"]::after {
+            transform: rotate(90deg);
+        }
+
+        /* Mobile responsiveness for submenu */
+        @media (max-width: 768px) {
+            .dropdown-submenu .dropdown-menu.submenu {
+                position: static;
+                float: none;
+                box-shadow: none;
+                margin-left: 20px;
+                border-left: 2px solid #667eea;
+                border-top: none;
+                border-right: none;
+                border-bottom: none;
+            }
+        }
+    </style>
+
+    <!-- JavaScript for dropdown functionality -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Handle dropdown submenu on mobile
+            const dropdownSubmenu = document.querySelectorAll('.dropdown-submenu');
+            
+            dropdownSubmenu.forEach(function(submenu) {
+                const toggle = submenu.querySelector('.dropdown-toggle');
+                const menu = submenu.querySelector('.dropdown-menu.submenu');
+                
+                if (toggle && menu) {
+                    toggle.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        
+                        // Toggle submenu visibility
+                        if (menu.style.display === 'block') {
+                            menu.style.display = 'none';
+                            toggle.setAttribute('aria-expanded', 'false');
+                        } else {
+                            menu.style.display = 'block';
+                            toggle.setAttribute('aria-expanded', 'true');
+                        }
+                    });
+                }
+            });
+            
+            // Close submenus when clicking outside
+            document.addEventListener('click', function(e) {
+                dropdownSubmenu.forEach(function(submenu) {
+                    const menu = submenu.querySelector('.dropdown-menu.submenu');
+                    const toggle = submenu.querySelector('.dropdown-toggle');
+                    
+                    if (menu && !submenu.contains(e.target)) {
+                        menu.style.display = 'none';
+                        if (toggle) {
+                            toggle.setAttribute('aria-expanded', 'false');
+                        }
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>
