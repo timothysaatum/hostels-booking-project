@@ -159,7 +159,7 @@ class Hostel(BaseTimestampModel):
     account_name = models.CharField(max_length=200)
     bank_name = models.CharField(max_length=100, blank=True)
 
-    main_image = models.ImageField(upload_to='hostels/main/', blank=True, null=True)
+    main_image = models.ImageField(upload_to='hostels/', blank=True, null=True)
 
     total_rooms = models.PositiveIntegerField(default=0, db_index=True)
     available_rooms = models.PositiveIntegerField(default=0, db_index=True)
@@ -299,8 +299,8 @@ class RoomType(BaseTimestampModel):
         self.hostel.update_cached_fields()
         
         # Resize image if it exists
-        if self.main_image and os.path.exists(self.main_image.path):
-            self._resize_image(self.main_image.path, (800, 600))
+        if self.main_image and os.path.exists(self.main_image.url):
+            self._resize_image(self.main_image.url, (800, 600))
 
     def _resize_image(self, image_path, size):
         """Resize image to specified size"""

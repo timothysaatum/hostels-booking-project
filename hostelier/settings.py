@@ -22,6 +22,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = config('SECRET_KEY')
+CLOUDINARY_URL = config('CLOUDINARY_URL', default='')
+print(f"CLOUDINARY_URL: {CLOUDINARY_URL}")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG_STATUS', cast=bool)
@@ -33,7 +35,8 @@ ALLOWED_HOSTS = config('CURRENT_ALLOWED_HOST', cast = Csv())
 INSTALLED_APPS = [
     'django_ckeditor_5',
     'hostels',
-    # 'atlass',
+    'cloudinary',
+    'cloudinary_storage',
     'crispy_bootstrap5',
     'users',
     "crispy_forms",
@@ -103,8 +106,8 @@ CUSTOM_CONFIG = {
     }
 }
 CKEDITOR_5_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 CKEDITOR_5_CONFIGS = CUSTOM_CONFIG
-
 
 WSGI_APPLICATION = 'hostelier.wsgi.application'
 
@@ -121,7 +124,12 @@ DATABASES = {
 INTERNAL_IPS = [
     '127.0.0.1',
 ]
-
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME':  config('CLOUD_NAME'),
+    'API_KEY': config('CLOUDINARY_API_KEY'),
+    'API_SECRET': config('CLOUDINARY_API_SECRET'),
+    'FOLDER': 'hostel_images',
+}
 #DATABASES = {
 #    'default': {
 #        'ENGINE': 'django.db.backends.mysql',
