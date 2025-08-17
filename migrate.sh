@@ -7,4 +7,4 @@ python manage.py collectstatic --noinput
 
 # Start FastAPI app
 gunicorn hostelier.wsgi:application \
-  --bind 0.0.0: $PORT
+  --bind 0.0.0:$PORT
