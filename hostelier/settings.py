@@ -130,6 +130,9 @@ CLOUDINARY_STORAGE = {
     'API_SECRET': config('CLOUDINARY_API_SECRET'),
     'FOLDER': 'hostel_images',
 }
+# Static & Media storage
+STATICFILES_STORAGE = "cloudinary_storage.storage.StaticCloudinaryStorage"
+DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
 #DATABASES = {
 #    'default': {
 #        'ENGINE': 'django.db.backends.mysql',
