@@ -121,11 +121,11 @@ if ENVIRONMENT == 'development':
             'NAME': BASE_DIR / 'db.sqlite3',
         }
     }
-    
+
 if ENVIRONMENT == 'production':
     DATABASES = {
         'default': dj_database_url.parse(
-            os.environ.get('DATABASE_URL', 'postgresql://neondb_owner:npg_iaUm0yvEq8wB@ep-restless-butterfly-ae0djgm5-pooler.c-2.us-east-2.aws.neon.tech/neondb?sslmode=require&channel_binding=require'),
+            config('DATABASE_URL'),
             conn_max_age=600,
             ssl_require=True
         )
@@ -140,25 +140,6 @@ CLOUDINARY_STORAGE = {
     'API_SECRET': config('CLOUDINARY_API_SECRET'),
     'FOLDER': 'hostel_images',
 }
-# Static & Media storage
-# STATICFILES_STORAGE = "cloudinary_storage.storage.StaticCloudinaryStorage"
-# DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
-#DATABASES = {
-#    'default': {
-#        'ENGINE': 'django.db.backends.mysql',
-#        'NAME': 'rooms$Hostels',
-#        'USER': 'rooms',
-#        'PASSWORD': config('DB_PASS'),
-#        'HOST': 'rooms.mysql.pythonanywhere-services.com',
-#        'OPTIONS': {
-#            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
-#        },
-#    }
-#}
-
-#SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'
-
-
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
 
@@ -227,9 +208,3 @@ PAYSTACK_SECRET_KEY = config('PAYSTACK_SECRET_KEY')
 SMS_BACKEND = 'sms.backends.twilio.SmsBackend'
 TWILIO_ACCOUNT_SID = 'live-redacted-twilio-account-sid'
 TWILIO_AUTH_TOKEN = 'live-redacted-twilio-auth-token'
-
-
-#SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARD_PROTO', 'https')
-#SECURE_SSL_REDIRECT = True
-#https://smsc.hubtel.com
-#https://api-otp.hubtel.com
