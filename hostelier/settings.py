@@ -121,6 +121,7 @@ if ENVIRONMENT == 'development':
             'NAME': BASE_DIR / 'db.sqlite3',
         }
     }
+    
 if ENVIRONMENT == 'production':
     DATABASES = {
         'default': dj_database_url.parse(
