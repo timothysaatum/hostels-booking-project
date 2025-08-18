@@ -13,7 +13,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 from pathlib import Path
 import os
 from decouple import config, Csv
-
+import dj_database_url
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -24,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config('SECRET_KEY')
 CLOUDINARY_URL = config('CLOUDINARY_URL', default='')
 # print(f"CLOUDINARY_URL: {CLOUDINARY_URL}")
-
+ENVIRONMENT = config('ENVIRONMENT', default='development')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG_STATUS', cast=bool)
 
@@ -114,13 +114,21 @@ WSGI_APPLICATION = 'hostelier.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+if ENVIRONMENT == 'development':
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
     }
-}
+if ENVIRONMENT == 'production':
+    DATABASES = {
+        'default': dj_database_url.parse(
+            os.environ.get('DATABASE_URL', 'postgresql://neondb_owner:npg_iaUm0yvEq8wB@ep-restless-butterfly-ae0djgm5-pooler.c-2.us-east-2.aws.neon.tech/neondb?sslmode=require&channel_binding=require'),
+            conn_max_age=600,
+            ssl_require=True
+        )
+    }
 
 INTERNAL_IPS = [
     '127.0.0.1',
