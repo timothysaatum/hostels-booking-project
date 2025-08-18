@@ -10,7 +10,7 @@ from django.db.models import Avg, Count, Q, Sum, F
 from django.utils.text import slugify
 from io import BytesIO
 import os
-
+from cloudinary_storage.storage import MediaCloudinaryStorage
 User = get_user_model()
 
 
@@ -159,7 +159,7 @@ class Hostel(BaseTimestampModel):
     account_name = models.CharField(max_length=200)
     bank_name = models.CharField(max_length=100, blank=True)
 
-    main_image = models.ImageField(upload_to='hostels/', blank=True, null=True)
+    main_image = models.ImageField(upload_to='hostels/', storage=MediaCloudinaryStorage(), blank=True, null=True)
 
     total_rooms = models.PositiveIntegerField(default=0, db_index=True)
     available_rooms = models.PositiveIntegerField(default=0, db_index=True)
@@ -268,7 +268,7 @@ class RoomType(BaseTimestampModel):
     total_rooms = models.PositiveIntegerField(validators=[MinValueValidator(1)])
     price_per_person = models.DecimalField(max_digits=10, decimal_places=2, db_index=True)
     description = CKEditor5Field(config_name='advanced', blank=True)
-    main_image = models.ImageField(upload_to='room_types/main/', blank=True, null=True)
+    main_image = models.ImageField(upload_to='room_types/main/', storage=MediaCloudinaryStorage(), blank=True, null=True)
     
     # Cached availability (updated via signals)
     available_rooms_count = models.PositiveIntegerField(default=0, db_index=True)
@@ -349,7 +349,7 @@ class RoomType(BaseTimestampModel):
 class HostelImage(BaseTimestampModel):
     """Images for hostels"""
     hostel = models.ForeignKey(Hostel, on_delete=models.CASCADE, related_name='images')
-    image = models.ImageField(upload_to='hostels/gallery/')
+    image = models.ImageField(upload_to='hostels/gallery/', storage=MediaCloudinaryStorage())
     caption = models.CharField(max_length=200, blank=True)
     order = models.PositiveIntegerField(default=0, db_index=True)
 
@@ -382,7 +382,7 @@ class HostelImage(BaseTimestampModel):
 class RoomTypeImage(BaseTimestampModel):
     """Images for room types"""
     room_type = models.ForeignKey(RoomType, on_delete=models.CASCADE, related_name='images')
-    image = models.ImageField(upload_to='room_types/gallery/')
+    image = models.ImageField(upload_to='room_types/gallery/', storage=MediaCloudinaryStorage())
     caption = models.CharField(max_length=200, blank=True)
     order = models.PositiveIntegerField(default=0, db_index=True)
 

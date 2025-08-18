@@ -643,7 +643,7 @@ class HostelCreateView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         context = self.get_context_data()
         image_formset = context['image_formset']
-        
+        print(form)
         with transaction.atomic():
             form.instance.owner = self.request.user
             form.instance.owner_name = self.request.user.full_name or self.request.user.email

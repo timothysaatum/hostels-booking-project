@@ -14,6 +14,7 @@ from pathlib import Path
 import os
 from decouple import config, Csv
 import dj_database_url
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -22,21 +23,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = config('SECRET_KEY')
-CLOUDINARY_URL = config('CLOUDINARY_URL', default='')
-# print(f"CLOUDINARY_URL: {CLOUDINARY_URL}")
+
 ENVIRONMENT = config('ENVIRONMENT', default='development')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG_STATUS', cast=bool)
 
-ALLOWED_HOSTS = config('CURRENT_ALLOWED_HOST', cast = Csv())
+ALLOWED_HOSTS = config('CURRENT_ALLOWED_HOST', cast=Csv())
 
 # Application definition
-
 INSTALLED_APPS = [
     'django_ckeditor_5',
     'hostels',
-    'cloudinary',
-    # 'cloudinary_storage',
     'crispy_bootstrap5',
     'users',
     "crispy_forms",
@@ -46,9 +43,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'cloudinary',
+    'cloudinary_storage',
 ]
-
-CKEDITOR_UPLOAD_PATH = 'static/images/'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -60,7 +57,6 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-
 
 ROOT_URLCONF = 'hostelier.urls'
 
@@ -79,36 +75,6 @@ TEMPLATES = [
         },
     },
 ]
-CKEDITOR_UPLOAD_PATH = "uploads/"
-# Path where uploaded images will be stored
-CKEDITOR_5_FILE_STORAGE = "media/"
-
-# CKEditor 5 configurations
-CUSTOM_CONFIG = {
-    "default": {
-        "toolbar": [
-            "heading", "|",
-            "bold", "italic", "link", "bulletedList", "numberedList", "|",
-            "blockQuote", "insertTable", "mediaEmbed", "undo", "redo"
-        ],
-        "height": "300px",
-        "width": "100%",
-    },
-    "advanced": {
-        "toolbar": [
-            "heading", "|",
-            "bold", "italic", "link", "underline", "strikethrough", "subscript", "superscript",
-            "bulletedList", "numberedList", "outdent", "indent", "|",
-            "blockQuote", "insertTable", "imageUpload", "mediaEmbed", "|",
-            "undo", "redo", "codeBlock"
-        ],
-        "height": "500px",
-        "width": "100%",
-    }
-}
-CKEDITOR_5_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-CKEDITOR_5_CONFIGS = CUSTOM_CONFIG
 
 WSGI_APPLICATION = 'hostelier.wsgi.application'
 
@@ -143,77 +109,105 @@ if ENVIRONMENT == 'production':
 INTERNAL_IPS = [
     '127.0.0.1',
 ]
+
+# Cloudinary Configuration
 CLOUDINARY_STORAGE = {
-    'CLOUD_NAME':  config('CLOUD_NAME'),
+    'CLOUD_NAME': config('CLOUD_NAME'),
     'API_KEY': config('CLOUDINARY_API_KEY'),
     'API_SECRET': config('CLOUDINARY_API_SECRET'),
     'FOLDER': 'hostel_images',
 }
+
+# File Storage - Use Cloudinary for all file uploads
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
+# CKEditor 5 Configuration
+CKEDITOR_5_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+CKEDITOR_UPLOAD_PATH = "uploads/"
+
+# CKEditor 5 configurations
+CUSTOM_CONFIG = {
+    "default": {
+        "toolbar": [
+            "heading", "|",
+            "bold", "italic", "link", "bulletedList", "numberedList", "|",
+            "blockQuote", "insertTable", "imageUpload", "mediaEmbed", "undo", "redo"
+        ],
+        "height": "300px",
+        "width": "100%",
+    },
+    "advanced": {
+        "toolbar": [
+            "heading", "|",
+            "bold", "italic", "link", "underline", "strikethrough", "subscript", "superscript",
+            "bulletedList", "numberedList", "outdent", "indent", "|",
+            "blockQuote", "insertTable", "imageUpload", "mediaEmbed", "|",
+            "undo", "redo", "codeBlock"
+        ],
+        "height": "500px",
+        "width": "100%",
+    }
+}
+
+CKEDITOR_5_CONFIGS = CUSTOM_CONFIG
+
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
-
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME':
-        'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
     },
     {
-        'NAME':
-        'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
     },
     {
-        'NAME':
-        'django.contrib.auth.password_validation.CommonPasswordValidator',
+        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
     },
     {
-        'NAME':
-        'django.contrib.auth.password_validation.NumericPasswordValidator',
+        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-#pwa binaries
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
-
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
-
 USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
-
 STATIC_URL = 'static/'
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
+
+# Media files - handled by Cloudinary
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+# Crispy Forms
 CRISPY_TEMPLATE_PACK = 'bootstrap5'
 
-
+# Authentication
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = '/'
+AUTH_USER_MODEL = 'users.RoomUser'
+
+# Email Configuration
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = config('EMAIL_USER')
 EMAIL_HOST_PASSWORD = 'kscnzqcdtpmewpxz'
-AUTH_USER_MODEL = 'users.RoomUser'
 
+# Paystack Configuration
 PAYSTACK_PUBLIC_KEY = config('PAYSTACK_PUBLIC_KEY')
 PAYSTACK_SECRET_KEY = config('PAYSTACK_SECRET_KEY')
 
-#sms backends
+# SMS Backend Configuration
 SMS_BACKEND = 'sms.backends.twilio.SmsBackend'
 TWILIO_ACCOUNT_SID = 'live-redacted-twilio-account-sid'
 TWILIO_AUTH_TOKEN = 'live-redacted-twilio-auth-token'
