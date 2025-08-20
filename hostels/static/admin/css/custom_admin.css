@@ -1,0 +1,16 @@
+.inline-group .tabular {
+    overflow-x: auto;
+}
+
+.hostel-image-preview img {
+    border: 2px solid #ddd;
+    transition: border-color 0.3s;
+}
+
+.hostel-image-preview img:hover {
+    border-color: #007cba;
+}
+
+.field-occupancy_status {
+    text-align: center;
+}

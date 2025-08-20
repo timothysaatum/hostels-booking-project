@@ -17,23 +17,16 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-#from hostels.distance import IPAddressFinder
+
 
 
 
 urlpatterns = [
     path('admin/t-23/unarcom/engines/admin/portal/Management/', admin.site.urls),
-    # path('', include('pwa.urls')),
     path('', include('hostels.urls')),
     path('users/', include('users.urls')),
-    # path('booking/', include('atlass.urls')),
     path("ckeditor5/", include('django_ckeditor_5.urls')),
 ]
-#user = IPAddressFinder()
-
-#ip = user.find_user_ip()
-
-#location_data = user.get_user_location(ip)
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL,
