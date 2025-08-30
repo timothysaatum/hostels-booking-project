@@ -207,7 +207,7 @@ class Hostel(BaseTimestampModel):
     slug = models.SlugField(max_length=220, unique=True, blank=True)
     description = CKEditor5Field(config_name='advanced')
 
-    phone_number = models.CharField(max_length=15)
+    phone_number = models.CharField(max_length=60)
     email = models.EmailField(blank=True)
 
     latitude = models.DecimalField(max_digits=20, decimal_places=16, null=True, blank=True)

@@ -209,29 +209,6 @@ class HostelDetailView(DetailView):
         context['similar_hostels'] = similar_hostels
         return context
 
-# class HostelDetailView(DetailView):
-#     """Detailed view of a hostel with distance calculation"""
-#     model = Hostel
-#     template_name = 'hostels/hostel_detail.html'
-#     context_object_name = 'hostel'
-#     slug_field = 'slug'
-#     slug_url_kwarg = 'slug'
-
-#     def get_queryset(self):
-#         return Hostel.active.all().select_related('school', 'owner').prefetch_related(
-#             'amenities',
-#             'images',
-#             Prefetch(
-#                 'room_types', 
-#                 queryset=RoomType.objects.prefetch_related('images', 'rooms')
-#                 .annotate(
-#                     available_spots=F('rooms__capacity') - F('rooms__current_occupants')
-#                 )
-#             )
-#         )
-
-    
-
 
 class HostelCreateView(LoginRequiredMixin, CreateView):
     """Create new hostel with automatic room generation"""
